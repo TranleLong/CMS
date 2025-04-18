@@ -1,0 +1,848 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="menu-content">
+  <!-- Main menu list view -->
+  <div id="menu-list-view">
+    <div class="menu-header">
+      <h1>Quản lý menu</h1>
+      <button class="btn-add-menu" onclick="showAddMenuForm()">
+        <i class="fas fa-plus"></i> Thêm menu
+      </button>
+    </div>
+
+    <div class="menu-list-container">
+      <h2>Danh sách menu</h2>
+      <p class="menu-description">Quản lý tất cả menu trong hệ thống của bạn</p>
+
+      <div class="menu-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Tìm kiếm menu...">
+      </div>
+
+      <div class="menu-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Tiêu đề</th>
+              <th>Slug</th>
+              <th>Trạng thái</th>
+              <th>Ngày tạo</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Menu chính</td>
+              <td>menu-chinh</td>
+              <td><span class="status-badge active">Đang hoạt động</span></td>
+              <td>15/01/2023</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="previewMenu(1)"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon" onclick="showEditMenuForm(1)"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon delete" onclick="showDeleteConfirm(1)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Menu footer</td>
+              <td>menu-footer</td>
+              <td><span class="status-badge active">Đang hoạt động</span></td>
+              <td>20/01/2023</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="previewMenu(2)"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon" onclick="showEditMenuForm(2)"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon delete" onclick="showDeleteConfirm(2)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Menu phụ</td>
+              <td>menu-phu</td>
+              <td><span class="status-badge inactive">Không hoạt động</span></td>
+              <td>25/01/2023</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="previewMenu(3)"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon" onclick="showEditMenuForm(3)"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon delete" onclick="showDeleteConfirm(3)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add menu form -->
+  <div id="add-menu-form" class="menu-form" style="display: none;">
+    <div class="form-header">
+      <h2>Thêm menu mới</h2>
+      <button class="btn-back" onclick="hideAddMenuForm()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
+
+    <div class="form-content">
+      <div class="form-group">
+        <label for="new-menu-title">Tiêu đề <span class="required">*</span></label>
+        <input type="text" id="new-menu-title" placeholder="Nhập tiêu đề menu">
+      </div>
+
+      <div class="form-group">
+        <label for="new-menu-slug">Đường dẫn</label>
+        <div class="slug-input">
+          <span class="slug-prefix">/</span>
+          <input type="text" id="new-menu-slug" placeholder="duong-dan-menu">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="new-menu-items">Mục menu</label>
+        <div class="menu-items-container">
+          <div class="menu-item-row">
+            <input type="text" placeholder="Tên mục menu" class="menu-item-name">
+            <input type="text" placeholder="Đường dẫn" class="menu-item-url">
+            <button class="btn-remove-item"><i class="fas fa-times"></i></button>
+          </div>
+          <button class="btn-add-item"><i class="fas fa-plus"></i> Thêm mục menu</button>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="hideAddMenuForm()">Hủy</button>
+        <button class="btn-save">Lưu menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit menu form -->
+  <div id="edit-menu-form" class="menu-form" style="display: none;">
+    <div class="form-header">
+      <h2>Sửa menu</h2>
+      <button class="btn-back" onclick="hideEditMenuForm()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
+
+    <div class="form-content">
+      <div class="form-group">
+        <label for="edit-menu-title">Tiêu đề <span class="required">*</span></label>
+        <input type="text" id="edit-menu-title" value="Menu chính">
+      </div>
+
+      <div class="form-group">
+        <label for="edit-menu-slug">Đường dẫn</label>
+        <div class="slug-input">
+          <span class="slug-prefix">/</span>
+          <input type="text" id="edit-menu-slug" value="menu-chinh">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-menu-items">Mục menu</label>
+        <div class="menu-items-container">
+          <div class="menu-item-row">
+            <input type="text" value="Trang chủ" class="menu-item-name">
+            <input type="text" value="/" class="menu-item-url">
+            <button class="btn-remove-item"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="menu-item-row">
+            <input type="text" value="Giới thiệu" class="menu-item-name">
+            <input type="text" value="/gioi-thieu" class="menu-item-url">
+            <button class="btn-remove-item"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="menu-item-row">
+            <input type="text" value="Liên hệ" class="menu-item-name">
+            <input type="text" value="/lien-he" class="menu-item-url">
+            <button class="btn-remove-item"><i class="fas fa-times"></i></button>
+          </div>
+          <button class="btn-add-item"><i class="fas fa-plus"></i> Thêm mục menu</button>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="hideEditMenuForm()">Hủy</button>
+        <button class="btn-save">Cập nhật menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview menu -->
+  <div id="preview-menu" class="menu-preview" style="display: none;">
+    <div class="preview-header">
+      <h2>Xem trước menu</h2>
+      <button class="btn-back" onclick="hidePreviewMenu()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
+
+    <div class="preview-content">
+      <h3>Menu chính</h3>
+      <div class="preview-menu-container">
+        <ul class="preview-menu-list">
+          <li><a href="#" class="active">Trang chủ</a></li>
+          <li><a href="#">Giới thiệu</a></li>
+          <li><a href="#">Sản phẩm</a></li>
+          <li><a href="#">Dịch vụ</a></li>
+          <li><a href="#">Tin tức</a></li>
+          <li><a href="#">Liên hệ</a></li>
+        </ul>
+      </div>
+
+      <div class="preview-info">
+        <div class="info-section">
+          <h4>Thông tin menu</h4>
+          <div class="info-row">
+            <span class="info-label">Tiêu đề:</span>
+            <span class="info-value">Menu chính</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Đường dẫn:</span>
+            <span class="info-value">/menu-chinh</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Trạng thái:</span>
+            <span class="info-value">Đang hoạt động</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Ngày tạo:</span>
+            <span class="info-value">15/01/2023</span>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h4>Cách sử dụng</h4>
+          <p>Để hiển thị menu này trên website, sử dụng mã sau:</p>
+          <div class="code-block">
+            <button class="btn-copy" onclick="copyCode()"><i class="fas fa-copy"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirmation modal -->
+  <div id="delete-confirm" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Xác nhận xóa</h3>
+        <button class="close-modal" onclick="hideDeleteConfirm()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="warning-icon">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <p class="warning-text">Cảnh báo</p>
+        <p class="warning-message">Hành động này không thể hoàn tác và có thể dẫn tới mất dữ liệu</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="hideDeleteConfirm()">Hủy</button>
+        <button class="btn-delete">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .menu-content {
+    padding: 20px;
+    background-color: #f8f9fa;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .menu-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .btn-add-menu {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .btn-add-menu:hover {
+    background-color: #2980b9;
+  }
+
+  .btn-add-menu i {
+    margin-right: 8px;
+  }
+
+  .menu-list-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .menu-list-container h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .menu-description {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .menu-search {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .menu-search input {
+    width: 100%;
+    padding: 10px 15px 10px 35px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .menu-search i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+  }
+
+  .menu-table {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #666;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #333;
+    font-size: 14px;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .status-badge.active {
+    background-color: #e6f7ee;
+    color: #27ae60;
+  }
+
+  .status-badge.inactive {
+    background-color: #f8f9fa;
+    color: #7f8c8d;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 5px;
+  }
+
+  .btn-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-icon:hover {
+    background-color: #f5f5f5;
+  }
+
+  .btn-icon.delete {
+    color: #e74c3c;
+  }
+
+  .btn-icon.delete:hover {
+    background-color: #fde8e7;
+  }
+
+  /* Form styles */
+  .menu-form {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .form-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .btn-back {
+    width: 36px;
+    height: 36px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .form-content {
+    padding: 10px 0;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .slug-input {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .slug-prefix {
+    padding: 10px;
+    background-color: #f5f5f5;
+    color: #666;
+    border-right: 1px solid #e0e0e0;
+  }
+
+  .slug-input input {
+    border: none;
+    border-radius: 0;
+  }
+
+  .menu-items-container {
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 15px;
+  }
+
+  .menu-item-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+
+  .menu-item-name {
+    flex: 1;
+  }
+
+  .menu-item-url {
+    flex: 1;
+  }
+
+  .btn-remove-item {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    color: #e74c3c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .btn-add-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .btn-add-item i {
+    margin-right: 8px;
+  }
+
+  .required {
+    color: #e74c3c;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 30px;
+  }
+
+  .btn-cancel {
+    padding: 8px 16px;
+    background-color: white;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .btn-save {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* Preview styles */
+  .menu-preview {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .preview-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .preview-content h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  .preview-menu-container {
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 30px;
+  }
+
+  .preview-menu-list {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+  }
+
+  .preview-menu-list a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+
+  .preview-menu-list a.active {
+    background-color: #3498db;
+    color: white;
+  }
+
+  .preview-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .info-section {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 15px;
+  }
+
+  .info-section h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  .info-row {
+    display: flex;
+    margin-bottom: 10px;
+  }
+
+  .info-label {
+    font-weight: 500;
+    color: #666;
+    width: 100px;
+  }
+
+  .info-value {
+    color: #333;
+  }
+
+  .code-block {
+    background-color: #2d3436;
+    color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    position: relative;
+    margin-top: 10px;
+  }
+
+  .btn-copy {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: #f8f9fa;
+    cursor: pointer;
+  }
+
+  /* Modal styles */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .close-modal {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+  }
+
+  .modal-body {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .warning-icon {
+    font-size: 40px;
+    color: #e74c3c;
+    margin-bottom: 10px;
+  }
+
+  .warning-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e74c3c;
+    margin-bottom: 10px;
+  }
+
+  .warning-message {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .btn-delete {
+    padding: 8px 16px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  // Show/hide add menu form
+  function showAddMenuForm() {
+    document.getElementById('menu-list-view').style.display = 'none';
+    document.getElementById('add-menu-form').style.display = 'block';
+    document.getElementById('edit-menu-form').style.display = 'none';
+    document.getElementById('preview-menu').style.display = 'none';
+  }
+
+  function hideAddMenuForm() {
+    document.getElementById('menu-list-view').style.display = 'block';
+    document.getElementById('add-menu-form').style.display = 'none';
+  }
+
+  // Show/hide edit menu form
+  function showEditMenuForm(id) {
+    document.getElementById('menu-list-view').style.display = 'none';
+    document.getElementById('add-menu-form').style.display = 'none';
+    document.getElementById('edit-menu-form').style.display = 'block';
+    document.getElementById('preview-menu').style.display = 'none';
+    // Here you would load the menu data based on the ID
+  }
+
+  function hideEditMenuForm() {
+    document.getElementById('menu-list-view').style.display = 'block';
+    document.getElementById('edit-menu-form').style.display = 'none';
+  }
+
+  // Show/hide preview menu
+  function previewMenu(id) {
+    document.getElementById('menu-list-view').style.display = 'none';
+    document.getElementById('add-menu-form').style.display = 'none';
+    document.getElementById('edit-menu-form').style.display = 'none';
+    document.getElementById('preview-menu').style.display = 'block';
+    // Here you would load the menu data based on the ID
+  }
+
+  function hidePreviewMenu() {
+    document.getElementById('menu-list-view').style.display = 'block';
+    document.getElementById('preview-menu').style.display = 'none';
+  }
+
+  // Show/hide delete confirmation
+  function showDeleteConfirm(id) {
+    document.getElementById('delete-confirm').style.display = 'flex';
+    // Store the ID for deletion
+  }
+
+  function hideDeleteConfirm() {
+    document.getElementById('delete-confirm').style.display = 'none';
+  }
+
+  // Copy code function
+  function copyCode() {
+    const codeText = document.querySelector('.code-block code').innerText;
+    navigator.clipboard.writeText(codeText).then(() => {
+      alert('Đã sao chép mã vào clipboard!');
+    });
+  }
+
+  // Add menu item row
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.btn-add-item')) {
+      const container = e.target.closest('.menu-items-container');
+      const newRow = document.createElement('div');
+      newRow.className = 'menu-item-row';
+      newRow.innerHTML = `
+        <input type="text" placeholder="Tên mục menu" class="menu-item-name">
+        <input type="text" placeholder="Đường dẫn" class="menu-item-url">
+        <button class="btn-remove-item"><i class="fas fa-times"></i></button>
+      `;
+      container.insertBefore(newRow, e.target.closest('.btn-add-item'));
+    }
+
+    if (e.target.closest('.btn-remove-item')) {
+      const row = e.target.closest('.menu-item-row');
+      row.remove();
+    }
+  });
+</script>
+{% endblock %}

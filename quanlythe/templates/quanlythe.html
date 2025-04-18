@@ -1,0 +1,526 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="tag-content">
+  <!-- Main tag list view -->
+  <div id="tag-list-view">
+    <div class="tag-header">
+      <h1>Quản lý thẻ</h1>
+      <button class="btn-add-tag" onclick="showAddTagForm()">
+        <i class="fas fa-plus"></i> Thêm thẻ mới
+      </button>
+    </div>
+
+    <div class="tag-list-container">
+      <h2>Danh sách thẻ</h2>
+      <p class="tag-description">Quản lý tất cả thẻ trong hệ thống của bạn</p>
+
+      <div class="tag-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Tìm kiếm thẻ...">
+      </div>
+
+      <div class="tag-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Tên thẻ</th>
+              <th>Slug</th>
+              <th>Số bài viết</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Công nghệ</td>
+              <td>cong-nghe</td>
+              <td>5</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="showEditTagForm(1)"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon delete" onclick="showDeleteConfirm(1)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Kinh doanh</td>
+              <td>kinh-doanh</td>
+              <td>3</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="showEditTagForm(2)"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon delete" onclick="showDeleteConfirm(2)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Giáo dục</td>
+              <td>giao-duc</td>
+              <td>8</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="showEditTagForm(3)"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon delete" onclick="showDeleteConfirm(3)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add tag form -->
+  <div id="add-tag-form" class="tag-form" style="display: none;">
+    <div class="form-header">
+      <h2>Thêm thẻ mới</h2>
+      <button class="btn-back" onclick="hideAddTagForm()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
+
+    <div class="form-content">
+      <div class="form-group">
+        <label for="new-tag-name">Tên thẻ <span class="required">*</span></label>
+        <input type="text" id="new-tag-name" placeholder="Nhập tên thẻ">
+      </div>
+
+      <div class="form-group">
+        <label for="new-tag-slug">Slug</label>
+        <input type="text" id="new-tag-slug" placeholder="ten-the">
+        <p class="field-help">Chuỗi đường dẫn thân thiện cho thẻ, thường là tên thẻ viết thường và có dấu gạch ngang.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="new-tag-desc">Mô tả</label>
+        <textarea id="new-tag-desc" rows="4" placeholder="Mô tả ngắn về thẻ này"></textarea>
+        <p class="field-help">Mô tả ngắn gọn về thẻ này là gì và sử dụng cho nội dung nào.</p>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="hideAddTagForm()">Hủy</button>
+        <button class="btn-save">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit tag form -->
+  <div id="edit-tag-form" class="tag-form" style="display: none;">
+    <div class="form-header">
+      <h2>Sửa thông tin thẻ</h2>
+      <button class="btn-back" onclick="hideEditTagForm()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
+
+    <div class="form-content">
+      <div class="form-group">
+        <label for="edit-tag-name">Tên thẻ <span class="required">*</span></label>
+        <input type="text" id="edit-tag-name" value="Công nghệ">
+      </div>
+
+      <div class="form-group">
+        <label for="edit-tag-slug">Slug</label>
+        <input type="text" id="edit-tag-slug" value="cong-nghe">
+        <p class="field-help">Chuỗi đường dẫn thân thiện cho thẻ, thường là tên thẻ viết thường và có dấu gạch ngang.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-tag-desc">Mô tả</label>
+        <textarea id="edit-tag-desc" rows="4">Thẻ về các bài viết liên quan đến công nghệ, tin tức công nghệ mới.</textarea>
+        <p class="field-help">Mô tả ngắn gọn về thẻ này là gì và sử dụng cho nội dung nào.</p>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="hideEditTagForm()">Hủy</button>
+        <button class="btn-save">Cập nhật</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirmation modal -->
+  <div id="delete-confirm" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Xác nhận xóa</h3>
+        <button class="close-modal" onclick="hideDeleteConfirm()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="warning-icon">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <p class="warning-text">Cảnh báo</p>
+        <p class="warning-message">Hành động này không thể hoàn tác và có thể dẫn tới mất dữ liệu</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="hideDeleteConfirm()">Hủy</button>
+        <button class="btn-delete">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .tag-content {
+    padding: 20px;
+    background-color: #f8f9fa;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .tag-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .tag-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .btn-add-tag {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .btn-add-tag:hover {
+    background-color: #2980b9;
+  }
+
+  .btn-add-tag i {
+    margin-right: 8px;
+  }
+
+  .tag-list-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .tag-list-container h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .tag-description {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .tag-search {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .tag-search input {
+    width: 100%;
+    padding: 10px 15px 10px 35px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .tag-search i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+  }
+
+  .tag-table {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #666;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #333;
+    font-size: 14px;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 5px;
+  }
+
+  .btn-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-icon:hover {
+    background-color: #f5f5f5;
+  }
+
+  .btn-icon.delete {
+    color: #e74c3c;
+  }
+
+  .btn-icon.delete:hover {
+    background-color: #fde8e7;
+  }
+
+  /* Form styles */
+  .tag-form {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .form-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .btn-back {
+    width: 36px;
+    height: 36px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .form-content {
+    padding: 10px 0;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .field-help {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+  }
+
+  .required {
+    color: #e74c3c;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 30px;
+  }
+
+  .btn-cancel {
+    padding: 8px 16px;
+    background-color: white;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .btn-save {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* Modal styles */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .close-modal {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+  }
+
+  .modal-body {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .warning-icon {
+    font-size: 40px;
+    color: #e74c3c;
+    margin-bottom: 10px;
+  }
+
+  .warning-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e74c3c;
+    margin-bottom: 10px;
+  }
+
+  .warning-message {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .btn-delete {
+    padding: 8px 16px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  // Show/hide add tag form
+  function showAddTagForm() {
+    document.getElementById('tag-list-view').style.display = 'none';
+    document.getElementById('add-tag-form').style.display = 'block';
+    document.getElementById('edit-tag-form').style.display = 'none';
+  }
+
+  function hideAddTagForm() {
+    document.getElementById('tag-list-view').style.display = 'block';
+    document.getElementById('add-tag-form').style.display = 'none';
+  }
+
+  // Show/hide edit tag form
+  function showEditTagForm(id) {
+    document.getElementById('tag-list-view').style.display = 'none';
+    document.getElementById('add-tag-form').style.display = 'none';
+    document.getElementById('edit-tag-form').style.display = 'block';
+    // Here you would load the tag data based on the ID
+  }
+
+  function hideEditTagForm() {
+    document.getElementById('tag-list-view').style.display = 'block';
+    document.getElementById('edit-tag-form').style.display = 'none';
+  }
+
+  // Show/hide delete confirmation
+  function showDeleteConfirm(id) {
+    document.getElementById('delete-confirm').style.display = 'flex';
+    // Store the ID for deletion
+  }
+
+  function hideDeleteConfirm() {
+    document.getElementById('delete-confirm').style.display = 'none';
+  }
+</script>
+{% endblock %}

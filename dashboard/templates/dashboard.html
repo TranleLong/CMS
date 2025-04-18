@@ -1,0 +1,454 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Trang chủ</h1>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-cards">
+        <div class="stat-card blue-border">
+            <div class="stat-header">
+                <span>Tổng bài viết</span>
+                <i class="fas fa-file-alt blue-icon"></i>
+            </div>
+            <div class="stat-number">24</div>
+            <div class="stat-change">+2 trong tháng này</div>
+        </div>
+
+        <div class="stat-card green-border">
+            <div class="stat-header">
+                <span>Tổng danh mục</span>
+                <i class="fas fa-folder green-icon"></i>
+            </div>
+            <div class="stat-number">8</div>
+            <div class="stat-change">+1 trong tháng này</div>
+        </div>
+
+        <div class="stat-card purple-border">
+            <div class="stat-header">
+                <span>Tổng media</span>
+                <i class="fas fa-image purple-icon"></i>
+            </div>
+            <div class="stat-number">132</div>
+            <div class="stat-change">+12 trong tháng này</div>
+        </div>
+
+        <div class="stat-card orange-border">
+            <div class="stat-header">
+                <span>Tổng thành viên</span>
+                <i class="fas fa-users orange-icon"></i>
+            </div>
+            <div class="stat-number">5</div>
+            <div class="stat-change">+0 trong tháng này</div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Content -->
+    <div class="dashboard-content">
+        <!-- Chart Section -->
+        <div class="chart-section">
+            <h2>Tổng quan</h2>
+            <p>Số lượng bài viết trong tháng này</p>
+
+            <div class="chart-container">
+                <div class="chart">
+                    <!-- Chart bars -->
+                    <div class="chart-y-labels">
+                        <span>24</span>
+                        <span>18</span>
+                        <span>12</span>
+                        <span>6</span>
+                        <span>0</span>
+                    </div>
+                    <div class="chart-bars">
+                        <div class="chart-bar" style="height: 15%"><span>T1</span></div>
+                        <div class="chart-bar" style="height: 25%"><span>T2</span></div>
+                        <div class="chart-bar" style="height: 35%"><span>T3</span></div>
+                        <div class="chart-bar" style="height: 20%"><span>T4</span></div>
+                        <div class="chart-bar" style="height: 30%"><span>T5</span></div>
+                        <div class="chart-bar" style="height: 40%"><span>T6</span></div>
+                        <div class="chart-bar" style="height: 25%"><span>T7</span></div>
+                        <div class="chart-bar" style="height: 50%"><span>T8</span></div>
+                        <div class="chart-bar" style="height: 35%"><span>T9</span></div>
+                        <div class="chart-bar" style="height: 60%"><span>T10</span></div>
+                        <div class="chart-bar" style="height: 70%"><span>T11</span></div>
+                        <div class="chart-bar" style="height: 80%"><span>T12</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity Section -->
+        <div class="activity-section">
+            <div class="activity-header">
+                <h2>Hoạt động gần đây</h2>
+                <p>Các hoạt động mới nhất trong hệ thống</p>
+            </div>
+
+            <div class="activity-list-container">
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user"></i></div>
+                        <div class="activity-content">
+                            <p>Nguyễn Văn A đã tạo bài viết Tin tức mới nhất</p>
+                            <span class="activity-time">2 giờ trước</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user"></i></div>
+                        <div class="activity-content">
+                            <p>Nguyễn Văn A đã tạo bài viết Tin tức mới nhất</p>
+                            <span class="activity-time">2 giờ trước</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user"></i></div>
+                        <div class="activity-content">
+                            <p>Nguyễn Văn A đã tạo bài viết Tin tức mới nhất</p>
+                            <span class="activity-time">2 giờ trước</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user"></i></div>
+                        <div class="activity-content">
+                            <p>Nguyễn Văn A đã tạo bài viết Tin tức mới nhất</p>
+                            <span class="activity-time">2 giờ trước</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user"></i></div>
+                        <div class="activity-content">
+                            <p>Nguyễn Văn A đã tạo bài viết Tin tức mới nhất</p>
+                            <span class="activity-time">2 giờ trước</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user"></i></div>
+                        <div class="activity-content">
+                            <p>Trần Thị B đã cập nhật trang Giới thiệu</p>
+                            <span class="activity-time">3 giờ trước</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user"></i></div>
+                        <div class="activity-content">
+                            <p>Lê Văn C đã tải lên 5 hình ảnh mới</p>
+                            <span class="activity-time">5 giờ trước</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user"></i></div>
+                        <div class="activity-content">
+                            <p>Nguyễn Văn A đã thêm danh mục Sản phẩm mới</p>
+                            <span class="activity-time">1 ngày trước</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user"></i></div>
+                        <div class="activity-content">
+                            <p>Trần Thị B đã xóa thẻ Khuyến mãi</p>
+                            <span class="activity-time">1 ngày trước</span>
+                        </div>
+                    </div>
+
+                    <!-- Add more activity items to test scrolling -->
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user"></i></div>
+                        <div class="activity-content">
+                            <p>Nguyễn Văn A đã tạo bài viết mới</p>
+                            <span class="activity-time">2 ngày trước</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-user"></i></div>
+                        <div class="activity-content">
+                            <p>Lê Văn C đã cập nhật thông tin</p>
+                            <span class="activity-time">2 ngày trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Dashboard Styles */
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 20px 0 20px;
+        background-color: #f5f7fb;
+    }
+
+    .dashboard-header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+    }
+
+    /* Stats Cards */
+    .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .stat-card {
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+        border-top: 3px solid transparent;
+    }
+
+    .blue-border {
+        border-top-color: #0d6efd;
+    }
+
+    .green-border {
+        border-top-color: #10b981;
+    }
+
+    .purple-border {
+        border-top-color: #8b5cf6;
+    }
+
+    .orange-border {
+        border-top-color: #f59e0b;
+    }
+
+    .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .stat-header span {
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .blue-icon {
+        color: #0d6efd;
+    }
+
+    .green-icon {
+        color: #10b981;
+    }
+
+    .purple-icon {
+        color: #8b5cf6;
+    }
+
+    .orange-icon {
+        color: #f59e0b;
+    }
+
+    .stat-number {
+        font-size: 28px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 5px;
+    }
+
+    .stat-change {
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    /* Dashboard Content */
+    .dashboard-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        height: calc(100vh - 300px); /* Adjust based on your header and stats height */
+    }
+
+    .chart-section, .activity-section {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .chart-section {
+        padding: 20px 20px 0 20px;
+    }
+
+    /* Activity section with fixed header and scrollable content */
+    .activity-section {
+        overflow: hidden; /* Prevents the whole section from scrolling */
+    }
+
+    .activity-header {
+        padding: 20px 20px 0 20px;
+    }
+
+    .chart-section h2, .activity-header h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #111827;
+        margin: 0 0 5px 0;
+    }
+
+    .chart-section p, .activity-header p {
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    /* Chart */
+    .chart-container {
+        height: 300px;
+        margin: 20px;
+    }
+
+    .chart {
+        display: flex;
+        height: 95%;
+        align-items: flex-end;
+        padding: 0 20px;
+    }
+
+    .chart-y-labels {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        padding-right: 10px;
+        color: #6b7280;
+        font-size: 12px;
+    }
+
+    .chart-bars {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-grow: 1;
+        height: 100%;
+    }
+
+    .chart-bar {
+        width: 30px;
+        background-color: #0d6efd;
+        border-radius: 4px 4px 0 0;
+        position: relative;
+        transition: height 0.3s ease;
+    }
+
+    .chart-bar span {
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    /* Activity List - Scrollable */
+    .activity-list-container {
+        flex: 1;
+        overflow-y: auto; /* This makes the container scrollable */
+        padding: 0 20px;
+    }
+
+    .activity-list {
+        padding-top: 10px;
+    }
+
+    .activity-item {
+        display: flex;
+        padding: 12px 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-icon {
+        width: 36px;
+        height: 36px;
+        background-color: #e5e7eb;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+
+    .activity-content {
+        flex-grow: 1;
+    }
+
+    .activity-content p {
+        margin: 0 0 5px 0;
+        font-size: 14px;
+        color: #111827;
+    }
+
+    .activity-time {
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    /* Custom scrollbar for activity list */
+    .activity-list-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .activity-list-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .activity-list-container::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 10px;
+    }
+
+    .activity-list-container::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .stats-cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .dashboard-content {
+            grid-template-columns: 1fr;
+            height: auto;
+        }
+
+        .chart-section, .activity-section {
+            height: 500px; /* Fixed height for mobile */
+        }
+    }
+
+    @media (max-width: 640px) {
+        .stats-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        .menu {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu>.menu-item>a {
+            display: flex;
+        }
+
+        .main {
+            display: flex;
+            height: calc(100vh - 50px);
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+            width: 100%;
+            height: 50px;
+        }
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .search-box {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            width: 250px;
+        }
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            margin-left: 5px;
+        }
+
+        .navbar-right i {
+            font-size: 20px;
+            cursor: pointer;
+            color: #353b48;
+        }
+
+        .navbar-right>i {
+            border: 1px solid #e0e0e0;
+            padding: 5px 8px;
+            border-radius: 6px;
+        .main-content {
+            height: calc(100vh - 50px); /* Subtract navbar height */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-left">
+            <img src="{% static 'images/img_2.png' %}" alt="" style="width: 120px; height: 70px;">
+        </div>
+        <div class="navbar-right">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Tìm kiếm...">
+            </div>
+            <i class="fas fa-bell"></i>
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </div>
+    <div class="main">
+        <div class="sidebar" style="width: 10vw;">
+            <ul class="menu" style="height: 100%;">
+                <li class="menu-item">
+                    <a href="{% url 'get_content' target='dashboard' %}" class="active" data-target="home">
+                        <i class="fas fa-home"></i>
+                        <span>Trang chủ</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'get_content' target='quanlybaiviet' %}" data-target="baiviet">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Bài viết</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'get_content' target='quanlydanhmuc' %}" data-target="danhmuc">
+                        <i class="fas fa-folder"></i>
+                        <span>Danh mục</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'get_content' target='quanlythe' %}" data-target="quanlythe">
+                        <i class="fas fa-tag"></i>
+                        <span>Thẻ</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'get_content' target='quanlymenu' %}" data-target="quanlymenu">
+                        <i class="fas fa-file"></i>
+                        <span>Quản lý menu</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'get_content' target='quanlymedia' %}" data-target="quanlymedia">
+                        <i class="fas fa-image"></i>
+                        <span>Media</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'get_content' target='quanlythanhvien' %}" data-target="thanhvien">
+                        <i class="fas fa-users"></i>
+                        <span>Thành viên</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'get_content' target='quanlycauhinh' %}" data-target="cauhinh">
+                        <i class="fas fa-cog"></i>
+                        <span>Cấu hình</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="content" style="width: 90vw;">
+            {% block content %}
+            <!-- Nội dung mặc định của bài viết sẽ xuất hiện ở đây -->
+            {% endblock %}
+        </div>
+    </div>
+<script>
+    // Hàm để thiết lập menu active khi click
+    function setActive(element) {
+        // Xóa lớp active khỏi tất cả các mục menu
+        const menuItems = document.querySelectorAll('.menu-item a');
+        menuItems.forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Thêm lớp active vào mục được click
+        element.classList.add('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lấy đường dẫn URL hiện tại
+        const currentPath = window.location.pathname;
+
+        // Lấy tất cả các mục menu
+        const menuItems = document.querySelectorAll('.menu-item a');
+
+        // Xóa lớp active khỏi tất cả các mục menu
+        menuItems.forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Kiểm tra ID của menu item dựa trên đường dẫn URL hiện tại
+        menuItems.forEach(item => {
+            const href = item.getAttribute('href');
+
+            // Nếu URL của menu item khớp với URL của trang hiện tại, đánh dấu là active
+            if (href && currentPath.includes(href)) {
+                item.classList.add('active');
+            }
+        });
+
+        // Thêm sự kiện click để thay đổi màu sắc menu khi người dùng chọn chức năng
+        menuItems.forEach(item => {
+            item.addEventListener('click', function(event) {
+                setActive(event.target); // Gọi hàm setActive khi click vào mục menu
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

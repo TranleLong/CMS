@@ -1,0 +1,210 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="config-content">
+  <h1>Cấu hình hệ thống</h1>
+
+  <div class="config-section">
+    <h2>Cấu hình chung</h2>
+    <p class="section-desc">Cấu hình thông tin cơ bản cho website của bạn</p>
+
+    <form id="generalConfigForm">
+      <div class="form-group">
+        <label for="website-name">Tên website</label>
+        <input type="text" id="website-name" placeholder="Website CMS" value="Website CMS">
+      </div>
+
+      <div class="form-group">
+        <label for="website-desc">Mô tả website</label>
+        <textarea id="website-desc" rows="4" placeholder="Mô tả ngắn về website của bạn">Hệ thống quản lý nội dung hiện đại</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="website-url">URL website</label>
+        <input type="url" id="website-url" placeholder="https://example.com" value="https://example.com">
+      </div>
+
+      <div class="form-group">
+        <label for="admin-email">Email quản trị</label>
+        <input type="email" id="admin-email" placeholder="admin@example.com" value="admin@example.com">
+      </div>
+
+      <button type="button" class="btn-save" onclick="saveConfig()">Lưu thay đổi</button>
+    </form>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h3>Thành công!</h3>
+      <p id="success-message">Cấu hình đã được lưu thành công</p>
+      <button class="btn-close" onclick="closeModal()">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .config-content {
+    padding: 20px;
+    background-color: #f8f9fa;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .config-content h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .config-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  .config-section h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+  }
+
+  .section-desc {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .btn-save {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .btn-save:hover {
+    background-color: #2980b9;
+  }
+
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 30px;
+    width: 400px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+  }
+
+  .success-icon {
+    font-size: 60px;
+    color: #2ecc71;
+    margin-bottom: 15px;
+  }
+
+  .modal-content h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2ecc71;
+    margin-bottom: 10px;
+  }
+
+  .modal-content p {
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .btn-close {
+    padding: 8px 30px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  function saveConfig() {
+    // Đây là nơi bạn sẽ thêm code để lưu cấu hình vào backend
+    // Hiển thị modal thành công
+    document.getElementById('success-message').textContent = 'Cấu hình đã được lưu thành công';
+    document.getElementById('success-modal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('success-modal').style.display = 'none';
+  }
+
+  // Đóng modal khi click bên ngoài
+  window.onclick = function(event) {
+    const modal = document.getElementById('success-modal');
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  }
+</script>
+{% endblock %}

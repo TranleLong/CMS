@@ -1,0 +1,672 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="member-content">
+  <!-- Main member list view -->
+  <div id="member-list-view">
+    <div class="member-header">
+      <h1>Quản lý nhân viên</h1>
+      <button class="btn-add-member" onclick="showAddMemberForm()">
+        <i class="fas fa-plus"></i> Thêm thành viên
+      </button>
+    </div>
+
+    <div class="member-list-container">
+      <h2>Danh sách nhân viên</h2>
+      <p class="member-description">Quản lý tất cả thành viên trong hệ thống của bạn</p>
+
+      <div class="member-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Tìm kiếm thành viên...">
+      </div>
+
+      <div class="member-table">
+        <table>
+          <thead>
+            <tr>
+              <th width="30%">Tên thành viên</th>
+              <th width="30%">Email</th>
+              <th width="15%">Vai trò</th>
+              <th width="15%">Trạng thái</th>
+              <th width="10%">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="member-info">
+                  <i class="fas fa-user-circle"></i>
+                  <span>Nguyễn Văn A</span>
+                </div>
+              </td>
+              <td>admin@example.com</td>
+              <td>Quản trị viên</td>
+              <td><span class="status-badge active">Hoạt động</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="showEditMemberForm(1)"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon" onclick="showEditMemberForm(1)"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon delete" onclick="showDeleteConfirm(1)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="member-info">
+                  <i class="fas fa-user-circle"></i>
+                  <span>Trần Thị B</span>
+                </div>
+              </td>
+              <td>editor@example.com</td>
+              <td>Biên tập viên</td>
+              <td><span class="status-badge active">Hoạt động</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="showEditMemberForm(2)"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon" onclick="showEditMemberForm(2)"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon delete" onclick="showDeleteConfirm(2)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="member-info">
+                  <i class="fas fa-user-circle"></i>
+                  <span>Lê Văn C</span>
+                </div>
+              </td>
+              <td>author@example.com</td>
+              <td>Tác giả</td>
+              <td><span class="status-badge inactive">Không hoạt động</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon" onclick="showEditMemberForm(3)"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon" onclick="showEditMemberForm(3)"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon delete" onclick="showDeleteConfirm(3)"><i class="fas fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add member form -->
+  <div id="add-member-form" class="member-form" style="display: none;">
+    <div class="form-header">
+      <h2>Thêm thành viên mới</h2>
+      <button class="btn-back" onclick="hideAddMemberForm()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
+
+    <div class="form-content">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="new-name">Tên thành viên <span class="required">*</span></label>
+          <input type="text" id="new-name" placeholder="Nhập tên thành viên">
+        </div>
+        <div class="form-group">
+          <label for="new-email">Email</label>
+          <input type="email" id="new-email" placeholder="Nhập địa chỉ email">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="new-role">Vai trò <span class="required">*</span></label>
+          <input type="text" id="new-role" placeholder="Tác giả">
+        </div>
+        <div class="form-group">
+          <label>Trạng thái</label>
+          <div class="toggle-container">
+            <span>Hoạt động</span>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="new-password">Mật khẩu <span class="required">*</span></label>
+          <input type="password" id="new-password" placeholder="Nhập mật khẩu">
+        </div>
+        <div class="form-group">
+          <label for="new-confirm-password">Xác nhận mật khẩu <span class="required">*</span></label>
+          <input type="password" id="new-confirm-password" placeholder="Nhập lại mật khẩu">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="hideAddMemberForm()">Hủy</button>
+        <button class="btn-save">Lưu thành viên</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit member form -->
+  <div id="edit-member-form" class="member-form" style="display: none;">
+    <div class="form-header">
+      <h2>Sửa thông tin thành viên</h2>
+      <button class="btn-back" onclick="hideEditMemberForm()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
+
+    <div class="form-content">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="edit-name">Tên thành viên <span class="required">*</span></label>
+          <input type="text" id="edit-name" value="Nguyễn Văn A">
+        </div>
+        <div class="form-group">
+          <label for="edit-email">Email</label>
+          <input type="email" id="edit-email" value="admin@example.com">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="edit-role">Vai trò <span class="required">*</span></label>
+          <input type="text" id="edit-role" value="Quản trị viên">
+        </div>
+        <div class="form-group">
+          <label>Trạng thái</label>
+          <div class="toggle-container">
+            <span>Hoạt động</span>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="edit-password">Mật khẩu mới</label>
+          <input type="password" id="edit-password" placeholder="Để trống nếu không thay đổi">
+        </div>
+        <div class="form-group">
+          <label for="edit-confirm-password">Xác nhận mật khẩu mới</label>
+          <input type="password" id="edit-confirm-password" placeholder="Để trống nếu không thay đổi">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-cancel" onclick="hideEditMemberForm()">Hủy</button>
+        <button class="btn-save">Cập nhật thành viên</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirmation modal -->
+  <div id="delete-confirm" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Xác nhận xóa</h3>
+        <button class="close-modal" onclick="hideDeleteConfirm()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="warning-icon">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <p class="warning-text">Cảnh báo</p>
+        <p class="warning-message">Hành động này không thể hoàn tác và có thể dẫn tới mất dữ liệu</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="hideDeleteConfirm()">Hủy</button>
+        <button class="btn-delete">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .member-content {
+    padding: 20px;
+    background-color: #f8f9fa;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .member-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .member-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .btn-add-member {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .btn-add-member:hover {
+    background-color: #2980b9;
+  }
+
+  .btn-add-member i {
+    margin-right: 8px;
+  }
+
+  .member-list-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .member-list-container h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .member-description {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .member-search {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .member-search input {
+    width: 100%;
+    padding: 10px 15px 10px 35px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .member-search i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+  }
+
+  .member-table {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #666;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #333;
+    font-size: 14px;
+  }
+
+  .member-info {
+    display: flex;
+    align-items: center;
+  }
+
+  .member-info i {
+    font-size: 20px;
+    color: #666;
+    margin-right: 10px;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .status-badge.active {
+    background-color: #e6f7ee;
+    color: #27ae60;
+  }
+
+  .status-badge.inactive {
+    background-color: #f8f9fa;
+    color: #7f8c8d;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 5px;
+  }
+
+  .btn-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-icon:hover {
+    background-color: #f5f5f5;
+  }
+
+  .btn-icon.delete {
+    color: #e74c3c;
+  }
+
+  .btn-icon.delete:hover {
+    background-color: #fde8e7;
+  }
+
+  /* Form styles */
+  .member-form {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .form-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .btn-back {
+    width: 36px;
+    height: 36px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .form-content {
+    padding: 10px 0;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    flex: 1;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .required {
+    color: #e74c3c;
+  }
+
+  .toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: #3498db;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 30px;
+  }
+
+  .btn-cancel {
+    padding: 8px 16px;
+    background-color: white;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .btn-save {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* Modal styles */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .close-modal {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+  }
+
+  .modal-body {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .warning-icon {
+    font-size: 40px;
+    color: #e74c3c;
+    margin-bottom: 10px;
+  }
+
+  .warning-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e74c3c;
+    margin-bottom: 10px;
+  }
+
+  .warning-message {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .btn-delete {
+    padding: 8px 16px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  // Show/hide add member form
+  function showAddMemberForm() {
+    document.getElementById('member-list-view').style.display = 'none';
+    document.getElementById('add-member-form').style.display = 'block';
+    document.getElementById('edit-member-form').style.display = 'none';
+  }
+
+  function hideAddMemberForm() {
+    document.getElementById('member-list-view').style.display = 'block';
+    document.getElementById('add-member-form').style.display = 'none';
+  }
+
+  // Show/hide edit member form
+  function showEditMemberForm(id) {
+    document.getElementById('member-list-view').style.display = 'none';
+    document.getElementById('add-member-form').style.display = 'none';
+    document.getElementById('edit-member-form').style.display = 'block';
+    // Here you would load the member data based on the ID
+  }
+
+  function hideEditMemberForm() {
+    document.getElementById('member-list-view').style.display = 'block';
+    document.getElementById('edit-member-form').style.display = 'none';
+  }
+
+  // Show/hide delete confirmation
+  function showDeleteConfirm(id) {
+    document.getElementById('delete-confirm').style.display = 'flex';
+    // Store the ID for deletion
+  }
+
+  function hideDeleteConfirm() {
+    document.getElementById('delete-confirm').style.display = 'none';
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,471 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+<style>
+    /* Main Layout */
+.content-wrapper {
+    padding: 20px;
+    width: 100%;
+}
+
+/* Header */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight:600;
+    margin: 0;
+    color: #333;
+}
+
+.btn-add {
+    background-color: #2196F3;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.btn-add i {
+    margin-right: 8px;
+}
+
+/* Card */
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    margin-bottom: 20px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    color: #333;
+}
+
+.card-description {
+    color: #666;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Search */
+.search-container {
+    margin-bottom: 20px;
+}
+
+.search-box {
+    position: relative;
+    width: 100%;
+    padding: 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding-left: 35px;
+    font-size: 14px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+/* Table */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    text-align: left;
+    padding: 12px 8px;
+    color: #666;
+    font-weight: 500;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.data-table td {
+    padding: 12px 8px;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.category-name {
+    color: #333;
+}
+
+.category-slug {
+    color: #666;
+}
+
+.category-count {
+    color: #333;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.btn-edit {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #2196F3;
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #F44336;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 400px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Delete Modal */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.modal-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.warning-icon {
+    color: #ff9800;
+    font-size: 20px;
+}
+
+.modal-title h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.modal-body {
+    margin-bottom: 20px;
+}
+
+.modal-message {
+    margin: 0;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.warning-box {
+    background-color: #fff3e0;
+    border-radius: 4px;
+    padding: 10px;
+    border-left: 4px solid #ff9800;
+}
+
+.warning-text {
+    margin: 0;
+    color: #e65100;
+    font-size: 14px;
+}
+
+.warning-text i {
+    margin-right: 5px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.btn-cancel {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.btn-confirm {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: #F44336;
+    color: white;
+    cursor: pointer;
+}
+
+/* Success Modal */
+.success-content {
+    text-align: center;
+}
+
+.success-body {
+    margin-bottom: 20px;
+}
+
+.success-icon-container {
+    width: 60px;
+    height: 60px;
+    background-color: #e8f5e9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px auto;
+}
+
+.success-icon {
+    color: #4caf50;
+    font-size: 30px;
+}
+
+.success-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.success-message {
+    margin: 10px 0 0 0;
+}
+
+.btn-success {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+    width: 100px;
+}
+
+</style>
+<div class="content-wrapper">
+    <div class="header-container">
+        <h1 class="page-title">Quản lý danh mục</h1>
+        <a href="" class="btn-add">
+            <i class="fas fa-plus"></i> Thêm danh mục mới
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Danh sách danh mục</h2>
+            <p class="card-description">Quản lý tất cả danh mục trong hệ thống của bạn</p>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" placeholder="Tìm kiếm danh mục..." class="search-input">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Tên danh mục</th>
+                    <th>Slug</th>
+                    <th>Số bài viết</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="category-name">Công nghệ</td>
+                    <td class="category-slug">cong-nghe</td>
+                    <td class="category-count">5</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="" class="btn-edit" title="Sửa">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button class="btn-delete" onclick="confirmDelete(1)" title="Xóa">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="category-name">Kinh doanh</td>
+                    <td class="category-slug">kinh-doanh</td>
+                    <td class="category-count">3</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="" class="btn-edit" title="Sửa">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button class="btn-delete" onclick="confirmDelete(2)" title="Xóa">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="category-name">Giáo dục</td>
+                    <td class="category-slug">giao-duc</td>
+                    <td class="category-count">8</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="" class="btn-edit" title="Sửa">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button class="btn-delete" onclick="confirmDelete(3)" title="Xóa">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="category-name">Du lịch</td>
+                    <td class="category-slug">du-lich</td>
+                    <td class="category-count">12</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="" class="btn-edit" title="Sửa">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button class="btn-delete" onclick="confirmDelete(4)" title="Xóa">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">
+                <i class="fas fa-exclamation-triangle warning-icon"></i>
+                <h3>Cảnh báo</h3>
+            </div>
+            <button onclick="closeDeleteModal()" class="close-button">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-message">Bạn có chắc chắn muốn lưu không?</p>
+            <div class="warning-box">
+                <p class="warning-text">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Hành động này không thể hoàn tác và có thể ảnh hưởng đến dữ liệu liên quan.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeDeleteModal()" class="btn-cancel">Hủy</button>
+            <button onclick="deleteCategory()" class="btn-confirm">Có</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal thông báo thành công -->
+<div id="successModal" class="modal">
+    <div class="modal-content success-content">
+        <div class="success-body">
+            <div class="success-icon-container">
+                <i class="fas fa-check success-icon"></i>
+            </div>
+            <h3 class="success-title">Thành công!</h3>
+            <p id="successMessage" class="success-message">Xóa danh mục thành công</p>
+        </div>
+        <button onclick="closeSuccessModal()" class="btn-success">Đóng</button>
+    </div>
+</div>
+
+<script>
+    let categoryIdToDelete = null;
+
+    function confirmDelete(id) {
+        categoryIdToDelete = id;
+        document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    function deleteCategory() {
+        // Ở đây sẽ gọi API để xóa danh mục
+        // Sau khi xóa thành công, hiển thị thông báo
+        closeDeleteModal();
+        document.getElementById('successMessage').textContent = 'Xóa danh mục thành công';
+        document.getElementById('successModal').style.display = 'flex';
+    }
+
+    function closeSuccessModal() {
+        document.getElementById('successModal').style.display = 'none';
+        // Reload trang sau khi xóa thành công
+        // window.location.reload();
+    }
+</script>
+{% endblock %}

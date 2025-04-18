@@ -1,0 +1,404 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+
+<div class="content-wrapper">
+  <div class="content-header">
+    <h1 class="content-title">Quản lý bài viết</h1>
+    <div class="content-actions">
+      <button class="btn btn-primary" id="btnThemBaiViet">
+        <i class="fas fa-plus"></i>
+        Thêm bài viết mới
+      </button>
+      <button class="btn btn-outline-primary" id="btnXuatBaiViet">
+        <i class="fas fa-download"></i>
+        Xuất bài viết
+      </button>
+    </div>
+  </div>
+
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Danh sách bài viết</h2>
+        <p class="card-subtitle">Hiển thị tất cả các bài viết trong hệ thống của bạn</p>
+
+        <div class="search-wrapper">
+          <div class="search-input">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Tìm kiếm bài viết..." class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Tiêu đề</th>
+                <th>Người tạo</th>
+                <th>Danh mục</th>
+                <th>Trạng thái</th>
+                <th>Ngày tạo</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Bài viết giới thiệu</td>
+                <td>Cát Hải</td>
+                <td>MV001</td>
+                <td><span class="badge badge-primary">Đã xuất bản</span></td>
+                <td>13/03/2023</td>
+                <td class="action-buttons">
+                  <button class="btn-icon btn-view" title="Xem"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon btn-edit" title="Sửa"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon btn-delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>Giới thiệu sản phẩng tốt</td>
+                <td>Chí Hải</td>
+                <td>MV002</td>
+                <td><span class="badge badge-warning">Chờ duyệt</span></td>
+                <td>10/03/2023</td>
+                <td class="action-buttons">
+                  <button class="btn-icon btn-view" title="Xem"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon btn-edit" title="Sửa"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon btn-delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>Tin tức mới nhất</td>
+                <td>Trí Đức</td>
+                <td>MV003</td>
+                <td><span class="badge badge-success">Đăng trang</span></td>
+                <td>08/03/2023</td>
+                <td class="action-buttons">
+                  <button class="btn-icon btn-view" title="Xem"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon btn-edit" title="Sửa"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon btn-delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>Tin tức hot</td>
+                <td>Trí Đức</td>
+                <td>MV004</td>
+                <td><span class="badge badge-success">Đăng trang</span></td>
+                <td>05/03/2023</td>
+                <td class="action-buttons">
+                  <button class="btn-icon btn-view" title="Xem"><i class="fas fa-eye"></i></button>
+                  <button class="btn-icon btn-edit" title="Sửa"><i class="fas fa-edit"></i></button>
+                  <button class="btn-icon btn-delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="pagination-wrapper">
+          <ul class="pagination">
+            <li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a></li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a></li>
+          </ul>
+          <div class="pagination-info">
+            Hiển thị 1-10 của 24 bài viết
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CSS styles for the content section -->
+<style>
+  .content-wrapper {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 60px);
+  }
+
+  .content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .content-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .content-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-primary {
+    background-color: #0d6efd;
+    color: white;
+  }
+
+  .btn-outline-primary {
+    background-color: transparent;
+    color: #0d6efd;
+    border: 1px solid #0d6efd;
+  }
+
+  .card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+  }
+
+  .card-header {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+  }
+
+  .card-subtitle {
+    color: #6c757d;
+    font-size: 14px;
+    margin: 0 0 15px 0;
+  }
+
+  .search-wrapper {
+    margin-top: 15px;
+  }
+
+  .search-input {
+    position: relative;
+    max-width: 300px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+  }
+
+  .search-input input {
+    padding-left: 35px;
+    height: 38px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+  }
+
+  .card-body {
+    padding: 0;
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table th {
+    background-color: #f8f9fa;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+  }
+
+  .badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+  }
+
+  .badge-primary {
+    background-color: #0d6efd;
+    color: white;
+  }
+
+  .badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+
+  .badge-success {
+    background-color: #198754;
+    color: white;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    color: #6c757d;
+    background-color: transparent;
+    transition: all 0.2s;
+  }
+
+  .btn-icon:hover {
+    background-color: #f8f9fa;
+  }
+
+  .btn-view:hover {
+    color: #0d6efd;
+  }
+
+  .btn-edit:hover {
+    color: #ffc107;
+  }
+
+  .btn-delete:hover {
+    color: #dc3545;
+  }
+
+  .card-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 5px;
+  }
+
+  .page-item {
+    display: inline-block;
+  }
+
+  .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    min-width: 32px;
+    padding: 0 10px;
+    border-radius: 4px;
+    color: #0d6efd;
+    text-decoration: none;
+    border: 1px solid #dee2e6;
+    background-color: white;
+  }
+
+  .page-item.active .page-link {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+  }
+
+  .page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #f8f9fa;
+  }
+
+  .pagination-info {
+    color: #6c757d;
+    font-size: 14px;
+  }
+</style>
+
+<!-- Optional JavaScript for functionality -->
+<script>
+  // Add event listeners for buttons
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add new article button
+    const btnThemBaiViet = document.getElementById('btnThemBaiViet');
+    if (btnThemBaiViet) {
+      btnThemBaiViet.addEventListener('click', function() {
+        // Redirect to add new article page or open modal
+        window.location.href = '/get-content/quanlybaiviet/thembaiviet/';
+      });
+    }
+
+    // Edit buttons
+    const editButtons = document.querySelectorAll('.btn-edit');
+    editButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const row = this.closest('tr');
+        const title = row.querySelector('td:first-child').textContent;
+        // Redirect to edit article page
+        window.location.href = '/get-content/quanlybaiviet/suabaiviet/';//////////////////
+      });
+    });
+
+    // view buttons
+    const viewButtons = document.querySelectorAll('.btn-view');
+    viewButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const row = this.closest('tr');
+        const title = row.querySelector('td:first-child').textContent;
+        // Redirect to edit article page
+        window.location.href = '/get-content/quanlybaiviet/xembaiviet/';//////////////////
+      });
+    });
+
+    // Delete buttons
+    const deleteButtons = document.querySelectorAll('.btn-delete');
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const row = this.closest('tr');
+        const title = row.querySelector('td:first-child').textContent;
+        // Show confirmation dialog
+        if (confirm('Bạn có chắc chắn muốn xóa bài viết "' + title + '"?')) {
+          // Delete article logic here
+          row.remove();
+          alert('Đã xóa bài viết thành công!');
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock %}

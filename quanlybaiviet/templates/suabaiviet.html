@@ -1,0 +1,550 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+<div class="content-wrapper">
+  <div class="content-header">
+    <div class="breadcrumb">
+      <a href="{% url 'get_content' target='quanlybaiviet' %}" class="breadcrumb-item">
+        <i class="fas fa-chevron-left"></i>
+        Sửa bài viết
+      </a>
+    </div>
+    <div class="content-actions">
+      <button class="btn btn-outline" id="btnXemTruoc">
+        <i class="fas fa-eye"></i>
+        Xem trước
+      </button>
+      <button class="btn btn-outline-danger" id="btnXoa">
+        <i class="fas fa-trash"></i>
+        Xóa bài viết
+      </button>
+      <button class="btn btn-primary" id="btnLuuBaiViet">
+        <i class="fas fa-save"></i>
+        Lưu bài viết
+      </button>
+    </div>
+  </div>
+
+  <div class="content-body">
+    <div class="edit-container">
+      <div class="edit-main">
+        <div class="form-group">
+          <label for="title">Tiêu đề</label>
+          <input type="text" id="title" class="form-control" value="Bài viết giới thiệu">
+        </div>
+
+        <div class="form-group">
+          <label for="duongDan">Đường dẫn</label>
+          <input type="text" id="duongDan" class="form-control" value="bai-viet-gioi-thieu">
+        </div>
+
+        <div class="form-group">
+          <label for="tomTat">Tóm tắt</label>
+          <textarea id="tomTat" class="form-control" rows="3">Giới thiệu ngắn gọn về nội dung và chủng loại bài viết mà website của bạn đang cung cấp.</textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="noiDung">Nội dung</label>
+          <div class="editor-toolbar">
+            <button class="toolbar-btn"><i class="fas fa-bold"></i></button>
+            <button class="toolbar-btn"><i class="fas fa-italic"></i></button>
+            <button class="toolbar-btn"><i class="fas fa-underline"></i></button>
+            <button class="toolbar-btn"><i class="fas fa-list"></i></button>
+            <button class="toolbar-btn"><i class="fas fa-heading"></i></button>
+          </div>
+          <textarea id="noiDung" class="form-control editor" rows="10">Nội dung chi tiết của bài viết sẽ được hiển thị ở đây. Bạn có thể chỉnh sửa nội dung này theo ý muốn của mình.</textarea>
+        </div>
+      </div>
+
+      <div class="edit-sidebar">
+        <div class="sidebar-card">
+          <h3 class="sidebar-title">Danh mục</h3>
+          <div class="form-group">
+            <select class="form-control">
+              <option value="cat-news">Tin tức</option>
+              <option value="cat-tech" selected>Công nghệ</option>
+              <option value="cat-lifestyle">Đời sống</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <h3 class="sidebar-title">Thẻ</h3>
+          <div class="form-group">
+            <div class="tag-input-container">
+              <div class="tag-item">
+                <span>News</span>
+                <button class="tag-remove"><i class="fas fa-times"></i></button>
+              </div>
+              <div class="tag-item">
+                <span>Content</span>
+                <button class="tag-remove"><i class="fas fa-times"></i></button>
+              </div>
+              <input type="text" class="tag-input" placeholder="Thêm thẻ...">
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <h3 class="sidebar-title">Tác giả</h3>
+          <div class="form-group">
+            <input type="text" class="form-control" value="Nguyễn Văn A">
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <h3 class="sidebar-title">Ngày đăng</h3>
+          <div class="form-group">
+            <input type="date" class="form-control" value="2023-03-13">
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <h3 class="sidebar-title">Ảnh đại diện</h3>
+          <div class="featured-image-container">
+            <div class="featured-image">
+              <img id="previewImage" src="/placeholder.svg?height=200&width=300" alt="Ảnh đại diện">
+            </div>
+            <div class="image-actions">
+              <button class="btn btn-outline btn-sm" id="btnChonAnh">Chọn ảnh</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal chọn ảnh -->
+<div class="modal" id="modalChonAnh">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Thư viện ảnh</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="search-media">
+          <input type="text" class="form-control" placeholder="Tìm kiếm...">
+        </div>
+        <div class="media-grid">
+          <div class="media-item">
+            <img src="/placeholder.svg?height=100&width=100" alt="Ảnh 1">
+          </div>
+          <div class="media-item">
+            <img src="/placeholder.svg?height=100&width=100" alt="Ảnh 2">
+          </div>
+          <div class="media-item">
+            <img src="/placeholder.svg?height=100&width=100" alt="Ảnh 3">
+          </div>
+          <div class="media-item">
+            <img src="/placeholder.svg?height=100&width=100" alt="Ảnh 4">
+          </div>
+          <div class="media-item">
+            <img src="/placeholder.svg?height=100&width=100" alt="Ảnh 5">
+          </div>
+          <div class="media-item">
+            <img src="/placeholder.svg?height=100&width=100" alt="Ảnh 6">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" id="btnChonAnhXacNhan">Chọn</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+
+  body {
+     overflow: hidden;
+  }
+
+  .content-wrapper {
+    padding: 20px;
+    background-color: #f8f9fa;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .breadcrumb-item i {
+    margin-right: 8px;
+  }
+
+  .content-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .btn-primary {
+    background-color: #0d6efd;
+    color: white;
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    color: #6c757d;
+    border: 1px solid #ced4da;
+  }
+
+  .btn-outline:hover {
+    background-color: #f8f9fa;
+  }
+
+  .btn-outline-danger {
+    background-color: transparent;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+  }
+
+  .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .edit-container {
+    display: flex;
+    gap: 20px;
+  }
+
+  .edit-main {
+    flex: 1;
+  }
+
+  .edit-sidebar {
+    width: 300px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+  }
+
+  .editor-toolbar {
+    display: flex;
+    gap: 5px;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .toolbar-btn {
+    padding: 6px 10px;
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .toolbar-btn:hover {
+    background-color: #e9ecef;
+  }
+
+  .editor {
+    min-height: 300px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .sidebar-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .sidebar-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+  }
+
+  .tag-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+  }
+
+  .tag-item {
+    display: flex;
+    align-items: center;
+    background-color: #e9ecef;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .tag-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 5px;
+    color: #6c757d;
+  }
+
+  .tag-input {
+    flex: 1;
+    min-width: 100px;
+    border: none;
+    outline: none;
+    padding: 4px 0;
+  }
+
+  .featured-image-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .featured-image {
+    width: 100%;
+    height: 150px;
+    border: 1px dashed #ced4da;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .featured-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+  }
+
+  .image-actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-dialog {
+    width: 80%;
+    max-width: 800px;
+    margin: 50px auto;
+  }
+
+  .modal-content {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .modal-body {
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  .search-media {
+    margin-bottom: 15px;
+  }
+
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+  }
+
+  .media-item {
+    border: 2px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    height: 100px;
+  }
+
+  .media-item:hover {
+    border-color: #ced4da;
+  }
+
+  .media-item.selected {
+    border-color: #0d6efd;
+  }
+
+  .media-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid #e9ecef;
+  }
+
+
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Xử lý modal chọn ảnh
+    const btnChonAnh = document.getElementById('btnChonAnh');
+    const modalChonAnh = document.getElementById('modalChonAnh');
+    const btnChonAnhXacNhan = document.getElementById('btnChonAnhXacNhan');
+    const closeButtons = document.querySelectorAll('.close, [data-dismiss="modal"]');
+
+    btnChonAnh.addEventListener('click', function() {
+      modalChonAnh.style.display = 'block';
+    });
+
+    closeButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        modalChonAnh.style.display = 'none';
+      });
+    });
+
+    // Đóng modal khi click bên ngoài
+    window.addEventListener('click', function(event) {
+      if (event.target === modalChonAnh) {
+        modalChonAnh.style.display = 'none';
+      }
+    });
+
+    // Chọn ảnh trong thư viện
+    const mediaItems = document.querySelectorAll('.media-item');
+    let selectedItem = null;
+
+    mediaItems.forEach(item => {
+      item.addEventListener('click', function() {
+        if (selectedItem) {
+          selectedItem.classList.remove('selected');
+        }
+        this.classList.add('selected');
+        selectedItem = this;
+      });
+    });
+
+    // Xác nhận chọn ảnh
+    btnChonAnhXacNhan.addEventListener('click', function() {
+      if (selectedItem) {
+        const selectedImage = selectedItem.querySelector('img');
+        const previewImage = document.getElementById('previewImage');
+        previewImage.src = selectedImage.src;
+        modalChonAnh.style.display = 'none';
+      }
+    });
+
+    // Xử lý nút lưu bài viết
+    const btnLuuBaiViet = document.getElementById('btnLuuBaiViet');
+    btnLuuBaiViet.addEventListener('click', function() {
+      alert('Đã lưu bài viết thành công!');
+      window.location.href = '{% url "get_content" target="quanlybaiviet" %}';
+    });
+
+    // Xử lý nút xem trước
+    const btnXemTruoc = document.getElementById('btnXemTruoc');
+    btnXemTruoc.addEventListener('click', function() {
+      window.open('{% url "get_content" target="xembaiviet" %}', '_blank');
+    });
+
+    // Xử lý nút xóa bài viết
+    const btnXoa = document.getElementById('btnXoa');
+    btnXoa.addEventListener('click', function() {
+      if (confirm('Bạn có chắc chắn muốn xóa bài viết này?')) {
+        alert('Đã xóa bài viết thành công!');
+        window.location.href = '{% url "get_content" target="quanlybaiviet" %}';
+      }
+    });
+  });
+</script>
+{% endblock %}
