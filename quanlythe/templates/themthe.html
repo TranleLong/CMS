@@ -1,0 +1,392 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .content-wrapper {
+        padding: 20px;
+        width: 100%;
+    }
+
+    .back-button {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .back-button i {
+        margin-right: 5px;
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .required {
+        color: #F44336;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .form-textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        resize: vertical;
+        font-size: 14px;
+        min-height: 120px;
+    }
+
+    .form-hint {
+        display: block;
+        margin-top: 5px;
+        color: #666;
+        font-size: 12px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    .btn-cancel {
+        padding: 10px 16px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        background-color: white;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-save {
+        padding: 10px 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #2196F3;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        border-radius: 8px;
+        width: 400px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: #999;
+    }
+
+    /* Success modal */
+    .success-modal {
+        text-align: center;
+        padding: 30px;
+    }
+
+    .success-icon-container {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 20px;
+        background-color: #E8F5E9;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .success-icon {
+        color: #4CAF50;
+        font-size: 40px;
+    }
+
+    .success-title {
+        color: #4CAF50;
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .success-message {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .btn-success {
+        padding: 8px 30px;
+        border-radius: 4px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    /* Confirm modal */
+    .confirm-modal {
+        padding: 20px;
+    }
+
+    .confirm-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .confirm-icon {
+        color: #FF9800;
+        font-size: 20px;
+        margin-right: 10px;
+    }
+
+    .confirm-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .warning-box {
+        background-color: #FFF3E0;
+        border-radius: 4px;
+        padding: 10px;
+        border-left: 4px solid #FF9800;
+        margin-bottom: 20px;
+    }
+
+    .warning-text {
+        margin: 0;
+        color: #E65100;
+        font-size: 14px;
+    }
+
+    .confirm-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .btn-confirm-cancel {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #f0f0f0;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-confirm-save {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #F44336;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .back-button {
+        text-decoration: none;
+        color: #0d6efd;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="content-wrapper">
+    <a href="/get-content/quanlythe/" class="back-button">
+        <i class="fas fa-chevron-left" style="margin-top:4px"></i> Quay lại
+    </a>
+    <div class="card">
+        <form id="addTagForm">
+            <div class="form-group">
+                <label for="tagName" class="form-label">Tên thẻ <span class="required">*</span></label>
+                <input type="text" id="tagName" name="tagName" class="form-input" required placeholder="Nhập tên thẻ">
+            </div>
+            
+            <div class="form-group">
+                <label for="tagSlug" class="form-label">Đường dẫn <span class="required">*</span></label>
+                <input type="text" id="tagSlug" name="tagSlug" class="form-input" required placeholder="ten-the">
+                <span class="form-hint">Chuỗi đường dẫn thân thiện cho thẻ, thường là tên thẻ viết thường và có dấu gạch ngang.</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="tagDescription" class="form-label">Mô tả</label>
+                <textarea id="tagDescription" name="tagDescription" class="form-textarea" placeholder="Mô tả ngắn về thẻ này"></textarea>
+                <span class="form-hint">Mô tả ngắn gọn về thẻ này là gì và sử dụng cho nội dung nào.</span>
+            </div>
+            
+            <div class="form-actions">
+                <a href="/get-content/quanlythe/" class="btn-cancel">Hủy</a>
+                <button type="button" id="btnSave" class="btn-save">Lưu thẻ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal xác nhận lưu -->
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeConfirmModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="confirm-modal">
+            <div class="confirm-header">
+                <i class="fas fa-exclamation-triangle confirm-icon"></i>
+                <h3 class="confirm-title">Bạn có chắc chắn muốn lưu không?</h3>
+            </div>
+            <div class="warning-box">
+                <p class="warning-text">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Hành động này không thể hoàn tác và có thể ảnh hưởng đến dữ liệu liên quan.
+                </p>
+            </div>
+            <div class="confirm-actions">
+                <button class="btn-confirm-cancel" onclick="closeConfirmModal()">Hủy</button>
+                <button class="btn-confirm-save" onclick="saveTag()">Có</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal thông báo thành công -->
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeSuccessModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="success-modal">
+            <div class="success-icon-container">
+                <i class="fas fa-check success-icon"></i>
+            </div>
+            <h3 class="success-title">Thành công!</h3>
+            <p class="success-message">Thêm thẻ thành công</p>
+            <button class="btn-success" onclick="closeSuccessModal()">Đóng</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-generate slug from tag name
+        const tagNameInput = document.getElementById('tagName');
+        const tagSlugInput = document.getElementById('tagSlug');
+        
+        tagNameInput.addEventListener('input', function() {
+            // Only auto-generate if user hasn't edited the slug
+            if (!tagSlugInput.dataset.edited) {
+                const slug = createSlug(this.value);
+                tagSlugInput.value = slug;
+            }
+        });
+        
+        tagSlugInput.addEventListener('input', function() {
+            // Mark that user has edited the slug
+            this.dataset.edited = 'true';
+        });
+        
+        // Save button click handler
+        const btnSave = document.getElementById('btnSave');
+        btnSave.addEventListener('click', function() {
+            // Validate form
+            const form = document.getElementById('addTagForm');
+            if (form.checkValidity()) {
+                // Show confirmation modal
+                document.getElementById('confirmModal').style.display = 'flex';
+            } else {
+                // Trigger form validation
+                form.reportValidity();
+            }
+        });
+    });
+    
+    function createSlug(text) {
+        return text
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[đĐ]/g, 'd')
+            .replace(/[^a-z0-9\s]/g, '')
+            .replace(/\s+/g, '-');
+    }
+    
+    function closeConfirmModal() {
+        document.getElementById('confirmModal').style.display = 'none';
+    }
+    
+    function saveTag() {
+        // Close confirm modal
+        closeConfirmModal();
+        
+        // Simulate saving (you would normally send data to server here)
+        setTimeout(function() {
+            // Show success modal
+            document.getElementById('successModal').style.display = 'flex';
+        }, 500);
+    }
+    
+    function closeSuccessModal() {
+        document.getElementById('successModal').style.display = 'none';
+        // Redirect back to tag list
+        window.location.href = '/get-content/quanlythe/';
+    }
+</script>
+{% endblock %}

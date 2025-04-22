@@ -2,307 +2,101 @@
 {% load static %}
 
 {% block content %}
-<div class="member-content">
-  <!-- Main member list view -->
-  <div id="member-list-view">
-    <div class="member-header">
-      <h1>Quản lý nhân viên</h1>
-      <button class="btn-add-member" onclick="showAddMemberForm()">
-        <i class="fas fa-plus"></i> Thêm thành viên
-      </button>
-    </div>
-
-    <div class="member-list-container">
-      <h2>Danh sách nhân viên</h2>
-      <p class="member-description">Quản lý tất cả thành viên trong hệ thống của bạn</p>
-
-      <div class="member-search">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Tìm kiếm thành viên...">
-      </div>
-
-      <div class="member-table">
-        <table>
-          <thead>
-            <tr>
-              <th width="30%">Tên thành viên</th>
-              <th width="30%">Email</th>
-              <th width="15%">Vai trò</th>
-              <th width="15%">Trạng thái</th>
-              <th width="10%">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="member-info">
-                  <i class="fas fa-user-circle"></i>
-                  <span>Nguyễn Văn A</span>
-                </div>
-              </td>
-              <td>admin@example.com</td>
-              <td>Quản trị viên</td>
-              <td><span class="status-badge active">Hoạt động</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn-icon" onclick="showEditMemberForm(1)"><i class="fas fa-eye"></i></button>
-                  <button class="btn-icon" onclick="showEditMemberForm(1)"><i class="fas fa-edit"></i></button>
-                  <button class="btn-icon delete" onclick="showDeleteConfirm(1)"><i class="fas fa-trash"></i></button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="member-info">
-                  <i class="fas fa-user-circle"></i>
-                  <span>Trần Thị B</span>
-                </div>
-              </td>
-              <td>editor@example.com</td>
-              <td>Biên tập viên</td>
-              <td><span class="status-badge active">Hoạt động</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn-icon" onclick="showEditMemberForm(2)"><i class="fas fa-eye"></i></button>
-                  <button class="btn-icon" onclick="showEditMemberForm(2)"><i class="fas fa-edit"></i></button>
-                  <button class="btn-icon delete" onclick="showDeleteConfirm(2)"><i class="fas fa-trash"></i></button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="member-info">
-                  <i class="fas fa-user-circle"></i>
-                  <span>Lê Văn C</span>
-                </div>
-              </td>
-              <td>author@example.com</td>
-              <td>Tác giả</td>
-              <td><span class="status-badge inactive">Không hoạt động</span></td>
-              <td>
-                <div class="action-buttons">
-                  <button class="btn-icon" onclick="showEditMemberForm(3)"><i class="fas fa-eye"></i></button>
-                  <button class="btn-icon" onclick="showEditMemberForm(3)"><i class="fas fa-edit"></i></button>
-                  <button class="btn-icon delete" onclick="showDeleteConfirm(3)"><i class="fas fa-trash"></i></button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Add member form -->
-  <div id="add-member-form" class="member-form" style="display: none;">
-    <div class="form-header">
-      <h2>Thêm thành viên mới</h2>
-      <button class="btn-back" onclick="hideAddMemberForm()">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-    </div>
-
-    <div class="form-content">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="new-name">Tên thành viên <span class="required">*</span></label>
-          <input type="text" id="new-name" placeholder="Nhập tên thành viên">
-        </div>
-        <div class="form-group">
-          <label for="new-email">Email</label>
-          <input type="email" id="new-email" placeholder="Nhập địa chỉ email">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="new-role">Vai trò <span class="required">*</span></label>
-          <input type="text" id="new-role" placeholder="Tác giả">
-        </div>
-        <div class="form-group">
-          <label>Trạng thái</label>
-          <div class="toggle-container">
-            <span>Hoạt động</span>
-            <label class="switch">
-              <input type="checkbox" checked>
-              <span class="slider round"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="new-password">Mật khẩu <span class="required">*</span></label>
-          <input type="password" id="new-password" placeholder="Nhập mật khẩu">
-        </div>
-        <div class="form-group">
-          <label for="new-confirm-password">Xác nhận mật khẩu <span class="required">*</span></label>
-          <input type="password" id="new-confirm-password" placeholder="Nhập lại mật khẩu">
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button class="btn-cancel" onclick="hideAddMemberForm()">Hủy</button>
-        <button class="btn-save">Lưu thành viên</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Edit member form -->
-  <div id="edit-member-form" class="member-form" style="display: none;">
-    <div class="form-header">
-      <h2>Sửa thông tin thành viên</h2>
-      <button class="btn-back" onclick="hideEditMemberForm()">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-    </div>
-
-    <div class="form-content">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="edit-name">Tên thành viên <span class="required">*</span></label>
-          <input type="text" id="edit-name" value="Nguyễn Văn A">
-        </div>
-        <div class="form-group">
-          <label for="edit-email">Email</label>
-          <input type="email" id="edit-email" value="admin@example.com">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="edit-role">Vai trò <span class="required">*</span></label>
-          <input type="text" id="edit-role" value="Quản trị viên">
-        </div>
-        <div class="form-group">
-          <label>Trạng thái</label>
-          <div class="toggle-container">
-            <span>Hoạt động</span>
-            <label class="switch">
-              <input type="checkbox" checked>
-              <span class="slider round"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="edit-password">Mật khẩu mới</label>
-          <input type="password" id="edit-password" placeholder="Để trống nếu không thay đổi">
-        </div>
-        <div class="form-group">
-          <label for="edit-confirm-password">Xác nhận mật khẩu mới</label>
-          <input type="password" id="edit-confirm-password" placeholder="Để trống nếu không thay đổi">
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button class="btn-cancel" onclick="hideEditMemberForm()">Hủy</button>
-        <button class="btn-save">Cập nhật thành viên</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Delete confirmation modal -->
-  <div id="delete-confirm" class="modal" style="display: none;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Xác nhận xóa</h3>
-        <button class="close-modal" onclick="hideDeleteConfirm()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="warning-icon">
-          <i class="fas fa-exclamation-circle"></i>
-        </div>
-        <p class="warning-text">Cảnh báo</p>
-        <p class="warning-message">Hành động này không thể hoàn tác và có thể dẫn tới mất dữ liệu</p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-cancel" onclick="hideDeleteConfirm()">Hủy</button>
-        <button class="btn-delete">Xóa</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <style>
-  .member-content {
-    padding: 20px;
-    background-color: #f8f9fa;
-    height: 100%;
-    overflow-y: auto;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  .member-header {
+  html, body {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .content-wrapper {
+    padding: 20px;
+    width: 100%;
+    overflow-y: auto;
+    max-height: 100vh;
+    background-color: #f8f9fa;
+  }
+
+  .header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
   }
 
-  .member-header h1 {
+  .page-title {
     font-size: 24px;
     font-weight: 600;
+    margin: 0;
     color: #333;
   }
 
-  .btn-add-member {
+  .btn-add {
+    background-color: #0d6efd;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
     display: flex;
     align-items: center;
-    padding: 8px 16px;
-    background-color: #3498db;
-    color: white;
+    font-weight: 500;
     border: none;
-    border-radius: 5px;
-    font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.3s;
   }
 
-  .btn-add-member:hover {
-    background-color: #2980b9;
-  }
-
-  .btn-add-member i {
+  .btn-add i {
     margin-right: 8px;
   }
 
-  .member-list-container {
-    background-color: white;
+  .card {
+    background: white;
     border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     padding: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
   }
 
-  .member-list-container h2 {
+  .card-header {
+    margin-bottom: 20px;
+  }
+
+  .card-title {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 5px;
     color: #333;
   }
 
-  .member-description {
+  .card-description {
     color: #666;
+    margin: 0;
     font-size: 14px;
+  }
+
+  .search-container {
     margin-bottom: 20px;
   }
 
-  .member-search {
+  .search-box {
     position: relative;
-    margin-bottom: 20px;
   }
 
-  .member-search input {
+  .search-input {
     width: 100%;
-    padding: 10px 15px 10px 35px;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding-left: 35px;
     font-size: 14px;
   }
 
-  .member-search i {
+  .search-icon {
     position: absolute;
     left: 12px;
     top: 50%;
@@ -310,17 +104,12 @@
     color: #999;
   }
 
-  .member-table {
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  table {
+  .data-table {
     width: 100%;
     border-collapse: collapse;
   }
 
-  thead th {
+  .data-table th {
     text-align: left;
     padding: 12px 15px;
     border-bottom: 1px solid #e0e0e0;
@@ -329,11 +118,10 @@
     font-size: 14px;
   }
 
-  tbody td {
+  .data-table td {
     padding: 12px 15px;
-    border-bottom: 1px solid #e0e0e0;
-    color: #333;
     font-size: 14px;
+    border-bottom: 1px solid #eee;
   }
 
   .member-info {
@@ -396,177 +184,26 @@
     background-color: #fde8e7;
   }
 
-  /* Form styles */
-  .member-form {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  .form-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-
-  .form-header h2 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #333;
-  }
-
-  .btn-back {
-    width: 36px;
-    height: 36px;
-    border-radius: 5px;
-    border: 1px solid #e0e0e0;
-    background-color: white;
-    color: #666;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-
-  .form-content {
-    padding: 10px 0;
-  }
-
-  .form-row {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-
-  .form-group {
-    flex: 1;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #333;
-    font-weight: 500;
-  }
-
-  .form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    font-size: 14px;
-  }
-
-  .required {
-    color: #e74c3c;
-  }
-
-  .toggle-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-  }
-
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-  }
-
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-  }
-
-  input:checked + .slider {
-    background-color: #3498db;
-  }
-
-  input:checked + .slider:before {
-    transform: translateX(26px);
-  }
-
-  .slider.round {
-    border-radius: 34px;
-  }
-
-  .slider.round:before {
-    border-radius: 50%;
-  }
-
-  .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 30px;
-  }
-
-  .btn-cancel {
-    padding: 8px 16px;
-    background-color: white;
-    color: #333;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
-  .btn-save {
-    padding: 8px 16px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
   /* Modal styles */
   .modal {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
   }
 
   .modal-content {
     background-color: white;
     border-radius: 8px;
     width: 400px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
   }
 
   .modal-header {
@@ -622,51 +259,261 @@
     border-top: 1px solid #e0e0e0;
   }
 
+  .btn-cancel {
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
   .btn-delete {
     padding: 8px 16px;
     background-color: #e74c3c;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
   }
+
+  /* Success modal */
+  .success-modal {
+    text-align: center;
+    padding: 30px;
+  }
+
+  .success-icon-container {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    background-color: #E8F5E9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .success-icon {
+    color: #4CAF50;
+    font-size: 40px;
+  }
+
+  .success-title {
+    color: #4CAF50;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .success-message {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .btn-success {
+    padding: 8px 30px;
+    border-radius: 4px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+  }
 </style>
 
+<div class="content-wrapper">
+  <div class="header-container">
+    <h1 class="page-title">Quản lý thành viên</h1>
+    <a href="/get-content/quanlythanhvien/themthanhvien/" class="btn-add">
+      <i class="fas fa-plus"></i> Thêm thành viên
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Danh sách thành viên</h2>
+      <p class="card-description">Quản lý tất cả thành viên trong hệ thống của bạn</p>
+    </div>
+
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm thành viên..." class="search-input">
+        <i class="fas fa-search search-icon"></i>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th width="30%">Tên thành viên</th>
+          <th width="30%">Email</th>
+          <th width="15%">Vai trò</th>
+          <th width="15%">Trạng thái</th>
+          <th width="10%">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="member-info">
+              <i class="fas fa-user-circle"></i>
+              <span>Nguyễn Văn A</span>
+            </div>
+          </td>
+          <td>admin@example.com</td>
+          <td>Quản trị viên</td>
+          <td><span class="status-badge active">Hoạt động</span></td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon view-member" data-id="1" title="Xem">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-icon edit-member" data-id="1" title="Sửa">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-icon delete" onclick="confirmDelete(1)" title="Xóa">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="member-info">
+              <i class="fas fa-user-circle"></i>
+              <span>Trần Thị B</span>
+            </div>
+          </td>
+          <td>editor@example.com</td>
+          <td>Biên tập viên</td>
+          <td><span class="status-badge active">Hoạt động</span></td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon view-member" data-id="2" title="Xem">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-icon edit-member" data-id="2" title="Sửa">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-icon delete" onclick="confirmDelete(2)" title="Xóa">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="member-info">
+              <i class="fas fa-user-circle"></i>
+              <span>Lê Văn C</span>
+            </div>
+          </td>
+          <td>author@example.com</td>
+          <td>Tác giả</td>
+          <td><span class="status-badge inactive">Không hoạt động</span></td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon view-member" data-id="3" title="Xem">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-icon edit-member" data-id="3" title="Sửa">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-icon delete" onclick="confirmDelete(3)" title="Xóa">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Xác nhận xóa</h3>
+      <button class="close-modal" onclick="hideDeleteConfirm()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="warning-icon">
+        <i class="fas fa-exclamation-circle"></i>
+      </div>
+      <p class="warning-text">Cảnh báo</p>
+      <p class="warning-message">Hành động này không thể hoàn tác và có thể dẫn tới mất dữ liệu</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="hideDeleteConfirm()">Hủy</button>
+      <button class="btn-delete" onclick="deleteThanhVien()">Xóa</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal thông báo thành công -->
+<div id="successModal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeSuccessModal()">&times;</button>
+    <div class="success-modal">
+      <div class="success-icon-container">
+        <i class="fas fa-check success-icon"></i>
+      </div>
+      <h3 class="success-title">Thành công!</h3>
+      <p id="successMessage" class="success-message">Xóa thành viên thành công</p>
+      <button class="btn-success" onclick="closeSuccessModal()">Đóng</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  // Show/hide add member form
-  function showAddMemberForm() {
-    document.getElementById('member-list-view').style.display = 'none';
-    document.getElementById('add-member-form').style.display = 'block';
-    document.getElementById('edit-member-form').style.display = 'none';
-  }
+  let memberIdToDelete = null;
 
-  function hideAddMemberForm() {
-    document.getElementById('member-list-view').style.display = 'block';
-    document.getElementById('add-member-form').style.display = 'none';
-  }
+  document.addEventListener('DOMContentLoaded', function() {
+    // Thêm sự kiện cho nút xem thành viên
+    const viewButtons = document.querySelectorAll('.view-member');
+    viewButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const memberId = this.getAttribute('data-id');
+        window.location.href = `/get-content/quanlythanhvien/xemthanhvien/${memberId}/`;
+      });
+    });
 
-  // Show/hide edit member form
-  function showEditMemberForm(id) {
-    document.getElementById('member-list-view').style.display = 'none';
-    document.getElementById('add-member-form').style.display = 'none';
-    document.getElementById('edit-member-form').style.display = 'block';
-    // Here you would load the member data based on the ID
-  }
+    // Thêm sự kiện cho nút sửa thành viên
+    const editButtons = document.querySelectorAll('.edit-member');
+    editButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const memberId = this.getAttribute('data-id');
+        window.location.href = `/get-content/quanlythanhvien/suathanhvien/${memberId}/`;
+      });
+    });
+  });
 
-  function hideEditMemberForm() {
-    document.getElementById('member-list-view').style.display = 'block';
-    document.getElementById('edit-member-form').style.display = 'none';
-  }
-
-  // Show/hide delete confirmation
-  function showDeleteConfirm(id) {
-    document.getElementById('delete-confirm').style.display = 'flex';
-    // Store the ID for deletion
+  function confirmDelete(id) {
+    memberIdToDelete = id;
+    document.getElementById('deleteModal').style.display = 'flex';
   }
 
   function hideDeleteConfirm() {
-    document.getElementById('delete-confirm').style.display = 'none';
+    document.getElementById('deleteModal').style.display = 'none';
+  }
+
+  function deleteThanhVien() {
+    // Ở đây sẽ gọi API để xóa thành viên
+    // Sau khi xóa thành công, hiển thị thông báo
+    hideDeleteConfirm();
+    document.getElementById('successMessage').textContent = 'Xóa thành viên thành công';
+    document.getElementById('successModal').style.display = 'flex';
+  }
+
+  function closeSuccessModal() {
+    document.getElementById('successModal').style.display = 'none';
+    // Reload trang sau khi xóa thành công
+    // window.location.reload();
   }
 </script>
 {% endblock %}

@@ -45,3 +45,20 @@ def get_content(request, target):
             'quanlymenu_data': 'Nội dung menu'
         }
         return render(request, 'quanlymenu.html', context)
+
+def them_menu(request):
+    return render(request, 'themmenu.html')
+def xem_menu(request, menu_id):
+    # Giả sử bạn sẽ lấy dữ liệu theo category_id từ cơ sở dữ liệu
+    context = {
+        'menu_id': menu_id,
+        'category_data': f'Nội dung menu với ID {menu_id}'  # Bạn có thể thay thế bằng dữ liệu thực tế từ DB
+    }
+    return render(request, 'xemmenu.html', context)
+def sua_menu(request, menu_id):
+    # Giả sử bạn sẽ lấy dữ liệu theo category_id từ cơ sở dữ liệu
+    context = {
+        'menu_id': menu_id,
+        'category_data': f'Nội dung menu với ID {menu_id}'  # Bạn có thể thay thế bằng dữ liệu thực tế từ DB
+    }
+    return render(request, 'suamenu.html', context)

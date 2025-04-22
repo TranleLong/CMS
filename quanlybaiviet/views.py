@@ -47,15 +47,6 @@ def get_content(request, target):
             'quanlymenu_data': 'Nội dung menu'
         }
         return render(request, 'quanlymenu.html', context)
-    elif target == 'suabaiviet':
-        return render(request, 'suabaiviet.html')
-    elif target == 'thembaiviet':
-        return render(request, 'thembaiviet.html')
-    elif target == 'xembaiviet':
-        return render(request, 'xembaiviet.html')
-    # elif target == 'xembaiviet':
-    #     title = request.GET.get('title', '')
-    #     return render(request, 'thembaiviet.html', {'title': title})
     else:
         # Trường hợp mặc định khi không có target nào khớp
         return HttpResponse(f"Không tìm thấy trang: {target}", status=404)

@@ -45,3 +45,20 @@ def get_content(request, target):
             'quanlymenu_data': 'Nội dung menu'
         }
         return render(request, 'quanlymenu.html', context)
+
+def them_thanhvien(request):
+    return render(request, 'themthanhvien.html')
+def xem_thanhvien(request, member_id):
+    # Giả sử bạn sẽ lấy dữ liệu theo category_id từ cơ sở dữ liệu
+    context = {
+        'member_id': member_id,
+        'category_data': f'Nội dung member với ID {member_id}'  # Bạn có thể thay thế bằng dữ liệu thực tế từ DB
+    }
+    return render(request, 'xemthanhvien.html', context)
+def sua_thanhvien(request, member_id):
+    # Giả sử bạn sẽ lấy dữ liệu theo category_id từ cơ sở dữ liệu
+    context = {
+        'member_id': member_id,
+        'category_data': f'Nội dung member với ID {member_id}'  # Bạn có thể thay thế bằng dữ liệu thực tế từ DB
+    }
+    return render(request, 'suathanhvien.html', context)

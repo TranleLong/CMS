@@ -1,313 +1,347 @@
 {% extends 'sidebar.html' %}
 {% block content %}
 <style>
-    /* Main Layout */
-.content-wrapper {
-    padding: 20px;
-    width: 100%;
-}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-/* Header */
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
+    html, body {
+      overflow: hidden; /* Loại bỏ thanh cuộn ngoài */
+      height: 100%; /* Đảm bảo chiều cao của body và html luôn bằng 100% */
+    }
 
-.page-title {
-    font-size: 24px;
-    font-weight:600;
-    margin: 0;
-    color: #333;
-}
+    .content-wrapper {
+      overflow-y: auto; /* Chỉ cho phép cuộn dọc trong phần content */
+      max-height: 100vh; /* Chiều cao tối đa của phần content */
+    }
 
-.btn-add {
-    background-color: #2196F3;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-}
+    .content-wrapper {
+        padding: 20px;
+        width: 100%;
+        overflow-y: auto;
+    }
 
-.btn-add i {
-    margin-right: 8px;
-}
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
 
-/* Card */
-.card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-}
+    .page-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+        color: #333;
+    }
 
-.card-header {
-    margin-bottom: 20px;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    .btn-add {
+        background-color: #0d6efd;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+    }
 
-}
+    .btn-add i {
+        margin-right: 8px;
+    }
 
-.card-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0 0 5px 0;
-    color: #333;
-}
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
 
-.card-description {
-    color: #666;
-    margin: 0;
-    font-size: 14px;
-}
+    .card-header {
+        margin-bottom: 20px;
+    }
 
-/* Search */
-.search-container {
-    margin-bottom: 20px;
-}
+    .card-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
+    }
 
-.search-box {
-    position: relative;
-    width: 100%;
-    padding: 0;
-    border: 1px solid #e0e0e0;
+    .card-description {
+        color: #666;
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .search-container {
+        margin-bottom: 20px;
+    }
+
+    .search-box {
+        position: relative;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding-left: 35px;
+        font-size: 14px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table th {
+        text-align: left;
+        padding: 12px 15px;
+        border-bottom: 1px solid #e0e0e0;
+        color: #666;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .data-table td {
+        padding: 12px 15px;
+        font-size: 14px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .category-name {
+        color: #333;
+    }
+
+    .category-slug {
+        color: #666;
+    }
+
+    .category-count {
+        color: #333;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+    }
+    .btn-icon {
+    width: 30px;
+    height: 30px;
     border-radius: 5px;
-    font-size: 14px;
-}
-
-.search-input {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding-left: 35px;
-    font-size: 14px;
-}
-
-.search-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-}
-
-/* Table */
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.data-table th {
-    text-align: left;
-    padding: 12px 8px;
-    color: #666;
-    font-weight: 500;
-    font-size: 14px;
-    border-bottom: 1px solid #eee;
-}
-
-.data-table td {
-    padding: 12px 8px;
-    font-size: 14px;
-    border-bottom: 1px solid #eee;
-}
-
-.category-name {
-    color: #333;
-}
-
-.category-slug {
-    color: #666;
-}
-
-.category-count {
-    color: #333;
-}
-
-/* Action Buttons */
-.action-buttons {
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-}
-
-.btn-edit {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #2196F3;
-}
-
-.btn-delete {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #F44336;
-}
-
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
+    border: 1px solid #e0e0e0;
     background-color: white;
-    border-radius: 8px;
-    width: 400px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* Delete Modal */
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.modal-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.warning-icon {
-    color: #ff9800;
-    font-size: 20px;
-}
-
-.modal-title h3 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.close-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-}
-
-.modal-body {
-    margin-bottom: 20px;
-}
-
-.modal-message {
-    margin: 0;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.warning-box {
-    background-color: #fff3e0;
-    border-radius: 4px;
-    padding: 10px;
-    border-left: 4px solid #ff9800;
-}
-
-.warning-text {
-    margin: 0;
-    color: #e65100;
-    font-size: 14px;
-}
-
-.warning-text i {
-    margin-right: 5px;
-}
-
-.modal-footer {
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-}
-
-.btn-cancel {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    background-color: #f0f0f0;
-    cursor: pointer;
-}
-
-.btn-confirm {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    background-color: #F44336;
-    color: white;
-    cursor: pointer;
-}
-
-/* Success Modal */
-.success-content {
-    text-align: center;
-}
-
-.success-body {
-    margin-bottom: 20px;
-}
-
-.success-icon-container {
-    width: 60px;
-    height: 60px;
-    background-color: #e8f5e9;
-    border-radius: 50%;
+    color: #666;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 15px auto;
-}
-
-.success-icon {
-    color: #4caf50;
-    font-size: 30px;
-}
-
-.success-title {
-    margin: 0;
-    font-size: 18px;
-    font-weight: bold;
-    color: #4caf50;
-}
-
-.success-message {
-    margin: 10px 0 0 0;
-}
-
-.btn-success {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    background-color: #4caf50;
-    color: white;
     cursor: pointer;
-    width: 100px;
-}
+    transition: all 0.3s;
+  }
 
+  .btn-icon:hover {
+    background-color: #f5f5f5;
+  }
+
+  .btn-icon.delete {
+    color: #e74c3c;
+  }
+
+  .btn-icon.delete:hover {
+    background-color: #fde8e7;
+  }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        border-radius: 8px;
+        width: 400px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: #999;
+    }
+
+    /* Delete confirmation modal */
+    .delete-modal-header {
+        padding: 20px 20px 0 20px;
+        text-align: center;
+    }
+
+    .delete-modal-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .delete-modal-body {
+        padding: 20px;
+    }
+
+    .warning-box {
+        background-color: #FFF3E0;
+        border-radius: 4px;
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .warning-icon {
+        color: #FF9800;
+        margin-right: 10px;
+    }
+
+    .warning-text {
+        color: #E65100;
+        font-size: 14px;
+        margin: 0;
+    }
+
+    .delete-modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 20px 20px 20px;
+        gap: 10px;
+    }
+
+    .btn-cancel {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #f0f0f0;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-confirm {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #F44336;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    /* Success modal */
+    .success-modal {
+        text-align: center;
+        padding: 30px;
+    }
+
+    .success-icon-container {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 20px;
+        background-color: #E8F5E9;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .success-icon {
+        color: #4CAF50;
+        font-size: 40px;
+    }
+
+    .success-title {
+        color: #4CAF50;
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .success-message {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .btn-success {
+        padding: 8px 30px;
+        border-radius: 4px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    /* Subcategory style */
+    .subcategory {
+        padding-left: 30px;
+        display: none; /* Ẩn danh mục con mặc định */
+    }
+
+    .subcategory-indicator {
+        color: #999;
+        margin-right: 5px;
+    }
+
+    /* Style cho danh mục cha có thể click */
+    .parent-category {
+        cursor: pointer;
+    }
+
+    .parent-category .category-name {
+        display: flex;
+        align-items: center;
+    }
+
+    .toggle-icon {
+        margin-right: 8px;
+        font-size: 12px;
+        color: #666;
+        transition: transform 0.3s;
+    }
+
+    .toggle-icon.open {
+        transform: rotate(90deg);
+    }
 </style>
+
 <div class="content-wrapper">
     <div class="header-container">
         <h1 class="page-title">Quản lý danh mục</h1>
-        <a href="" class="btn-add">
+        <a href="/get-content/quanlydanhmuc/themdanhmuc/" class="btn-add">
             <i class="fas fa-plus"></i> Thêm danh mục mới
         </a>
     </div>
@@ -336,62 +370,160 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="category-name">Công nghệ</td>
-                    <td class="category-slug">cong-nghe</td>
-                    <td class="category-count">5</td>
-                    <td>
-                        <div class="action-buttons">
-                            <a href="" class="btn-edit" title="Sửa">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <button class="btn-delete" onclick="confirmDelete(1)" title="Xóa">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="category-name">Kinh doanh</td>
-                    <td class="category-slug">kinh-doanh</td>
+                    <td class="category-name">Giới thiệu</td>
+                    <td class="category-slug">gioi-thieu</td>
                     <td class="category-count">3</td>
                     <td>
                         <div class="action-buttons">
-                            <a href="" class="btn-edit" title="Sửa">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <button class="btn-delete" onclick="confirmDelete(2)" title="Xóa">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+                          <button class="btn-icon view-category" data-id="1" title="Xem">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                          <button class="btn-icon edit-category" data-id="1" title="Sửa">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn-icon delete" onclick="confirmDelete(1)" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                          </button>
                         </div>
                     </td>
                 </tr>
-                <tr>
-                    <td class="category-name">Giáo dục</td>
-                    <td class="category-slug">giao-duc</td>
+                <tr class="parent-category" data-id="dich-vu">
+                    <td class="category-name">
+                        <i class="fas fa-caret-right toggle-icon"></i>
+                        Dịch vụ
+                    </td>
+                    <td class="category-slug">dich-vu</td>
+                    <td class="category-count">5</td>
+                    <td>
+                        <div class="action-buttons">
+                          <button class="btn-icon view-category" data-id="2" title="Xem">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                          <button class="btn-icon edit-category" data-id="2" title="Sửa">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn-icon delete" onclick="confirmDelete(2)" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="subcategory" data-parent="dich-vu">
+                    <td class="category-name">
+                        <span class="subcategory-indicator">└</span> Thiết kế website
+                    </td>
+                    <td class="category-slug">thiet-ke-website</td>
+                    <td class="category-count">2</td>
+                    <td>
+                        <div class="action-buttons">
+                          <button class="btn-icon view-category" data-id="3" title="Xem">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                          <button class="btn-icon edit-category" data-id="3" title="Sửa">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn-icon delete" onclick="confirmDelete(3)" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="subcategory" data-parent="dich-vu">
+                    <td class="category-name">
+                        <span class="subcategory-indicator">└</span> Phát triển ứng dụng
+                    </td>
+                    <td class="category-slug">phat-trien-ung-dung</td>
+                    <td class="category-count">3</td>
+                    <td>
+                        <div class="action-buttons">
+                          <button class="btn-icon view-category" data-id="4" title="Xem">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                          <button class="btn-icon edit-category" data-id="4" title="Sửa">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn-icon delete" onclick="confirmDelete(4)" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="parent-category" data-id="tin-tuc">
+                    <td class="category-name">
+                        <i class="fas fa-caret-right toggle-icon"></i>
+                        Tin tức
+                    </td>
+                    <td class="category-slug">tin-tuc</td>
                     <td class="category-count">8</td>
                     <td>
                         <div class="action-buttons">
-                            <a href="" class="btn-edit" title="Sửa">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <button class="btn-delete" onclick="confirmDelete(3)" title="Xóa">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+                          <button class="btn-icon view-category" data-id="5" title="Xem">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                          <button class="btn-icon edit-category" data-id="5" title="Sửa">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn-icon delete" onclick="confirmDelete(5)" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="subcategory" data-parent="tin-tuc">
+                    <td class="category-name">
+                        <span class="subcategory-indicator">└</span> Tin công nghệ
+                    </td>
+                    <td class="category-slug">tin-cong-nghe</td>
+                    <td class="category-count">4</td>
+                    <td>
+                        <div class="action-buttons">
+                          <button class="btn-icon view-category" data-id="7" title="Xem">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                          <button class="btn-icon edit-category" data-id="7" title="Sửa">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn-icon delete" onclick="confirmDelete(7)" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="subcategory" data-parent="tin-tuc">
+                    <td class="category-name">
+                        <span class="subcategory-indicator">└</span> Tin thị trường
+                    </td>
+                    <td class="category-slug">tin-thi-truong</td>
+                    <td class="category-count">4</td>
+                    <td>
+                        <div class="action-buttons">
+                          <button class="btn-icon view-category" data-id="8" title="Xem">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                          <button class="btn-icon edit-category" data-id="8" title="Sửa">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn-icon delete" onclick="confirmDelete(8)" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                          </button>
                         </div>
                     </td>
                 </tr>
                 <tr>
-                    <td class="category-name">Du lịch</td>
-                    <td class="category-slug">du-lich</td>
-                    <td class="category-count">12</td>
+                    <td class="category-name">Giải trí</td>
+                    <td class="category-slug">giai-tri</td>
+                    <td class="category-count">3</td>
                     <td>
                         <div class="action-buttons">
-                            <a href="" class="btn-edit" title="Sửa">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <button class="btn-delete" onclick="confirmDelete(4)" title="Xóa">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+                          <button class="btn-icon view-category" data-id="6" title="Xem">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                          <button class="btn-icon edit-category" data-id="6" title="Sửa">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button class="btn-icon delete" onclick="confirmDelete(6)" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                          </button>
                         </div>
                     </td>
                 </tr>
@@ -403,47 +535,96 @@
 <!-- Modal xác nhận xóa -->
 <div id="deleteModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title">
-                <i class="fas fa-exclamation-triangle warning-icon"></i>
-                <h3>Cảnh báo</h3>
-            </div>
-            <button onclick="closeDeleteModal()" class="close-button">
-                <i class="fas fa-times"></i>
-            </button>
+        <button class="modal-close" onclick="closeDeleteModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="delete-modal-header">
+            <h3 class="delete-modal-title">Xác nhận xóa</h3>
         </div>
-        <div class="modal-body">
-            <p class="modal-message">Bạn có chắc chắn muốn lưu không?</p>
+        <div class="delete-modal-body">
             <div class="warning-box">
                 <p class="warning-text">
-                    <i class="fas fa-exclamation-triangle"></i>
+                    <i class="fas fa-exclamation-triangle warning-icon"></i>
+                    Cảnh báo
+                </p>
+                <p class="warning-text" style="margin-top: 10px;">
                     Hành động này không thể hoàn tác và có thể ảnh hưởng đến dữ liệu liên quan.
                 </p>
             </div>
         </div>
-        <div class="modal-footer">
-            <button onclick="closeDeleteModal()" class="btn-cancel">Hủy</button>
-            <button onclick="deleteCategory()" class="btn-confirm">Có</button>
+        <div class="delete-modal-footer">
+            <button class="btn-cancel" onclick="closeDeleteModal()">Hủy</button>
+            <button class="btn-confirm" onclick="deleteCategory()">Xóa</button>
         </div>
     </div>
 </div>
 
 <!-- Modal thông báo thành công -->
 <div id="successModal" class="modal">
-    <div class="modal-content success-content">
-        <div class="success-body">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeSuccessModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="success-modal">
             <div class="success-icon-container">
                 <i class="fas fa-check success-icon"></i>
             </div>
             <h3 class="success-title">Thành công!</h3>
-            <p id="successMessage" class="success-message">Xóa danh mục thành công</p>
+            <p id="successMessage" class="success-message">Thêm danh mục thành công</p>
+            <button class="btn-success" onclick="closeSuccessModal()">Đóng</button>
         </div>
-        <button onclick="closeSuccessModal()" class="btn-success">Đóng</button>
     </div>
 </div>
 
 <script>
     let categoryIdToDelete = null;
+
+    // Xử lý sự kiện click vào danh mục cha để hiện/ẩn danh mục con
+    document.addEventListener('DOMContentLoaded', function() {
+        const parentCategories = document.querySelectorAll('.parent-category');
+
+        parentCategories.forEach(parent => {
+            parent.addEventListener('click', function(e) {
+                // Ngăn chặn sự kiện click lan tỏa đến các nút trong hàng
+                if (e.target.closest('.action-buttons')) {
+                    return;
+                }
+
+                const categoryId = this.getAttribute('data-id');
+                const toggleIcon = this.querySelector('.toggle-icon');
+                const subcategories = document.querySelectorAll(`.subcategory[data-parent="${categoryId}"]`);
+
+                // Chuyển đổi trạng thái hiển thị của danh mục con
+                subcategories.forEach(sub => {
+                    if (sub.style.display === 'table-row' || sub.style.display === '') {
+                        sub.style.display = 'none';
+                        toggleIcon.classList.remove('open');
+                    } else {
+                        sub.style.display = 'table-row';
+                        toggleIcon.classList.add('open');
+                    }
+                });
+            });
+        });
+
+        // Thêm sự kiện cho nút xem danh mục
+        const viewButtons = document.querySelectorAll('.view-category');
+        viewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const categoryId = this.getAttribute('data-id');
+                window.location.href = `/get-content/quanlydanhmuc/xemdanhmuc/${categoryId}/`;
+            });
+        });
+
+        // Thêm sự kiện cho nút sửa danh mục
+        const editButtons = document.querySelectorAll('.edit-category');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const categoryId = this.getAttribute('data-id');
+                window.location.href = `/get-content/quanlydanhmuc/suadanhmuc/${categoryId}/`;
+            });
+        });
+    });
 
     function confirmDelete(id) {
         categoryIdToDelete = id;
