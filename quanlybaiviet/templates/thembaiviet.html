@@ -3,10 +3,11 @@
 <div class="content-wrapper">
   <div class="content-header">
     <div class="breadcrumb">
-      <a href="{% url 'get_content' target='quanlybaiviet' %}" class="breadcrumb-item">
+      <a href="{% url 'quanlybaiviet' %}" class="breadcrumb-item">
         <i class="fas fa-chevron-left"></i>
-        Thêm bài viết
+        Quay lại danh sách
       </a>
+      <h1 class="page-title" style="margin-top: 15px;">Thêm bài viết mới</h1>
     </div>
     <div class="content-actions">
       <button class="btn btn-outline" id="btnXemTruoc">
@@ -21,118 +22,94 @@
   </div>
 
   <div class="content-body">
-    <div class="edit-container">
-      <div class="edit-main">
-        <div class="form-group">
-          <label for="title">Tiêu đề</label>
-          <input type="text" id="title" class="form-control" placeholder="Xu hướng thiết kế...">
-        </div>
-
-        <div class="form-group">
-          <label for="duongDan">Đường dẫn</label>
-          <input type="text" id="duongDan" class="form-control" placeholder="xu-huong-thiet-ke">
-        </div>
-
-        <div class="form-group">
-          <label for="tomTat">Tóm tắt</label>
-          <textarea id="tomTat" class="form-control" rows="3" placeholder="Nhập tóm tắt ngắn gọn về bài viết..."></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="noiDung">Nội dung</label>
-          <div class="editor-toolbar">
-            <button class="toolbar-btn"><i class="fas fa-bold"></i></button>
-            <button class="toolbar-btn"><i class="fas fa-italic"></i></button>
-            <button class="toolbar-btn"><i class="fas fa-underline"></i></button>
-            <button class="toolbar-btn"><i class="fas fa-list"></i></button>
-            <button class="toolbar-btn"><i class="fas fa-heading"></i></button>
-          </div>
-          <textarea id="noiDung" class="form-control editor" rows="10" placeholder="Viết nội dung bài viết ở đây..."></textarea>
-        </div>
-      </div>
-
-      <div class="edit-sidebar">
-        <div class="sidebar-card">
-          <h3 class="sidebar-title">Thông tin bài viết</h3>
+    <form id="addArticleForm" method="post" action="{% url 'them_baiviet' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="edit-container">
+        <div class="edit-main">
           <div class="form-group">
-            <label for="danhMuc">Danh mục</label>
-            <select id="danhMuc" class="form-control">
-              <option value="">Chọn danh mục</option>
-              <option value="cat-news">Tin tức</option>
-              <option value="cat-tech">Công nghệ</option>
-              <option value="cat-lifestyle">Đời sống</option>
-            </select>
+            <label for="tieu_de">Tiêu đề <span class="required">*</span></label>
+            <input type="text" id="tieu_de" name="tieu_de" class="form-control" placeholder="Nhập tiêu đề bài viết" required>
           </div>
 
           <div class="form-group">
-            <label for="the">Thẻ</label>
-            <select id="the" class="form-control">
-              <option value="">Chọn thẻ</option>
-              <option value="tag-news">News</option>
-              <option value="tag-tech">Technology</option>
-              <option value="tag-design">Design</option>
-            </select>
+            <label for="duong_dan">Đường dẫn <span class="required">*</span></label>
+            <input type="text" id="duong_dan" name="duong_dan" class="form-control" placeholder="nhap-duong-dan-bai-viet" required>
           </div>
 
           <div class="form-group">
-            <label for="tacGia">Tác giả</label>
-            <input type="text" id="tacGia" class="form-control" placeholder="Nhập tên tác giả">
+            <label for="tom_tat">Tóm tắt</label>
+            <textarea id="tom_tat" name="tom_tat" class="form-control" rows="3" placeholder="Nhập tóm tắt ngắn gọn về bài viết..."></textarea>
           </div>
 
           <div class="form-group">
-            <label for="ngayDang">Ngày đăng</label>
-            <input type="date" id="ngayDang" class="form-control">
+            <label for="noi_dung">Nội dung <span class="required">*</span></label>
+            <div class="editor-toolbar">
+              <button type="button" class="toolbar-btn"><i class="fas fa-bold"></i></button>
+              <button type="button" class="toolbar-btn"><i class="fas fa-italic"></i></button>
+              <button type="button" class="toolbar-btn"><i class="fas fa-underline"></i></button>
+              <button type="button" class="toolbar-btn"><i class="fas fa-list"></i></button>
+              <button type="button" class="toolbar-btn"><i class="fas fa-heading"></i></button>
+            </div>
+            <textarea id="noi_dung" name="noi_dung" class="form-control editor" rows="10" placeholder="Viết nội dung bài viết ở đây..." required></textarea>
           </div>
         </div>
 
-        <div class="sidebar-card">
-          <h3 class="sidebar-title">Ảnh đại diện</h3>
-          <div class="featured-image-container">
-            <div class="featured-image">
-              <div class="upload-placeholder">
-                <i class="fas fa-image"></i>
-                <p>Kéo thả file hoặc click để tải lên</p>
+        <div class="edit-sidebar">
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Thông tin bài viết</h3>
+            <div class="form-group">
+              <label for="ma_dm">Danh mục <span class="required">*</span></label>
+              <select id="ma_dm" name="ma_dm" class="form-control" required>
+                <option value="">Chọn danh mục</option>
+                {% for danh_muc in danh_muc_list %}
+                <option value="{{ danh_muc.ma_dm }}">{{ danh_muc.ten_dm }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="ma_the">Thẻ <span class="required">*</span></label>
+              <select id="ma_the" name="ma_the" class="form-control" required>
+                <option value="">Chọn thẻ</option>
+                {% for the in the_list %}
+                <option value="{{ the.ma_the }}">{{ the.ten_the }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="trang_thai">Trạng thái</label>
+              <select id="trang_thai" name="trang_thai" class="form-control">
+                <option value="Chờ duyệt">Chờ duyệt</option>
+                <option value="Đăng trang">Đăng trang</option>
+                <option value="Đã duyệt">Đã duyệt</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">Ảnh đại diện</h3>
+            <div class="featured-image-container">
+              <div class="featured-image">
+                <div class="upload-placeholder" id="uploadPlaceholder">
+                  <i class="fas fa-image"></i>
+                  <p>Kéo thả file hoặc click để tải lên</p>
+                </div>
+                <img id="previewImage" src="/placeholder.svg" alt="" style="display: none; max-width: 100%; max-height: 100%;">
               </div>
-              <img id="previewImage" src="/placeholder.svg" alt="" style="display: none;">
-            </div>
-            <div class="image-actions">
-              <button class="btn btn-outline btn-sm" id="btnChonAnh">Chọn ảnh</button>
+              <div class="image-actions">
+                <label for="anh" class="btn btn-outline btn-sm">Chọn ảnh</label>
+                <input type="file" id="anh" name="anh" style="display: none;" accept="image/*">
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal chọn ảnh -->
-<div class="modal" id="modalChonAnh">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Thư viện ảnh</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="upload-container">
-          <div class="upload-area">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <p>Kéo thả file vào đây</p>
-            <span>hoặc</span>
-            <button class="btn btn-outline">Chọn file từ máy tính</button>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline" data-dismiss="modal">Hủy</button>
-        <button type="button" class="btn btn-primary" id="btnTaiAnh">Tải lên</button>
-      </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <style>
-
   body {
     overflow: hidden;
   }
@@ -151,7 +128,6 @@
   }
 
   .breadcrumb {
-    display: flex;
     align-items: center;
   }
 
@@ -225,6 +201,10 @@
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
+  }
+
+  .required {
+    color: #dc3545;
   }
 
   .form-control {
@@ -318,164 +298,114 @@
     margin: 0;
   }
 
-  .featured-image img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-  }
-
   .image-actions {
     display: flex;
     justify-content: center;
-  }
-
-  /* Modal styles */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  .modal-dialog {
-    width: 80%;
-    max-width: 800px;
-    margin: 50px auto;
-  }
-
-  .modal-content {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #e9ecef;
-  }
-
-  .modal-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0;
-  }
-
-  .close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-  }
-
-  .modal-body {
-    padding: 20px;
-    max-height: 500px;
-    overflow-y: auto;
-  }
-
-  .upload-container {
-    width: 100%;
-  }
-
-  .upload-area {
-    border: 2px dashed #ced4da;
-    border-radius: 8px;
-    padding: 40px 20px;
-    text-align: center;
-    color: #6c757d;
-  }
-
-  .upload-area i {
-    font-size: 48px;
-    margin-bottom: 15px;
-  }
-
-  .upload-area p {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  .upload-area span {
-    display: block;
-    margin: 10px 0;
-  }
-
-  .modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 15px 20px;
-    border-top: 1px solid #e9ecef;
   }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Xử lý modal chọn ảnh
-    const btnChonAnh = document.getElementById('btnChonAnh');
-    const modalChonAnh = document.getElementById('modalChonAnh');
-    const btnTaiAnh = document.getElementById('btnTaiAnh');
-    const closeButtons = document.querySelectorAll('.close, [data-dismiss="modal"]');
+    // Tự động tạo đường dẫn từ tiêu đề
+    const tieuDeInput = document.getElementById('tieu_de');
+    const duongDanInput = document.getElementById('duong_dan');
 
-    btnChonAnh.addEventListener('click', function() {
-      modalChonAnh.style.display = 'block';
+    tieuDeInput.addEventListener('input', function() {
+      duongDanInput.value = createSlug(this.value);
     });
 
-    closeButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        modalChonAnh.style.display = 'none';
-      });
-    });
+    // Xử lý xem trước ảnh
+    const anhInput = document.getElementById('anh');
+    const previewImage = document.getElementById('previewImage');
+    const uploadPlaceholder = document.getElementById('uploadPlaceholder');
 
-    // Đóng modal khi click bên ngoài
-    window.addEventListener('click', function(event) {
-      if (event.target === modalChonAnh) {
-        modalChonAnh.style.display = 'none';
+    anhInput.addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+          previewImage.src = e.target.result;
+          previewImage.style.display = 'block';
+          uploadPlaceholder.style.display = 'none';
+        };
+
+        reader.readAsDataURL(this.files[0]);
       }
-    });
-
-    // Xử lý tải ảnh lên
-    btnTaiAnh.addEventListener('click', function() {
-      // Giả lập việc tải ảnh lên
-      const previewImage = document.getElementById('previewImage');
-      previewImage.src = '/placeholder.svg?height=200&width=300';
-      previewImage.style.display = 'block';
-      document.querySelector('.upload-placeholder').style.display = 'none';
-      modalChonAnh.style.display = 'none';
     });
 
     // Xử lý nút lưu bài viết
     const btnLuuBaiViet = document.getElementById('btnLuuBaiViet');
-    btnLuuBaiViet.addEventListener('click', function() {
-      // Kiểm tra các trường bắt buộc
-      const title = document.getElementById('title').value;
-      if (!title) {
-        alert('Vui lòng nhập tiêu đề bài viết!');
-        return;
-      }
+    const addArticleForm = document.getElementById('addArticleForm');
 
-      alert('Đã lưu bài viết thành công!');
-      window.location.href = 'quanlybaiviet.html';
+    btnLuuBaiViet.addEventListener('click', function() {
+      // Kiểm tra form trước khi submit
+      if (validateForm()) {
+        addArticleForm.submit();
+      }
     });
 
     // Xử lý nút xem trước
     const btnXemTruoc = document.getElementById('btnXemTruoc');
+
     btnXemTruoc.addEventListener('click', function() {
-      const title = document.getElementById('title').value;
-      if (!title) {
-        alert('Vui lòng nhập tiêu đề bài viết để xem trước!');
-        return;
+      if (validateForm(true)) {
+        alert('Chức năng xem trước đang được phát triển');
+      }
+    });
+
+    // Hàm tạo slug từ text
+    function createSlug(text) {
+      return text
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[đĐ]/g, 'd')
+        .replace(/[^a-z0-9\s]/g, '')
+        .replace(/\s+/g, '-');
+    }
+
+    // Hàm kiểm tra form
+    function validateForm(isPreview = false) {
+      const tieuDe = document.getElementById('tieu_de').value;
+      const duongDan = document.getElementById('duong_dan').value;
+      const noiDung = document.getElementById('noi_dung').value;
+      const maDm = document.getElementById('ma_dm').value;
+      const maThe = document.getElementById('ma_the').value;
+
+      let isValid = true;
+      let errorMessage = '';
+
+      if (!tieuDe) {
+        errorMessage += 'Vui lòng nhập tiêu đề bài viết\n';
+        isValid = false;
       }
 
-      window.open('xembaiviet.html', '_blank');
-    });
+      if (!duongDan) {
+        errorMessage += 'Vui lòng nhập đường dẫn bài viết\n';
+        isValid = false;
+      }
+
+      if (!noiDung) {
+        errorMessage += 'Vui lòng nhập nội dung bài viết\n';
+        isValid = false;
+      }
+
+      if (!maDm) {
+        errorMessage += 'Vui lòng chọn danh mục\n';
+        isValid = false;
+      }
+
+      if (!maThe) {
+        errorMessage += 'Vui lòng chọn thẻ\n';
+        isValid = false;
+      }
+
+      if (!isValid && !isPreview) {
+        alert(errorMessage);
+      }
+
+      return isValid;
+    }
   });
 </script>
 {% endblock %}

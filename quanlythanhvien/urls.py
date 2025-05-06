@@ -1,9 +1,10 @@
 from django.urls import path
-from quanlythanhvien import views
+from . import views
+
 urlpatterns = [
-    path("",views.quanlythanhvien, name = "thanhvien"),
-    path('get-content/<str:target>/', views.get_content, name='get_content'),
-    path('get-content/quanlythanhvien/themthanhvien/',views.them_thanhvien, name='them_thanhvien'),
-    path('get-content/quanlythanhvien/xemthanhvien/<int:member_id>/', views.xem_thanhvien, name='xem_thanhvien'),
-    path('get-content/quanlythanhvien/suathanhvien/<int:member_id>/', views.sua_thanhvien, name='sua_thanhvien'),
+    path('quanlythanhvien/', views.quanlythanhvien, name='quanlythanhvien'),
+    path('quanlythanhvien/themthanhvien/', views.them_thanh_vien, name='them_thanh_vien'),
+    path('quanlythanhvien/xemthanhvien/<int:user_id>/', views.xem_thanh_vien, name='xem_thanh_vien'),
+    path('quanlythanhvien/suathanhvien/<int:user_id>/', views.sua_thanh_vien, name='sua_thanh_vien'),
+    path('quanlythanhvien/xoathanhvien/<int:user_id>/', views.xoa_thanh_vien, name='xoa_thanh_vien'),
 ]

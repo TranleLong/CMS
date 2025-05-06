@@ -1,1 +1,1 @@
-from csdl.models import BaiViet, DanhMuc, DuyetBaiViet, LichDangBai, NguoiDung, TaiKhoan, The, BaiVietThe
+from csdl.models import DuyetBaiViet,Media,BaiViet,BaiVietMedia,BaiVietLichDangBai,LichDangBai,BaiVietThe,The,DanhMuc

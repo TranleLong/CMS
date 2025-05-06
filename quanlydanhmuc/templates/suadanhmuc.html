@@ -318,138 +318,172 @@
         cursor: pointer;
         font-size: 14px;
     }
+
+    /* Error message */
+    .error-message {
+        color: #F44336;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+    }
+
+    .form-input.error, .form-select.error, .form-textarea.error {
+        border-color: #F44336;
+    }
+
+    /* Alert messages */
+    .alert {
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        background-color: #E8F5E9;
+        color: #2E7D32;
+        border-left: 4px solid #4CAF50;
+    }
+
+    .alert-error {
+        background-color: #FFEBEE;
+        color: #C62828;
+        border-left: 4px solid #F44336;
+    }
 </style>
 
 <div class="content-wrapper">
-    <a href="{% url 'get_content' target='quanlydanhmuc' %}" class="back-button" style="text-decoration: none; color: #0d6efd; margin-right: 10px;">
+    <a href="{% url 'quanlydanhmuc' %}" class="back-button" style="text-decoration: none; color: #0d6efd; margin-right: 10px;">
         <i class="fas fa-chevron-left" style="margin-right: 5px; margin-top: 3px" ></i> Quay lại danh sách
     </a>
     <h1 class="page-title">Sửa danh mục</h1>
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <div class="card">
-        <form id="editCategoryForm">
+        <form id="editCategoryForm" method="post" action="">
+            {% csrf_token %}
             <div class="form-group">
-                <label for="categoryName" class="form-label">Tên danh mục <span class="required">*</span></label>
-                <input type="text" id="categoryName" name="categoryName" class="form-input" required value="Tin tức">
+                <label for="ten_dm" class="form-label">Tên danh mục <span class="required">*</span></label>
+                <input type="text" id="ten_dm" name="ten_dm" class="form-input" required value="{{ danh_muc.ten_dm }}">
+                <span class="error-message" id="ten_dm_error">Vui lòng nhập tên danh mục</span>
             </div>
-            
+
             <div class="form-group">
-                <label for="categorySlug" class="form-label">Đường dẫn <span class="required">*</span></label>
-                <input type="text" id="categorySlug" name="categorySlug" class="form-input" required value="tin-tuc">
+                <label for="slug" class="form-label">Đường dẫn <span class="required">*</span></label>
+                <input type="text" id="slug" name="slug" class="form-input" required value="{{ danh_muc.slug }}">
                 <span class="form-hint">Đường dẫn sẽ hiển thị trên URL của trang danh mục</span>
+                <span class="error-message" id="slug_error">Vui lòng nhập đường dẫn hợp lệ</span>
             </div>
-            
+
             <div class="form-group">
-                <label for="parentCategory" class="form-label">Danh mục cha</label>
-                <select id="parentCategory" name="parentCategory" class="form-select">
+                <label for="parent_id" class="form-label">Danh mục cha</label>
+                <select id="parent_id" name="parent_id" class="form-select">
                     <option value="">Chọn danh mục cha</option>
-                    <option value="1">Giới thiệu</option>
-                    <option value="2">Dịch vụ</option>
-                    <option value="3">Sản phẩm</option>
+                    {% for category in parent_categories %}
+                        <option value="{{ category.ma_dm }}" {% if danh_muc.parent_id and danh_muc.parent_id.ma_dm == category.ma_dm %}selected{% endif %}>{{ category.ten_dm }}</option>
+                    {% endfor %}
                 </select>
             </div>
-            
+
             <div class="form-group">
-                <label for="categoryDescription" class="form-label">Mô tả</label>
-                <textarea id="categoryDescription" name="categoryDescription" class="form-textarea" placeholder="Nhập mô tả cho danh mục">Danh mục chứa các tin tức mới nhất về công nghệ và thị trường.</textarea>
+                <label for="mo_ta" class="form-label">Mô tả</label>
+                <textarea id="mo_ta" name="mo_ta" class="form-textarea" placeholder="Nhập mô tả cho danh mục">{{ danh_muc.mo_ta }}</textarea>
             </div>
-            
+
             <div class="form-group">
                 <div class="toggle-container">
                     <label class="toggle-label">Trạng thái</label>
                     <label class="toggle-switch">
-                        <input type="checkbox" id="statusToggle" name="status" checked>
+                        <input type="checkbox" id="trang_thai" name="trang_thai" {% if danh_muc.trang_thai %}checked{% endif %}>
                         <span class="toggle-slider"></span>
                     </label>
-                    <span class="toggle-status" id="statusText">Đang hoạt động</span>
+                    <span class="toggle-status" id="statusText">{% if danh_muc.trang_thai %}Đang hoạt động{% else %}Không hoạt động{% endif %}</span>
                 </div>
             </div>
-            
+
             <div class="form-actions">
-                <a href="/get-content/quanlydanhmuc/" class="btn-cancel">Hủy</a>
-                <button type="button" id="btnSave" class="btn-save">Lưu danh mục</button>
+                <a href="{% url 'quanlydanhmuc' %}" class="btn-cancel">Hủy</a>
+                <button type="submit" class="btn-save">Lưu danh mục</button>
             </div>
         </form>
-    </div>
-</div>
-
-<!-- Modal xác nhận lưu -->
-<div id="confirmModal" class="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeConfirmModal()">
-            <i class="fas fa-times"></i>
-        </button>
-        <div class="confirm-modal">
-            <div class="confirm-header">
-                <i class="fas fa-exclamation-triangle confirm-icon"></i>
-                <h3 class="confirm-title">Bạn có chắc chắn muốn lưu không?</h3>
-            </div>
-            <div class="warning-box">
-                <p class="warning-text">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Hành động này không thể hoàn tác và có thể ảnh hưởng đến dữ liệu liên quan.
-                </p>
-            </div>
-            <div class="confirm-actions">
-                <button class="btn-confirm-cancel" onclick="closeConfirmModal()">Hủy</button>
-                <button class="btn-confirm-save" onclick="saveCategory()">Có</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal thông báo thành công -->
-<div id="successModal" class="modal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeSuccessModal()">
-            <i class="fas fa-times"></i>
-        </button>
-        <div class="success-modal">
-            <div class="success-icon-container">
-                <i class="fas fa-check success-icon"></i>
-            </div>
-            <h3 class="success-title">Thành công!</h3>
-            <p class="success-message">Sửa danh mục thành công</p>
-            <button class="btn-success" onclick="closeSuccessModal()">Đóng</button>
-        </div>
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Toggle switch functionality
-        const statusToggle = document.getElementById('statusToggle');
+        const statusToggle = document.getElementById('trang_thai');
         const statusText = document.getElementById('statusText');
-        
+
         statusToggle.addEventListener('change', function() {
             statusText.textContent = this.checked ? 'Đang hoạt động' : 'Không hoạt động';
         });
-        
+
         // Auto-generate slug from category name
-        const categoryNameInput = document.getElementById('categoryName');
-        const categorySlugInput = document.getElementById('categorySlug');
-        
+        const categoryNameInput = document.getElementById('ten_dm');
+        const categorySlugInput = document.getElementById('slug');
+
+        // Check if slug has been manually edited
+        let slugEdited = false;
+
         categoryNameInput.addEventListener('input', function() {
             // Only auto-generate if user hasn't edited the slug
-            if (!categorySlugInput.dataset.edited) {
+            if (!slugEdited) {
                 const slug = createSlug(this.value);
                 categorySlugInput.value = slug;
             }
         });
-        
+
         categorySlugInput.addEventListener('input', function() {
             // Mark that user has edited the slug
-            this.dataset.edited = 'true';
+            slugEdited = true;
         });
-        
-        // Save button click handler
-        const btnSave = document.getElementById('btnSave');
-        btnSave.addEventListener('click', function() {
-            // Show confirmation modal
-            document.getElementById('confirmModal').style.display = 'flex';
+
+        // Form validation
+        const editCategoryForm = document.getElementById('editCategoryForm');
+
+        editCategoryForm.addEventListener('submit', function(e) {
+            let isValid = true;
+
+            // Validate category name
+            const tenDm = document.getElementById('ten_dm');
+            const tenDmError = document.getElementById('ten_dm_error');
+
+            if (!tenDm.value.trim()) {
+                tenDm.classList.add('error');
+                tenDmError.style.display = 'block';
+                isValid = false;
+            } else {
+                tenDm.classList.remove('error');
+                tenDmError.style.display = 'none';
+            }
+
+            // Validate slug
+            const slug = document.getElementById('slug');
+            const slugError = document.getElementById('slug_error');
+
+            if (!slug.value.trim() || !/^[a-z0-9-]+$/.test(slug.value)) {
+                slug.classList.add('error');
+                slugError.style.display = 'block';
+                isValid = false;
+            } else {
+                slug.classList.remove('error');
+                slugError.style.display = 'none';
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
         });
     });
-    
+
     function createSlug(text) {
         return text
             .toLowerCase()
@@ -458,27 +492,6 @@
             .replace(/[đĐ]/g, 'd')
             .replace(/[^a-z0-9\s]/g, '')
             .replace(/\s+/g, '-');
-    }
-    
-    function closeConfirmModal() {
-        document.getElementById('confirmModal').style.display = 'none';
-    }
-    
-    function saveCategory() {
-        // Close confirm modal
-        closeConfirmModal();
-        
-        // Simulate saving (you would normally send data to server here)
-        setTimeout(function() {
-            // Show success modal
-            document.getElementById('successModal').style.display = 'flex';
-        }, 500);
-    }
-    
-    function closeSuccessModal() {
-        document.getElementById('successModal').style.display = 'none';
-        // Redirect back to category list
-        window.location.href = '/get-content/quanlydanhmuc/';
     }
 </script>
 {% endblock %}

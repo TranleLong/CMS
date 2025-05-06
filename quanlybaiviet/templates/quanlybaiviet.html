@@ -5,10 +5,10 @@
   <div class="content-header">
     <h1 class="content-title">Quản lý bài viết</h1>
     <div class="content-actions">
-      <button class="btn btn-primary" id="btnThemBaiViet">
+      <a href="{% url 'them_baiviet' %}" class="btn btn-primary" id="btnThemBaiViet">
         <i class="fas fa-plus"></i>
         Thêm bài viết mới
-      </button>
+      </a>
       <button class="btn btn-outline-primary" id="btnXuatBaiViet">
         <i class="fas fa-download"></i>
         Xuất bài viết
@@ -23,10 +23,30 @@
         <p class="card-subtitle">Hiển thị tất cả các bài viết trong hệ thống của bạn</p>
 
         <div class="search-wrapper">
-          <div class="search-input">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" placeholder="Tìm kiếm bài viết..." class="form-control">
-          </div>
+          <form method="get" action="{% url 'quanlybaiviet' %}">
+            <div class="search-input">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" name="search" placeholder="Tìm kiếm bài viết..." class="form-control" value="{{ search_query }}">
+            </div>
+
+            <div class="filter-container" style="display: flex; gap: 10px; margin-top: 10px;">
+              <select name="danh_muc" class="form-control" style="width: auto;">
+                <option value="">Tất cả danh mục</option>
+                {% for danh_muc in danh_muc_list %}
+                <option value="{{ danh_muc.ma_dm }}" {% if selected_danh_muc == danh_muc.ma_dm|stringformat:"s" %}selected{% endif %}>{{ danh_muc.ten_dm }}</option>
+                {% endfor %}
+              </select>
+
+              <select name="trang_thai" class="form-control" style="width: auto;">
+                <option value="">Tất cả trạng thái</option>
+                <option value="Đăng trang" {% if selected_trang_thai == "Đăng trang" %}selected{% endif %}>Đăng trang</option>
+                <option value="Chờ duyệt" {% if selected_trang_thai == "Chờ duyệt" %}selected{% endif %}>Chờ duyệt</option>
+                <option value="Đã duyệt" {% if selected_trang_thai == "Đã duyệt" %}selected{% endif %}>Đã duyệt</option>
+              </select>
+
+              <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">Lọc</button>
+            </div>
+          </form>
         </div>
       </div>
 
@@ -44,54 +64,32 @@
               </tr>
             </thead>
             <tbody>
+              {% for bai_viet in bai_viet_list %}
               <tr>
-                <td>Bài viết giới thiệu</td>
-                <td>Cát Hải</td>
-                <td>MV001</td>
-                <td><span class="badge badge-primary">Đã xuất bản</span></td>
-                <td>13/03/2023</td>
+                <td>{{ bai_viet.tieu_de }}</td>
+                <td>{{ bai_viet.ma_nguoi_dung.first_name }} {{ bai_viet.ma_nguoi_dung.last_name }}</td>
+                <td>{{ bai_viet.ma_dm.ten_dm }}</td>
+                <td>
+                  {% if bai_viet.trang_thai == "Đăng trang" %}
+                    <span class="badge badge-success">Đăng trang</span>
+                  {% elif bai_viet.trang_thai == "Chờ duyệt" %}
+                    <span class="badge badge-warning">Chờ duyệt</span>
+                  {% else %}
+                    <span class="badge badge-primary">Đã duyệt</span>
+                  {% endif %}
+                </td>
+                <td>{{ bai_viet.ngay_dang|date:"d/m/Y" }}</td>
                 <td class="action-buttons">
-                  <button class="btn-icon btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                  <button class="btn-icon btn-edit" title="Sửa"><i class="fas fa-edit"></i></button>
-                  <button class="btn-icon btn-delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                  <a href="{% url 'xem_baiviet' bai_viet.ma_bv %}" class="btn-icon btn-view" title="Xem"><i class="fas fa-eye"></i></a>
+                  <a href="{% url 'sua_baiviet' bai_viet.ma_bv %}" class="btn-icon btn-edit" title="Sửa"><i class="fas fa-edit"></i></a>
+                  <button class="btn-icon btn-delete" onclick="confirmDelete({{ bai_viet.ma_bv }}, '{{ bai_viet.tieu_de|escapejs }}')" title="Xóa"><i class="fas fa-trash"></i></button>
                 </td>
               </tr>
+              {% empty %}
               <tr>
-                <td>Giới thiệu sản phẩng tốt</td>
-                <td>Chí Hải</td>
-                <td>MV002</td>
-                <td><span class="badge badge-warning">Chờ duyệt</span></td>
-                <td>10/03/2023</td>
-                <td class="action-buttons">
-                  <button class="btn-icon btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                  <button class="btn-icon btn-edit" title="Sửa"><i class="fas fa-edit"></i></button>
-                  <button class="btn-icon btn-delete" title="Xóa"><i class="fas fa-trash"></i></button>
-                </td>
+                <td colspan="6" style="text-align: center; padding: 20px;">Không có bài viết nào</td>
               </tr>
-              <tr>
-                <td>Tin tức mới nhất</td>
-                <td>Trí Đức</td>
-                <td>MV003</td>
-                <td><span class="badge badge-success">Đăng trang</span></td>
-                <td>08/03/2023</td>
-                <td class="action-buttons">
-                  <button class="btn-icon btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                  <button class="btn-icon btn-edit" title="Sửa"><i class="fas fa-edit"></i></button>
-                  <button class="btn-icon btn-delete" title="Xóa"><i class="fas fa-trash"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>Tin tức hot</td>
-                <td>Trí Đức</td>
-                <td>MV004</td>
-                <td><span class="badge badge-success">Đăng trang</span></td>
-                <td>05/03/2023</td>
-                <td class="action-buttons">
-                  <button class="btn-icon btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                  <button class="btn-icon btn-edit" title="Sửa"><i class="fas fa-edit"></i></button>
-                  <button class="btn-icon btn-delete" title="Xóa"><i class="fas fa-trash"></i></button>
-                </td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -100,16 +98,50 @@
       <div class="card-footer">
         <div class="pagination-wrapper">
           <ul class="pagination">
-            <li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a></li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a></li>
+            {% if bai_viet_list.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_danh_muc %}&danh_muc={{ selected_danh_muc }}{% endif %}{% if selected_trang_thai %}&trang_thai={{ selected_trang_thai }}{% endif %}"><i class="fas fa-chevron-left"></i></a></li>
+            {% else %}
+              <li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a></li>
+            {% endif %}
+
+            {% for i in bai_viet_list.paginator.page_range %}
+              {% if bai_viet_list.number == i %}
+                <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+              {% elif i > bai_viet_list.number|add:'-3' and i < bai_viet_list.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_danh_muc %}&danh_muc={{ selected_danh_muc }}{% endif %}{% if selected_trang_thai %}&trang_thai={{ selected_trang_thai }}{% endif %}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if bai_viet_list.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ bai_viet_list.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_danh_muc %}&danh_muc={{ selected_danh_muc }}{% endif %}{% if selected_trang_thai %}&trang_thai={{ selected_trang_thai }}{% endif %}"><i class="fas fa-chevron-right"></i></a></li>
+            {% else %}
+              <li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a></li>
+            {% endif %}
           </ul>
           <div class="pagination-info">
-            Hiển thị 1-10 của 24 bài viết
+            Hiển thị {{ bai_viet_list.start_index }}-{{ bai_viet_list.end_index }} của {{ total_count }} bài viết
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div class="modal" id="deleteModal" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Xác nhận xóa</h4>
+        <button type="button" class="close" onclick="closeDeleteModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc chắn muốn xóa bài viết "<span id="deleteItemName"></span>"?</p>
+        <p>Hành động này không thể hoàn tác.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeDeleteModal()">Hủy</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
       </div>
     </div>
   </div>
@@ -162,6 +194,11 @@
     background-color: transparent;
     color: #0d6efd;
     border: 1px solid #0d6efd;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
   }
 
   .card {
@@ -347,57 +384,134 @@
     color: #6c757d;
     font-size: 14px;
   }
+
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-dialog {
+    width: 80%;
+    max-width: 500px;
+    margin: 50px auto;
+  }
+
+  .modal-content {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid #e9ecef;
+  }
 </style>
 
 <!-- Optional JavaScript for functionality -->
 <script>
-  // Add event listeners for buttons
-  document.addEventListener('DOMContentLoaded', function() {
-    // Add new article button
-    const btnThemBaiViet = document.getElementById('btnThemBaiViet');
-    if (btnThemBaiViet) {
-      btnThemBaiViet.addEventListener('click', function() {
-        // Redirect to add new article page or open modal
-        window.location.href = '/get-content/quanlybaiviet/thembaiviet/';
-      });
-    }
+  // Xử lý xác nhận xóa bài viết
+  let itemIdToDelete = null;
 
-    // Edit buttons
-    const editButtons = document.querySelectorAll('.btn-edit');
-    editButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const row = this.closest('tr');
-        const title = row.querySelector('td:first-child').textContent;
-        // Redirect to edit article page
-        window.location.href = '/get-content/quanlybaiviet/suabaiviet/';//////////////////
-      });
+  function confirmDelete(id, name) {
+    itemIdToDelete = id;
+    document.getElementById('deleteItemName').textContent = name;
+    document.getElementById('deleteModal').style.display = 'block';
+
+    // Cập nhật sự kiện cho nút xác nhận xóa
+    document.getElementById('confirmDeleteBtn').onclick = function() {
+      deleteItem(itemIdToDelete);
+    };
+  }
+
+  function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+  }
+
+  function deleteItem(id) {
+    // Gửi yêu cầu xóa bài viết
+    fetch(`/quanlybaiviet/xoabaiviet/${id}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      closeDeleteModal();
+
+      if (data.success) {
+        // Hiển thị thông báo thành công
+        alert(data.message);
+        // Tải lại trang
+        window.location.reload();
+      } else {
+        // Hiển thị thông báo lỗi
+        alert(data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      closeDeleteModal();
+      alert('Có lỗi xảy ra khi xóa bài viết');
     });
+  }
 
-    // view buttons
-    const viewButtons = document.querySelectorAll('.btn-view');
-    viewButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const row = this.closest('tr');
-        const title = row.querySelector('td:first-child').textContent;
-        // Redirect to edit article page
-        window.location.href = '/get-content/quanlybaiviet/xembaiviet/';//////////////////
-      });
-    });
-
-    // Delete buttons
-    const deleteButtons = document.querySelectorAll('.btn-delete');
-    deleteButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const row = this.closest('tr');
-        const title = row.querySelector('td:first-child').textContent;
-        // Show confirmation dialog
-        if (confirm('Bạn có chắc chắn muốn xóa bài viết "' + title + '"?')) {
-          // Delete article logic here
-          row.remove();
-          alert('Đã xóa bài viết thành công!');
+  // Hàm lấy CSRF token từ cookie
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
         }
-      });
-    });
+      }
+    }
+    return cookieValue;
+  }
+
+  // Xử lý nút xuất bài viết
+  document.getElementById('btnXuatBaiViet').addEventListener('click', function() {
+    alert('Chức năng xuất bài viết đang được phát triển');
   });
 </script>
 

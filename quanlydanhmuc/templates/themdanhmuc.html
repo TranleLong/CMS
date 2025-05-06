@@ -162,7 +162,7 @@
 </style>
 <div class="content-wrapper">
     <div class="back_to_qldm">
-        <a href="{% url 'get_content' target='quanlydanhmuc' %}" style="text-decoration: none; color: #0d6efd; margin-right: 10px;">
+        <a href="{% url 'quanlydanhmuc' %}" style="text-decoration: none; color: #0d6efd; margin-right: 10px;">
             <i class="fas fa-chevron-left" style="margin-right: 5px; margin-top: 3px"></i>
             Quay lại danh sách
         </a>
@@ -189,9 +189,9 @@
                 <div style="position: relative;">
                     <select id="parentCategory" name="parentCategory">
                         <option value="">Chọn danh mục cha</option>
-                        <option value="1">Tin tức</option>
-                        <option value="2">Sản phẩm</option>
-                        <option value="3">Dịch vụ</option>
+                        {% for category in parent_categories %}
+                        <option value="{{ category.ma_dm }}">{{ category.ten_dm }}</option>
+                        {% endfor %}
                     </select>
                     <i class="fas fa-chevron-down" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #666;"></i>
                 </div>

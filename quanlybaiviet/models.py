@@ -1,3 +1,1 @@
-from django.db import models
-
-# Create your models here.
+from csdl.models import DuyetBaiViet,Media,BaiViet,BaiVietMedia,BaiVietLichDangBai,LichDangBai,BaiVietThe,The,DanhMuc

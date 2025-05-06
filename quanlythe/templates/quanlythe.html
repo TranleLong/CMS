@@ -92,21 +92,53 @@
     .data-table {
         width: 100%;
         border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
     }
 
     .data-table th {
-        text-align: left;
-        padding: 12px 15px;
-        border-bottom: 1px solid #e0e0e0;
+        background-color: #f9f9f9;
         color: #666;
         font-weight: 600;
         font-size: 14px;
+        border-bottom: 1px solid #e0e0e0;
     }
 
     .data-table td {
-        padding: 12px 15px;
         font-size: 14px;
-        border-bottom: 1px solid #eee;
+    }
+
+    .data-table tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    /* Thiết lập chiều rộng cố định cho các cột */
+    .data-table th:nth-child(1),
+    .data-table td:nth-child(1) {
+        width: 35%;
+    }
+
+    .data-table th:nth-child(2),
+    .data-table td:nth-child(2) {
+        width: 30%;
+    }
+
+    .data-table th:nth-child(3),
+    .data-table td:nth-child(3) {
+        width: 15%;
+        text-align: center;
+    }
+
+    .data-table th:nth-child(4),
+    .data-table td:nth-child(4) {
+        width: 20%;
+        text-align: center;
     }
 
     .tag-name {
@@ -124,6 +156,7 @@
     .action-buttons {
         display: flex;
         gap: 5px;
+        justify-content: center;
     }
 
     .btn-icon {
@@ -289,15 +322,107 @@
         cursor: pointer;
         font-size: 14px;
     }
+
+    /* Thêm style cho nút refresh */
+    .btn-refresh {
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .btn-refresh i {
+        margin-right: 8px;
+    }
+
+    /* Style cho loading spinner */
+    .spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: #0d6efd;
+        animation: spin 1s ease-in-out infinite;
+        margin-left: 10px;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Style cho thông báo */
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 4px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: none;
+        z-index: 1100;
+        animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+
+    /* Alert styles */
+    .alert {
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        background-color: #E8F5E9;
+        color: #2E7D32;
+        border-left: 4px solid #4CAF50;
+    }
+
+    .alert-error {
+        background-color: #FFEBEE;
+        color: #C62828;
+        border-left: 4px solid #F44336;
+    }
 </style>
 
 <div class="content-wrapper">
     <div class="header-container">
         <h1 class="page-title">Quản lý thẻ</h1>
-        <a href="/get-content/quanlythe/themthe/" class="btn-add">
-            <i class="fas fa-plus"></i> Thêm thẻ mới
-        </a>
+        <div style="display: flex;">
+            <a href="themthe/" class="btn-add">
+                <i class="fas fa-plus"></i> Thêm thẻ mới
+            </a>
+        </div>
     </div>
+
+    <!-- Hiển thị thông báo lỗi hoặc thành công -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
     <div class="card">
         <div class="card-header">
@@ -307,7 +432,7 @@
 
         <div class="search-container">
             <div class="search-box">
-                <input type="text" placeholder="Tìm kiếm thẻ..." class="search-input">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên hoặc đường dẫn..." class="search-input">
                 <i class="fas fa-search search-icon"></i>
             </div>
         </div>
@@ -321,62 +446,36 @@
                     <th>Thao tác</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tagTableBody">
+                {% for the in the_list %}
                 <tr>
-                    <td class="tag-name">Công nghệ</td>
-                    <td class="tag-slug">cong-nghe</td>
-                    <td class="tag-count">5</td>
+                    <td class="tag-name">{{ the.ten_the }}</td>
+                    <td class="tag-slug">{{ the.slug }}</td>
+                    <td class="tag-count">{{ the.so_bai_viet }}</td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn-icon view-tag" data-id="1" title="Xem">
+                            <button class="btn-icon view-tag" data-id="{{ the.ma_the }}" title="Xem">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            <button class="btn-icon edit-tag" data-id="1" title="Sửa">
+                            <button class="btn-icon edit-tag" data-id="{{ the.ma_the }}" title="Sửa">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn-icon delete" onclick="confirmDelete(1)" title="Xóa">
+                            <button class="btn-icon delete" onclick="confirmDelete({{ the.ma_the }})" title="Xóa">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
+                {% empty %}
                 <tr>
-                    <td class="tag-name">Kinh doanh</td>
-                    <td class="tag-slug">kinh-doanh</td>
-                    <td class="tag-count">3</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-icon view-tag" data-id="2" title="Xem">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn-icon edit-tag" data-id="2" title="Sửa">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-icon delete" onclick="confirmDelete(2)" title="Xóa">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
+                    <td colspan="4" style="text-align: center; padding: 20px;">Không có thẻ nào</td>
                 </tr>
-                <tr>
-                    <td class="tag-name">Giáo dục</td>
-                    <td class="tag-slug">giao-duc</td>
-                    <td class="tag-count">8</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-icon view-tag" data-id="3" title="Xem">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn-icon edit-tag" data-id="3" title="Sửa">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-icon delete" onclick="confirmDelete(3)" title="Xóa">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                {% endfor %}
             </tbody>
+            <!-- Thêm vào cuối bảng, ngay trước đóng thẻ tbody -->
+            <tr id="noResultsMessage" style="display: none;">
+                <td colspan="4" style="text-align: center; padding: 20px;">Không tìm thấy thẻ nào phù hợp</td>
+            </tr>
         </table>
     </div>
 </div>
@@ -425,16 +524,97 @@
     </div>
 </div>
 
+<!-- Thông báo -->
+<div id="notification" class="notification">
+    Dữ liệu đã được cập nhật thành công!
+</div>
+
 <script>
     let tagIdToDelete = null;
 
-    document.addEventListener('DOMContentLoaded', function() {
+    // Hàm để tải lại dữ liệu thẻ
+    function refreshTagData() {
+        console.log("Đang tải lại dữ liệu thẻ...");
+
+        // Hiển thị spinner
+        document.getElementById('refreshSpinner').style.display = 'block';
+
+        // Gọi API để lấy dữ liệu mới
+        fetch('quanlythe/', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            console.log("Nhận phản hồi:", response.status);
+            return response.text();
+        })
+        .then(html => {
+            console.log("Đã nhận HTML, đang phân tích...");
+
+            // Tạo một DOM parser để phân tích HTML
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // Lấy nội dung bảng từ HTML mới
+            const newTableBody = doc.getElementById('tagTableBody');
+
+            if (newTableBody) {
+                console.log("Đã tìm thấy bảng mới, đang cập nhật...");
+                // Cập nhật nội dung bảng
+                document.getElementById('tagTableBody').innerHTML = newTableBody.innerHTML;
+
+                // Khởi tạo lại các sự kiện
+                initializeEvents();
+
+                // Hiển thị thông báo
+                showNotification('Dữ liệu đã được cập nhật thành công!');
+            } else {
+                console.error("Không tìm thấy bảng trong HTML trả về");
+                showNotification('Không thể cập nhật dữ liệu!', 'error');
+            }
+
+            // Ẩn spinner
+            document.getElementById('refreshSpinner').style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Ẩn spinner
+            document.getElementById('refreshSpinner').style.display = 'none';
+            // Hiển thị thông báo lỗi
+            showNotification('Có lỗi xảy ra khi tải dữ liệu!', 'error');
+        });
+    }
+
+    // Hàm hiển thị thông báo
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+
+        // Thay đổi màu sắc dựa trên loại thông báo
+        if (type === 'error') {
+            notification.style.backgroundColor = '#e74c3c';
+        } else {
+            notification.style.backgroundColor = '#4CAF50';
+        }
+
+        // Hiển thị thông báo
+        notification.style.display = 'block';
+
+        // Tự động ẩn thông báo sau 3 giây
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
+
+    // Khởi tạo các sự kiện
+    function initializeEvents() {
         // Thêm sự kiện cho nút xem thẻ
         const viewButtons = document.querySelectorAll('.view-tag');
         viewButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const tagId = this.getAttribute('data-id');
-                window.location.href = `/get-content/quanlythe/xemthe/${tagId}/`;
+                window.location.href = `/quanlythe/xemthe/${tagId}/`;
             });
         });
 
@@ -443,10 +623,45 @@
         editButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const tagId = this.getAttribute('data-id');
-                window.location.href = `/get-content/quanlythe/suathe/${tagId}/`;
+                window.location.href = `/quanlythe/suathe/${tagId}/`;
             });
         });
-    });
+    }
+
+    // Tìm kiếm thẻ
+    function setupSearch() {
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.data-table tbody tr:not(#noResultsMessage)');
+
+            // Đếm số kết quả tìm thấy
+            let resultsCount = 0;
+
+            rows.forEach(row => {
+                // Chỉ lấy nội dung của cột tên thẻ và slug
+                const tagName = row.querySelector('.tag-name')?.textContent.toLowerCase() || '';
+                const tagSlug = row.querySelector('.tag-slug')?.textContent.toLowerCase() || '';
+
+                // Kiểm tra xem searchTerm có trong tên thẻ hoặc slug không
+                if (tagName.includes(searchTerm) || tagSlug.includes(searchTerm)) {
+                    row.style.display = '';
+                    resultsCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Hiển thị thông báo nếu không tìm thấy kết quả
+            const noResultsMessage = document.getElementById('noResultsMessage');
+            if (resultsCount === 0 && searchTerm !== '') {
+                noResultsMessage.style.display = 'table-row';
+                noResultsMessage.querySelector('td').textContent = `Không tìm thấy thẻ nào phù hợp với từ khóa "${searchTerm}"`;
+            } else {
+                noResultsMessage.style.display = 'none';
+            }
+        });
+    }
 
     function confirmDelete(id) {
         tagIdToDelete = id;
@@ -457,18 +672,73 @@
         document.getElementById('deleteModal').style.display = 'none';
     }
 
-    function deleteTag() {
-        // Ở đây sẽ gọi API để xóa thẻ
-        // Sau khi xóa thành công, hiển thị thông báo
-        closeDeleteModal();
-        document.getElementById('successMessage').textContent = 'Xóa thẻ thành công';
-        document.getElementById('successModal').style.display = 'flex';
-    }
-
     function closeSuccessModal() {
         document.getElementById('successModal').style.display = 'none';
-        // Reload trang sau khi xóa thành công
-        // window.location.reload();
+        // Tải lại trang sau khi đóng modal thành công
+        window.location.reload();
     }
+
+    function deleteTag() {
+        // Gửi yêu cầu POST để xóa thẻ
+        fetch(`/quanlythe/xoathe/${tagIdToDelete}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            closeDeleteModal();
+
+            if (data.success) {
+                // Xóa hàng thẻ khỏi bảng
+                const rowToDelete = document.querySelector(`.btn-icon.delete[onclick*="${tagIdToDelete}"]`).closest('tr');
+                if (rowToDelete) {
+                    rowToDelete.remove();
+                }
+
+                // Hiển thị thông báo thành công
+                document.getElementById('successMessage').textContent = data.message;
+                document.getElementById('successModal').style.display = 'flex';
+            } else {
+                // Hiển thị thông báo lỗi
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            closeDeleteModal();
+            alert('Có lỗi xảy ra khi xóa thẻ');
+        });
+    }
+
+    // Hàm lấy CSRF token từ cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Khởi tạo khi trang được tải
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("Trang đã được tải, đang khởi tạo...");
+
+        // Khởi tạo các sự kiện
+        initializeEvents();
+
+        // Thiết lập tìm kiếm
+        setupSearch();
+
+    });
 </script>
 {% endblock %}

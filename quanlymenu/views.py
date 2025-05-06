@@ -9,12 +9,6 @@ def get_content(request, target):
             'baiviet_data': 'Nội dung bài viết mặc định'
         }
         return render(request, 'quanlybaiviet.html', context)
-    elif target == 'quanlydanhmuc':
-        # Trả về nội dung block danh mục
-        context = {
-            'danhmuc_data': 'Nội dung quanlydanhmuc'
-        }
-        return render(request, 'quanlydanhmuc.html', context)
     elif target == 'dashboard':
         context = {
             'dashboard_data': 'Nội dung dashboard'

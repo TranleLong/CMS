@@ -68,7 +68,7 @@
     font-weight: 500;
   }
 
-  .form-group input {
+  .form-group input, .form-group select {
     width: 100%;
     padding: 10px;
     border: 1px solid #e0e0e0;
@@ -244,39 +244,89 @@
     cursor: pointer;
     font-size: 14px;
   }
+
+  /* Alert styles */
+  .alert {
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      font-size: 14px;
+  }
+
+  .alert-success {
+      background-color: #E8F5E9;
+      color: #2E7D32;
+      border-left: 4px solid #4CAF50;
+  }
+
+  .alert-error {
+      background-color: #FFEBEE;
+      color: #C62828;
+      border-left: 4px solid #F44336;
+  }
+
+  .form-error {
+      color: #C62828;
+      font-size: 12px;
+      margin-top: 5px;
+  }
 </style>
 
 <div class="content-wrapper">
-  <a href="/get-content/quanlythanhvien/" class="back-button">
+  <a href="/quanlythanhvien/" class="back-button">
     <i class="fas fa-chevron-left" style="margin-top:4px"></i> Quay lại danh sách
   </a>
 
   <h1 class="page-title">Thêm thành viên mới</h1>
 
+  {% if messages %}
+      {% for message in messages %}
+          <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+              {{ message }}
+          </div>
+      {% endfor %}
+  {% endif %}
+
   <div class="card">
-    <form id="addMemberForm">
+    <form id="addMemberForm" method="post" action="">
+      {% csrf_token %}
+
       <div class="form-row">
         <div class="form-group">
-          <label for="memberName">Tên thành viên <span class="required">*</span></label>
-          <input type="text" id="memberName" name="memberName" placeholder="Nhập tên thành viên" required>
+          <label for="first_name">Tên <span class="required">*</span></label>
+          <input type="text" id="first_name" name="first_name" required placeholder="Nhập tên">
         </div>
         <div class="form-group">
-          <label for="memberEmail">Email <span class="required">*</span></label>
-          <input type="email" id="memberEmail" name="memberEmail" placeholder="Nhập địa chỉ email" required>
+          <label for="last_name">Họ <span class="required">*</span></label>
+          <input type="text" id="last_name" name="last_name" required placeholder="Nhập họ">
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="memberRole">Vai trò <span class="required">*</span></label>
-          <input type="text" id="memberRole" name="memberRole" placeholder="Tác giả" required>
+          <label for="username">Tên đăng nhập <span class="required">*</span></label>
+          <input type="text" id="username" name="username" required placeholder="Nhập tên đăng nhập">
+        </div>
+        <div class="form-group">
+          <label for="email">Email <span class="required">*</span></label>
+          <input type="email" id="email" name="email" required placeholder="Nhập địa chỉ email">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="vai_tro">Vai trò <span class="required">*</span></label>
+          <select id="vai_tro" name="vai_tro" required>
+            <option value="nhan_vien">Nhân viên</option>
+            <option value="quan_ly">Quản lý</option>
+          </select>
         </div>
         <div class="form-group">
           <label>Trạng thái</label>
           <div class="toggle-container">
-            <span style="margin-bottom:8px">Hoạt động</span>
+            <span id="statusText" style="margin-bottom:8px">Hoạt động</span>
             <label class="switch">
-              <input type="checkbox" id="statusToggle" name="status" checked>
+              <input type="checkbox" id="is_active" name="is_active" checked>
               <span class="slider round"></span>
             </label>
           </div>
@@ -285,18 +335,19 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label for="memberPassword">Mật khẩu <span class="required">*</span></label>
-          <input type="password" id="memberPassword" name="memberPassword" placeholder="Nhập mật khẩu" required>
+          <label for="password">Mật khẩu <span class="required">*</span></label>
+          <input type="password" id="password" name="password" required placeholder="Nhập mật khẩu">
         </div>
         <div class="form-group">
-          <label for="confirmPassword">Xác nhận mật khẩu <span class="required">*</span></label>
-          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+          <label for="confirm_password">Xác nhận mật khẩu <span class="required">*</span></label>
+          <input type="password" id="confirm_password" name="confirm_password" required placeholder="Nhập lại mật khẩu">
+          <div class="form-error" id="password_error" style="display: none;">Mật khẩu không khớp</div>
         </div>
       </div>
 
       <div class="form-actions">
-        <a href="/get-content/quanlythanhvien/" class="btn-cancel">Hủy</a>
-        <button type="button" id="btnSave" class="btn-save" onclick="saveMember()">Lưu thành viên</button>
+        <a href="/quanlythanhvien/" class="btn-cancel">Hủy</a>
+        <button type="button" class="btn-save" onclick="validateForm()">Lưu thành viên</button>
       </div>
     </form>
   </div>
@@ -322,35 +373,43 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Toggle switch functionality
-    const statusToggle = document.getElementById('statusToggle');
-    const statusText = statusToggle.previousElementSibling;
-    
+    const statusToggle = document.getElementById('is_active');
+    const statusText = document.getElementById('statusText');
+
     statusToggle.addEventListener('change', function() {
       statusText.textContent = this.checked ? 'Hoạt động' : 'Không hoạt động';
     });
+
+    {% if messages %}
+    // Show success modal if there are success messages
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            document.getElementById('successModal').style.display = 'flex';
+        {% endif %}
+    {% endfor %}
+    {% endif %}
   });
 
-  function saveMember() {
-    // Kiểm tra form
+  function validateForm() {
     const form = document.getElementById('addMemberForm');
-    const password = document.getElementById('memberPassword').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    const passwordError = document.getElementById('password_error');
+
     // Kiểm tra mật khẩu khớp nhau
     if (password !== confirmPassword) {
-      alert('Mật khẩu và xác nhận mật khẩu không khớp!');
-      return;
+      passwordError.style.display = 'block';
+      return false;
+    } else {
+      passwordError.style.display = 'none';
+      form.submit();
     }
-    
-    // Ở đây sẽ gọi API để lưu thành viên
-    // Sau khi lưu thành công, hiển thị thông báo
-    document.getElementById('successModal').style.display = 'flex';
   }
 
   function closeSuccessModal() {
     document.getElementById('successModal').style.display = 'none';
     // Chuyển về trang danh sách thành viên
-    window.location.href = '/get-content/quanlythanhvien/';
+    window.location.href = '/quanlythanhvien/';
   }
 </script>
 {% endblock %}

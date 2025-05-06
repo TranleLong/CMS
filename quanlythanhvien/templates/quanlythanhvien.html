@@ -323,15 +323,44 @@
     cursor: pointer;
     font-size: 14px;
   }
+
+  /* Alert styles */
+  .alert {
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      font-size: 14px;
+  }
+
+  .alert-success {
+      background-color: #E8F5E9;
+      color: #2E7D32;
+      border-left: 4px solid #4CAF50;
+  }
+
+  .alert-error {
+      background-color: #FFEBEE;
+      color: #C62828;
+      border-left: 4px solid #F44336;
+  }
 </style>
 
 <div class="content-wrapper">
   <div class="header-container">
     <h1 class="page-title">Quản lý thành viên</h1>
-    <a href="/get-content/quanlythanhvien/themthanhvien/" class="btn-add">
+    <a href="/quanlythanhvien/themthanhvien/" class="btn-add">
       <i class="fas fa-plus"></i> Thêm thành viên
     </a>
   </div>
+
+  <!-- Hiển thị thông báo lỗi hoặc thành công -->
+  {% if messages %}
+      {% for message in messages %}
+          <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+              {{ message }}
+          </div>
+      {% endfor %}
+  {% endif %}
 
   <div class="card">
     <div class="card-header">
@@ -341,7 +370,7 @@
 
     <div class="search-container">
       <div class="search-box">
-        <input type="text" placeholder="Tìm kiếm thành viên..." class="search-input">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm thành viên..." class="search-input">
         <i class="fas fa-search search-icon"></i>
       </div>
     </div>
@@ -356,80 +385,44 @@
           <th width="10%">Thao tác</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="memberTableBody">
+        {% for thanh_vien in thanh_vien_list %}
         <tr>
           <td>
             <div class="member-info">
               <i class="fas fa-user-circle"></i>
-              <span>Nguyễn Văn A</span>
+              <span>{{ thanh_vien.first_name }} {{ thanh_vien.last_name }}</span>
             </div>
           </td>
-          <td>admin@example.com</td>
-          <td>Quản trị viên</td>
-          <td><span class="status-badge active">Hoạt động</span></td>
+          <td>{{ thanh_vien.email }}</td>
+          <td>{% if thanh_vien.is_staff %}Quản lý{% else %}Nhân viên{% endif %}</td>
+          <td><span class="status-badge {% if thanh_vien.is_active %}active{% else %}inactive{% endif %}">
+            {% if thanh_vien.is_active %}Hoạt động{% else %}Không hoạt động{% endif %}
+          </span></td>
           <td>
             <div class="action-buttons">
-              <button class="btn-icon view-member" data-id="1" title="Xem">
+              <button class="btn-icon view-member" data-id="{{ thanh_vien.id }}" title="Xem">
                 <i class="fas fa-eye"></i>
               </button>
-              <button class="btn-icon edit-member" data-id="1" title="Sửa">
+              <button class="btn-icon edit-member" data-id="{{ thanh_vien.id }}" title="Sửa">
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="btn-icon delete" onclick="confirmDelete(1)" title="Xóa">
+              <button class="btn-icon delete" onclick="confirmDelete({{ thanh_vien.id }})" title="Xóa">
                 <i class="fas fa-trash"></i>
               </button>
             </div>
           </td>
         </tr>
+        {% empty %}
         <tr>
-          <td>
-            <div class="member-info">
-              <i class="fas fa-user-circle"></i>
-              <span>Trần Thị B</span>
-            </div>
-          </td>
-          <td>editor@example.com</td>
-          <td>Biên tập viên</td>
-          <td><span class="status-badge active">Hoạt động</span></td>
-          <td>
-            <div class="action-buttons">
-              <button class="btn-icon view-member" data-id="2" title="Xem">
-                <i class="fas fa-eye"></i>
-              </button>
-              <button class="btn-icon edit-member" data-id="2" title="Sửa">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="btn-icon delete" onclick="confirmDelete(2)" title="Xóa">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </td>
+          <td colspan="5" style="text-align: center; padding: 20px;">Không có thành viên nào</td>
         </tr>
-        <tr>
-          <td>
-            <div class="member-info">
-              <i class="fas fa-user-circle"></i>
-              <span>Lê Văn C</span>
-            </div>
-          </td>
-          <td>author@example.com</td>
-          <td>Tác giả</td>
-          <td><span class="status-badge inactive">Không hoạt động</span></td>
-          <td>
-            <div class="action-buttons">
-              <button class="btn-icon view-member" data-id="3" title="Xem">
-                <i class="fas fa-eye"></i>
-              </button>
-              <button class="btn-icon edit-member" data-id="3" title="Sửa">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="btn-icon delete" onclick="confirmDelete(3)" title="Xóa">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </td>
-        </tr>
+        {% endfor %}
       </tbody>
+      <!-- Thêm vào cuối bảng, ngay trước đóng thẻ tbody -->
+      <tr id="noResultsMessage" style="display: none;">
+        <td colspan="5" style="text-align: center; padding: 20px;">Không tìm thấy thành viên nào phù hợp</td>
+      </tr>
     </table>
   </div>
 </div>
@@ -479,7 +472,7 @@
     viewButtons.forEach(button => {
       button.addEventListener('click', function() {
         const memberId = this.getAttribute('data-id');
-        window.location.href = `/get-content/quanlythanhvien/xemthanhvien/${memberId}/`;
+        window.location.href = `/quanlythanhvien/xemthanhvien/${memberId}/`;
       });
     });
 
@@ -488,10 +481,47 @@
     editButtons.forEach(button => {
       button.addEventListener('click', function() {
         const memberId = this.getAttribute('data-id');
-        window.location.href = `/get-content/quanlythanhvien/suathanhvien/${memberId}/`;
+        window.location.href = `/quanlythanhvien/suathanhvien/${memberId}/`;
       });
     });
+
+    // Thiết lập tìm kiếm
+    setupSearch();
   });
+
+  function setupSearch() {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      const rows = document.querySelectorAll('.data-table tbody tr:not(#noResultsMessage)');
+
+      // Đếm số kết quả tìm thấy
+      let resultsCount = 0;
+
+      rows.forEach(row => {
+        // Chỉ lấy nội dung của cột tên thành viên và email
+        const memberName = row.querySelector('.member-info span')?.textContent.toLowerCase() || '';
+        const memberEmail = row.cells[1]?.textContent.toLowerCase() || '';
+
+        // Kiểm tra xem searchTerm có trong tên thành viên hoặc email không
+        if (memberName.includes(searchTerm) || memberEmail.includes(searchTerm)) {
+          row.style.display = '';
+          resultsCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      // Hiển thị thông báo nếu không tìm thấy kết quả
+      const noResultsMessage = document.getElementById('noResultsMessage');
+      if (resultsCount === 0 && searchTerm !== '') {
+        noResultsMessage.style.display = 'table-row';
+        noResultsMessage.querySelector('td').textContent = `Không tìm thấy thành viên nào phù hợp với từ khóa "${searchTerm}"`;
+      } else {
+        noResultsMessage.style.display = 'none';
+      }
+    });
+  }
 
   function confirmDelete(id) {
     memberIdToDelete = id;
@@ -503,17 +533,60 @@
   }
 
   function deleteThanhVien() {
-    // Ở đây sẽ gọi API để xóa thành viên
-    // Sau khi xóa thành công, hiển thị thông báo
-    hideDeleteConfirm();
-    document.getElementById('successMessage').textContent = 'Xóa thành viên thành công';
-    document.getElementById('successModal').style.display = 'flex';
+    // Gửi yêu cầu POST để xóa thành viên
+    fetch(`/quanlythanhvien/xoathanhvien/${memberIdToDelete}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      hideDeleteConfirm();
+
+      if (data.success) {
+        // Xóa hàng thành viên khỏi bảng
+        const rowToDelete = document.querySelector(`.btn-icon.delete[onclick*="${memberIdToDelete}"]`).closest('tr');
+        if (rowToDelete) {
+          rowToDelete.remove();
+        }
+
+        // Hiển thị thông báo thành công
+        document.getElementById('successMessage').textContent = data.message;
+        document.getElementById('successModal').style.display = 'flex';
+      } else {
+        // Hiển thị thông báo lỗi
+        alert(data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      hideDeleteConfirm();
+      alert('Có lỗi xảy ra khi xóa thành viên');
+    });
   }
 
   function closeSuccessModal() {
     document.getElementById('successModal').style.display = 'none';
-    // Reload trang sau khi xóa thành công
-    // window.location.reload();
+    // Tải lại trang sau khi đóng modal thành công
+    window.location.reload();
+  }
+
+  // Hàm lấy CSRF token từ cookie
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
   }
 </script>
 {% endblock %}

@@ -15,7 +15,6 @@
             background-color: #f8f9fa;
             height: 100%;
             overflow-y: auto;
-            overflow-y: auto;
         }
 
         .article-content {
@@ -198,93 +197,37 @@
 <body>
 <div class="article-container">
         <div class="breadcrumb">
-          <a href="{% url 'get_content' target='quanlybaiviet' %}"  class="breadcrumb-item">
+          <a href="{% url 'quanlybaiviet' %}" class="breadcrumb-item">
             <i class="fas fa-chevron-left"></i>
             Quay lại danh sách
           </a>
-            <h1 class="page-title" style="margin-top: 15px;">Sửa bài viết</h1>
+            <h1 class="page-title" style="margin-top: 15px;">{{ bai_viet.tieu_de }}</h1>
         </div>
         <div class="article-content">
             <!-- Header -->
             <div class="article-header">
-                <img src="/placeholder.svg?height=300&width=800" alt="Xu hướng thiết kế website 2025">
+                {% if bai_viet.anh %}
+                <img src="{{ bai_viet.anh.url }}" alt="{{ bai_viet.tieu_de }}">
+                {% else %}
+                <img src="/placeholder.svg?height=300&width=800" alt="{{ bai_viet.tieu_de }}">
+                {% endif %}
                 <div class="article-header-content">
-                    <h1>10 xu hướng thiết kế website mới nhất năm 2025 mà bạn nên biết</h1>
-                    <p>Cập nhật các xu hướng thiết kế web mới nhất để giúp website của bạn luôn bắt kịp thời đại và thu hút người dùng hiệu quả hơn.</p>
+                    <h1>{{ bai_viet.tieu_de }}</h1>
+                    <p>{{ bai_viet.tom_tat }}</p>
                     <div>
-                        <i class="fas fa-calendar-alt"></i> 15/04/2025
+                        <i class="fas fa-calendar-alt"></i> {{ bai_viet.ngay_dang|date:"d/m/Y" }}
                     </div>
                 </div>
             </div>
 
             <!-- Intro -->
             <div class="article-intro">
-                <p>Thiết kế website không ngừng phát triển và thay đổi với những xu hướng mới mẻ mỗi năm. Năm 2025 đánh dấu sự phát triển vượt bậc về công nghệ và thiết kế với nhiều xu hướng đột phá. Dưới đây là 10 xu hướng thiết kế website nổi bật mà các nhà phát triển và designer cần nắm bắt để tạo ra những sản phẩm đẳng cấp.</p>
+                <p>{{ bai_viet.tom_tat }}</p>
             </div>
 
-            <!-- Section 1 -->
-            <div class="article-section">
-                <h2><span>1</span> Thiết kế tối giản (Minimalism) tiếp tục thống trị</h2>
-                <p>Thiết kế tối giản không chỉ là một xu hướng mà đã trở thành một triết lý thiết kế được ưa chuộng. Năm 2025, xu hướng này sẽ tiếp tục phát triển với:</p>
-                <ul>
-                    <li>Sử dụng không gian trắng nhiều hơn</li>
-                    <li>Tập trung vào nội dung quan trọng</li>
-                    <li>Bố cục đơn giản, dễ theo dõi</li>
-                    <li>Màu sắc tinh tế và có chủ đích rõ ràng</li>
-                </ul>
-                <div class="image-placeholder" style="height: 300px;">
-                    <i class="fas fa-image"></i>
-                </div>
-                <p>Các nhà thiết kế website đang ngày càng ưa chuộng phong cách tối giản vì nó giúp người dùng tập trung vào nội dung quan trọng và cải thiện trải nghiệm người dùng.</p>
-            </div>
-
-            <!-- Section 2 -->
-            <div class="article-section">
-                <h2><span>2</span> Thiết kế lấy cảm hứng từ Neomorphism</h2>
-                <p>Neomorphism là một phong cách thiết kế kết hợp giữa skeuomorphism (thiết kế mô phỏng vật thể thực) và flat design (thiết kế phẳng). Xu hướng này tạo ra các giao diện:</p>
-                <ul>
-                    <li>Có độ sâu và kết cấu nhẹ nhàng</li>
-                    <li>Sử dụng hiệu ứng đổ bóng tinh tế</li>
-                    <li>Tạo cảm giác các phần tử nổi lên từ nền</li>
-                    <li>Mang lại trải nghiệm trực quan và dễ chịu</li>
-                </ul>
-                <p>"Neomorphism mang đến một cái nhìn mới về thiết kế UI với các yếu tố mềm mại, tinh tế và có chiều sâu, tạo cảm giác gần gũi hơn với người dùng so với thiết kế phẳng truyền thống" - theo các chuyên gia UI/UX.</p>
-            </div>
-
-            <!-- Section 3 -->
-            <div class="article-section">
-                <h2><span>3</span> Trải nghiệm 3D và thực tế ảo</h2>
-                <p>Với sự phát triển của công nghệ, các yếu tố 3D và thực tế ảo đang ngày càng được tích hợp vào thiết kế web. Xu hướng này mang đến:</p>
-                <ul>
-                    <li>Trải nghiệm tương tác sống động và hấp dẫn</li>
-                    <li>Khả năng khám phá sản phẩm từ nhiều góc độ</li>
-                    <li>Tăng thời gian người dùng ở lại trang web</li>
-                    <li>Tạo ấn tượng mạnh và khó quên với khách hàng</li>
-                </ul>
-            </div>
-
-            <!-- Section 4 -->
-            <div class="article-section">
-                <h2><span>4</span> Màu sắc sống động và gradient</h2>
-                <p>Năm 2025, màu sắc trong thiết kế web sẽ trở nên táo bạo và sống động hơn. Đặc biệt, các gradient (chuyển màu) sẽ tiếp tục thống trị với:</p>
-                <ul>
-                    <li>Gradient đa chiều với nhiều màu sắc</li>
-                    <li>Kết hợp giữa các tông màu tương phản</li>
-                    <li>Sử dụng gradient làm nền cho các phần tử quan trọng</li>
-                    <li>Tạo chiều sâu và sự chuyển động cho giao diện</li>
-                </ul>
-            </div>
-
-            <!-- Section 5 -->
-            <div class="article-section">
-                <h2><span>5</span> Typography sáng tạo</h2>
-                <p>Typography không chỉ là một phần của nội dung mà còn là một yếu tố thiết kế quan trọng. Xu hướng typography năm 2025 bao gồm:</p>
-                <ul>
-                    <li>Sử dụng font chữ tùy chỉnh và độc đáo</li>
-                    <li>Kết hợp nhiều kiểu font trong cùng một thiết kế</li>
-                    <li>Typography động và tương tác</li>
-                    <li>Chữ lớn và đậm làm điểm nhấn</li>
-                </ul>
+            <!-- Content -->
+            <div class="article-content">
+                {{ bai_viet.noi_dung|linebreaks }}
             </div>
         </div>
 
@@ -293,40 +236,28 @@
             <div class="sidebar-posts">
                 <h3>Bài viết liên quan</h3>
 
+                {% for bv in bai_viet_lien_quan %}
                 <div class="sidebar-post">
-                    <img src="/placeholder.svg?height=70&width=70" alt="Bài viết liên quan">
+                    {% if bv.anh %}
+                    <img src="{{ bv.anh.url }}" alt="{{ bv.tieu_de }}">
+                    {% else %}
+                    <img src="/placeholder.svg?height=70&width=70" alt="{{ bv.tieu_de }}">
+                    {% endif %}
                     <div class="sidebar-post-info">
-                        <h4>5 công cụ thiết kế website AI tốt nhất năm 2025</h4>
-                        <p>10/04/2025</p>
+                        <h4>{{ bv.tieu_de }}</h4>
+                        <p>{{ bv.ngay_dang|date:"d/m/Y" }}</p>
                     </div>
                 </div>
-
-                <div class="sidebar-post">
-                    <img src="/placeholder.svg?height=70&width=70" alt="Bài viết liên quan">
-                    <div class="sidebar-post-info">
-                        <h4>Làm thế nào để tối ưu tốc độ tải trang web?</h4>
-                        <p>05/04/2025</p>
-                    </div>
-                </div>
-
-                <div class="sidebar-post">
-                    <img src="/placeholder.svg?height=70&width=70" alt="Bài viết liên quan">
-                    <div class="sidebar-post-info">
-                        <h4>Những lỗi thiết kế UX phổ biến cần tránh</h4>
-                        <p>01/04/2025</p>
-                    </div>
-                </div>
+                {% empty %}
+                <p>Không có bài viết liên quan</p>
+                {% endfor %}
             </div>
 
             <div>
                 <h3>Thẻ</h3>
                 <div class="sidebar-tags">
-                    <span class="sidebar-tag">Thiết kế web</span>
-                    <span class="sidebar-tag">UX/UI</span>
-                    <span class="sidebar-tag">Xu hướng 2025</span>
-                    <span class="sidebar-tag">Minimalism</span>
-                    <span class="sidebar-tag">3D</span>
-                    <span class="sidebar-tag">Typography</span>
+                    <span class="sidebar-tag">{{ bai_viet.ma_the.ten_the }}</span>
+                    <span class="sidebar-tag">{{ bai_viet.ma_dm.ten_dm }}</span>
                 </div>
             </div>
         </div>

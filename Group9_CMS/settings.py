@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'quanlythanhvien',
     'quanlymenu',
 ]
-
+# AUTH_USER_MODEL = 'quanlybaiviet.CustomAuthUser'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -63,7 +63,9 @@ import os
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ BASE_DIR / 'templates' ],
+        'DIRS': [
+            BASE_DIR / 'templates',  # Thư mục templates của bạn
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,9 +74,14 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'custom_filters': 'quanlydanhmuc.templatetags.custom_filters',  # Đảm bảo đã khai báo đúng
+            },
+
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'Group9_CMS.wsgi.application'
 
@@ -88,7 +95,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Group9_CMS.settings')
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -133,3 +140,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# settings.py
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
