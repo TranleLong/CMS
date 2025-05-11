@@ -32,6 +32,7 @@ urlpatterns = [
     path('', include('quanlymedia.urls')),
     path('', include('quanlythanhvien.urls')),
     path('', include('quanlymenu.urls')),
+    path('imaps/', include('imaps_agency.urls')),
 
 ]
 if settings.DEBUG:

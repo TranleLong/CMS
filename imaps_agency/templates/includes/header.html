@@ -1,0 +1,151 @@
+<header class="sticky top-0 z-50 bg-white shadow-sm">
+    <div class="container mx-auto px-4">
+        <div class="flex h-20 items-center justify-between">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="flex items-center">
+                <span class="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-2xl font-bold text-transparent">
+                    I MAPS AGENCY
+                </span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex md:items-center md:space-x-1">
+                <a href="{% url 'home' %}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                    TRANG CHỦ
+                </a>
+                <div class="relative group">
+                    <button class="flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                        DỊCH VỤ <i data-lucide="chevron-down" class="ml-1 h-4 w-4"></i>
+                    </button>
+                    <div class="absolute left-0 top-full hidden w-64 translate-y-1 rounded-md bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5 group-hover:block">
+                        {% for service in global_services %}
+                        <a href="{% url 'service_detail' service.slug %}" class="block rounded-md px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                            {{ service.ten_dm }}
+                        </a>
+                        {% empty %}
+                        <span class="block rounded-md px-4 py-2 text-sm text-gray-500">
+                            Không có dịch vụ nào
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="relative group">
+                    <button class="flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                        GIỚI THIỆU <i data-lucide="chevron-down" class="ml-1 h-4 w-4"></i>
+                    </button>
+                    <div class="absolute left-0 top-full hidden w-56 translate-y-1 rounded-md bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5 group-hover:block">
+                        <a href="{% url 'about' %}" class="block rounded-md px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                            Về chúng tôi
+                        </a>
+                        <a href="{% url 'mission' %}" class="block rounded-md px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                            Sứ mệnh
+                        </a>
+                    </div>
+                </div>
+                <a href="{% url 'contact' %}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                    LIÊN HỆ
+                </a>
+            </nav>
+
+            <!-- Right side actions -->
+            <div class="flex items-center space-x-4">
+                <!-- Search toggle -->
+                <button id="searchToggle" class="rounded-full p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700" aria-label="Tìm kiếm">
+                    <i data-lucide="search" class="h-5 w-5"></i>
+                </button>
+
+                <!-- Mobile menu button -->
+                <button id="mobileMenuToggle" class="rounded-md p-1.5 text-gray-500 md:hidden" aria-label="Menu">
+                    <i data-lucide="menu" class="h-6 w-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search bar (expandable) -->
+        <div id="searchBar" class="max-h-0 overflow-hidden opacity-0 transition-all duration-300 ease-in-out">
+            <div class="relative py-3">
+                <input type="text" placeholder="Tìm kiếm..." class="w-full rounded-full border border-gray-200 bg-gray-50 px-4 py-2 pl-10 text-sm focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400">
+                <i data-lucide="search" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"></i>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mobileMenu" class="hidden md:hidden">
+            <div class="space-y-1 px-2 pb-3 pt-2">
+                <a href="{% url 'home' %}" class="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                    Trang chủ
+                </a>
+                <div class="space-y-1">
+                    <button class="mobile-submenu-toggle flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                        Dịch vụ
+                        <i data-lucide="chevron-down" class="h-4 w-4"></i>
+                    </button>
+                    <div class="mobile-submenu hidden pl-4">
+                        {% for service in global_services %}
+                        <a href="{% url 'service_detail' service.slug %}" class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                            {{ service.ten_dm }}
+                        </a>
+                        {% empty %}
+                        <span class="block rounded-md px-3 py-2 text-sm text-gray-500">
+                            Không có dịch vụ nào
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <button class="mobile-submenu-toggle flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                        Giới thiệu
+                        <i data-lucide="chevron-down" class="h-4 w-4"></i>
+                    </button>
+                    <div class="mobile-submenu hidden pl-4">
+                        <a href="{% url 'about' %}" class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                            Về chúng tôi
+                        </a>
+                        <a href="{% url 'mission' %}" class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                            Sứ mệnh
+                        </a>
+                    </div>
+                </div>
+                <a href="{% url 'contact' %}" class="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                    Liên hệ
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search toggle
+        const searchToggle = document.getElementById('searchToggle');
+        const searchBar = document.getElementById('searchBar');
+
+        searchToggle.addEventListener('click', function() {
+            if (searchBar.classList.contains('max-h-0')) {
+                searchBar.classList.remove('max-h-0', 'opacity-0');
+                searchBar.classList.add('max-h-16', 'opacity-100', 'py-3');
+            } else {
+                searchBar.classList.remove('max-h-16', 'opacity-100', 'py-3');
+                searchBar.classList.add('max-h-0', 'opacity-0');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Mobile submenu toggles
+        const mobileSubmenuToggles = document.querySelectorAll('.mobile-submenu-toggle');
+
+        mobileSubmenuToggles.forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const submenu = this.nextElementSibling;
+                submenu.classList.toggle('hidden');
+            });
+        });
+    });
+</script>

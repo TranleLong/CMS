@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'quanlymedia',
     'quanlythanhvien',
     'quanlymenu',
+    'imaps_agency',
 ]
 # AUTH_USER_MODEL = 'quanlybaiviet.CustomAuthUser'
 MIDDLEWARE = [
@@ -73,6 +74,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'imaps_agency.context_processors.global_context',
             ],
             'libraries': {
                 'custom_filters': 'quanlydanhmuc.templatetags.custom_filters',  # Đảm bảo đã khai báo đúng

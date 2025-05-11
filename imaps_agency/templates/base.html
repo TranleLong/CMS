@@ -1,0 +1,65 @@
+{% load static %}
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}I MAPS AGENCY - Giải pháp Marketing Toàn Diện{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="min-h-screen bg-[#FFF5F5]">
+    {% include 'includes/header.html' %}
+
+    {% block content %}{% endblock %}
+
+    {% include 'includes/footer.html' %}
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded');
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        if (mobileMenuToggle && mobileMenu) {
+            mobileMenuToggle.addEventListener('click', function() {
+                console.log('Mobile menu toggle clicked');
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Mobile submenu toggles
+        const mobileSubmenuToggles = document.querySelectorAll('.mobile-submenu-toggle');
+
+        mobileSubmenuToggles.forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                console.log('Mobile submenu toggle clicked');
+                const submenu = this.nextElementSibling;
+                submenu.classList.toggle('hidden');
+            });
+        });
+
+        // Dropdown menu for touch devices
+        const dropdownButtons = document.querySelectorAll('.dropdown button');
+
+        dropdownButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (window.innerWidth < 768) {
+                    e.preventDefault();
+                    const dropdown = this.closest('.dropdown');
+                    dropdown.classList.toggle('show');
+                }
+            });
+        });
+    });
+</script>
