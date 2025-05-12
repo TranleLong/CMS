@@ -32,6 +32,7 @@ urlpatterns = [
     path('', include('quanlymedia.urls')),
     path('', include('quanlythanhvien.urls')),
     path('', include('quanlymenu.urls')),
+    path('', include('imaps.urls')),  # Thêm URL của app imaps
 
 ]
 if settings.DEBUG:

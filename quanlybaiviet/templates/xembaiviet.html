@@ -192,6 +192,10 @@
             display: flex;
             gap: 10px;
         }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
     </style>
 
 <body>
@@ -233,6 +237,31 @@
 
         <!-- Sidebar -->
         <div class="article-sidebar">
+            <div class="sidebar-section">
+                <h3>Menu</h3>
+                <div class="sidebar-tags">
+                    {% if bai_viet.menu %}
+                    <span class="sidebar-tag">{{ bai_viet.menu.tieu_de }}</span>
+                    {% else %}
+                    <span class="sidebar-tag">Không có menu</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Thẻ</h3>
+                <div class="sidebar-tags">
+                    <span class="sidebar-tag">{{ bai_viet.ma_the.ten_the }}</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Danh mục</h3>
+                <div class="sidebar-tags">
+                    <span class="sidebar-tag">{{ bai_viet.ma_dm.ten_dm }}</span>
+                </div>
+            </div>
+
             <div class="sidebar-posts">
                 <h3>Bài viết liên quan</h3>
 
@@ -251,14 +280,6 @@
                 {% empty %}
                 <p>Không có bài viết liên quan</p>
                 {% endfor %}
-            </div>
-
-            <div>
-                <h3>Thẻ</h3>
-                <div class="sidebar-tags">
-                    <span class="sidebar-tag">{{ bai_viet.ma_the.ten_the }}</span>
-                    <span class="sidebar-tag">{{ bai_viet.ma_dm.ten_dm }}</span>
-                </div>
             </div>
         </div>
     </div>

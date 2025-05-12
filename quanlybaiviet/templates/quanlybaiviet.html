@@ -9,10 +9,6 @@
         <i class="fas fa-plus"></i>
         Thêm bài viết mới
       </a>
-      <button class="btn btn-outline-primary" id="btnXuatBaiViet">
-        <i class="fas fa-download"></i>
-        Xuất bài viết
-      </button>
     </div>
   </div>
 
@@ -37,6 +33,13 @@
                 {% endfor %}
               </select>
 
+              <select name="menu" class="form-control" style="width: auto;">
+                <option value="">Tất cả menu</option>
+                {% for menu in menu_list %}
+                <option value="{{ menu.ma_menu }}" {% if selected_menu == menu.ma_menu|stringformat:"s" %}selected{% endif %}>{{ menu.tieu_de }}</option>
+                {% endfor %}
+              </select>
+
               <select name="trang_thai" class="form-control" style="width: auto;">
                 <option value="">Tất cả trạng thái</option>
                 <option value="Đăng trang" {% if selected_trang_thai == "Đăng trang" %}selected{% endif %}>Đăng trang</option>
@@ -58,6 +61,7 @@
                 <th>Tiêu đề</th>
                 <th>Người tạo</th>
                 <th>Danh mục</th>
+                <th>Menu</th>
                 <th>Trạng thái</th>
                 <th>Ngày tạo</th>
                 <th>Thao tác</th>
@@ -69,6 +73,7 @@
                 <td>{{ bai_viet.tieu_de }}</td>
                 <td>{{ bai_viet.ma_nguoi_dung.first_name }} {{ bai_viet.ma_nguoi_dung.last_name }}</td>
                 <td>{{ bai_viet.ma_dm.ten_dm }}</td>
+                <td>{{ bai_viet.menu.tieu_de }}</td>
                 <td>
                   {% if bai_viet.trang_thai == "Đăng trang" %}
                     <span class="badge badge-success">Đăng trang</span>
@@ -87,7 +92,7 @@
               </tr>
               {% empty %}
               <tr>
-                <td colspan="6" style="text-align: center; padding: 20px;">Không có bài viết nào</td>
+                <td colspan="7" style="text-align: center; padding: 20px;">Không có bài viết nào</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -99,7 +104,7 @@
         <div class="pagination-wrapper">
           <ul class="pagination">
             {% if bai_viet_list.has_previous %}
-              <li class="page-item"><a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_danh_muc %}&danh_muc={{ selected_danh_muc }}{% endif %}{% if selected_trang_thai %}&trang_thai={{ selected_trang_thai }}{% endif %}"><i class="fas fa-chevron-left"></i></a></li>
+              <li class="page-item"><a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_danh_muc %}&danh_muc={{ selected_danh_muc }}{% endif %}{% if selected_menu %}&menu={{ selected_menu }}{% endif %}{% if selected_trang_thai %}&trang_thai={{ selected_trang_thai }}{% endif %}"><i class="fas fa-chevron-left"></i></a></li>
             {% else %}
               <li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a></li>
             {% endif %}
@@ -108,12 +113,13 @@
               {% if bai_viet_list.number == i %}
                 <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
               {% elif i > bai_viet_list.number|add:'-3' and i < bai_viet_list.number|add:'3' %}
-                <li class="page-item"><a class="page-link" href="?page={{ i }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_danh_muc %}&danh_muc={{ selected_danh_muc }}{% endif %}{% if selected_trang_thai %}&trang_thai={{ selected_trang_thai }}{% endif %}">{{ i }}</a></li>
+                <li class="page-item"><a class="page-link  and i < bai_viet_list.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_danh_muc %}&danh_muc={{ selected_danh_muc }}{% endif %}{% if selected_menu %}&menu={{ selected_menu }}{% endif %}{% if selected_trang_thai %}&trang_thai={{ selected_trang_thai }}{% endif %}">{{ i }}</a></li>
               {% endif %}
             {% endfor %}
 
             {% if bai_viet_list.has_next %}
-              <li class="page-item"><a class="page-link" href="?page={{ bai_viet_list.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_danh_muc %}&danh_muc={{ selected_danh_muc }}{% endif %}{% if selected_trang_thai %}&trang_thai={{ selected_trang_thai }}{% endif %}"><i class="fas fa-chevron-right"></i></a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ bai_viet_list.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_danh_muc %}&danh_muc={{ selected_danh_muc }}{% endif %}{% if selected_menu %}&menu={{ selected_menu }}{% endif %}{% if selected_trang_thai %}&trang_thai={{ selected_trang_thai }}{% endif %}"><i class="fas fa-chevron-right"></i></a></li>
             {% else %}
               <li class="page-item disabled"><a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a></li>
             {% endif %}

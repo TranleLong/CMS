@@ -84,6 +84,18 @@
           </div>
 
           <div class="sidebar-card">
+            <h3 class="sidebar-title">Menu</h3>
+            <div class="form-group">
+              <select id="menu" name="menu" class="form-control" required>
+                <option value="">Chọn menu</option>
+                {% for menu in menu_list %}
+                <option value="{{ menu.ma_menu }}" {% if bai_viet.menu.ma_menu == menu.ma_menu %}selected{% endif %}>{{ menu.tieu_de }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
             <h3 class="sidebar-title">Trạng thái</h3>
             <div class="form-group">
               <select id="trang_thai" name="trang_thai" class="form-control">
@@ -458,6 +470,7 @@
       const noiDung = document.getElementById('noi_dung').value;
       const maDm = document.getElementById('ma_dm').value;
       const maThe = document.getElementById('ma_the').value;
+      const menu = document.getElementById('menu').value;
 
       let isValid = true;
       let errorMessage = '';
@@ -484,6 +497,11 @@
 
       if (!maThe) {
         errorMessage += 'Vui lòng chọn thẻ\n';
+        isValid = false;
+      }
+
+      if (!menu) {
+        errorMessage += 'Vui lòng chọn menu\n';
         isValid = false;
       }
 

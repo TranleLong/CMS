@@ -78,6 +78,16 @@
             </div>
 
             <div class="form-group">
+              <label for="menu">Menu <span class="required">*</span></label>
+              <select id="menu" name="menu" class="form-control" required>
+                <option value="">Chọn menu</option>
+                {% for menu_item in menu_list %}
+                <option value="{{ menu_item.ma_menu }}">{{ menu_item.tieu_de }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
               <label for="trang_thai">Trạng thái</label>
               <select id="trang_thai" name="trang_thai" class="form-control">
                 <option value="Chờ duyệt">Chờ duyệt</option>
@@ -371,6 +381,7 @@
       const noiDung = document.getElementById('noi_dung').value;
       const maDm = document.getElementById('ma_dm').value;
       const maThe = document.getElementById('ma_the').value;
+      const menu = document.getElementById('menu').value;
 
       let isValid = true;
       let errorMessage = '';
@@ -397,6 +408,11 @@
 
       if (!maThe) {
         errorMessage += 'Vui lòng chọn thẻ\n';
+        isValid = false;
+      }
+
+      if (!menu) {
+        errorMessage += 'Vui lòng chọn menu\n';
         isValid = false;
       }
 

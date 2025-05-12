@@ -163,6 +163,85 @@
         margin-right: 8px;
     }
 
+    .btn-preview {
+        padding: 10px 16px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        background-color: #f8f9fa;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-preview i {
+        margin-right: 8px;
+    }
+
+    .related-posts {
+        margin-top: 30px;
+    }
+
+    .related-posts-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .post-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .post-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .post-item:last-child {
+        border-bottom: none;
+    }
+
+    .post-link {
+        color: #2196F3;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .post-link:hover {
+        text-decoration: underline;
+    }
+
+    .post-status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .status-active {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .status-inactive {
+        background-color: #ffebee;
+        color: #c62828;
+    }
+
+    .no-posts {
+        color: #666;
+        font-style: italic;
+    }
+
     /* Modal styles */
     .modal {
         display: none;
@@ -303,20 +382,19 @@
 </style>
 
 <div class="content-wrapper">
-    <a href="/get-content/quanlymenu/" class="back-button">
+    <a href="{% url 'quanlymenu' %}" class="back-button">
         <i class="fas fa-chevron-left" style="margin-bottom:15px"></i> Quay lại danh sách
     </a>
     <h1 class="page-title">Xem thông tin menu</h1>
     <div class="card">
-        <h3>Menu chính</h3>
+        <h3>{{ menu.tieu_de }}</h3>
         <div class="preview-menu-container">
             <ul class="preview-menu-list">
-                <li><a href="#" class="active">Trang chủ</a></li>
-                <li><a href="#">Giới thiệu</a></li>
-                <li><a href="#">Sản phẩm</a></li>
-                <li><a href="#">Dịch vụ</a></li>
-                <li><a href="#">Tin tức</a></li>
-                <li><a href="#">Liên hệ</a></li>
+                {% for bai_viet in bai_viet_list %}
+                <li><a href="#" {% if forloop.first %}class="active"{% endif %}>{{ bai_viet.tieu_de }}</a></li>
+                {% empty %}
+                <li><a href="#">Không có mục menu nào</a></li>
+                {% endfor %}
             </ul>
         </div>
 
@@ -325,19 +403,19 @@
                 <h4>Thông tin menu</h4>
                 <div class="info-row">
                     <span class="info-label">Tiêu đề:</span>
-                    <span class="info-value">Menu chính</span>
+                    <span class="info-value">{{ menu.tieu_de }}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Đường dẫn:</span>
-                    <span class="info-value">/menu-chinh</span>
+                    <span class="info-value">/{{ menu.duong_dan }}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Trạng thái:</span>
-                    <span class="info-value">Đang hoạt động</span>
+                    <span class="info-value">{% if menu.trang_thai == 'Dang hoat dong' %}Đang hoạt động{% else %}Không hoạt động{% endif %}</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Ngày tạo:</span>
-                    <span class="info-value">15/01/2023</span>
+                    <span class="info-value">{{ menu.ngay_tao|date:"d/m/Y" }}</span>
                 </div>
             </div>
 
@@ -347,17 +425,40 @@
                 <div class="code-block">
                     <button class="btn-copy" onclick="copyCode()"><i class="fas fa-copy"></i></button>
                     <div class="code-content">
-<!--                        thêm link menu vào đây-->
-                    </div>
+&lt;!-- Thêm menu {{ menu.tieu_de }} vào trang --&gt;
+&lt;div class="menu-container"&gt;
+  {% templatetag openblock %} include 'menu.html' with menu_id={{ menu.ma_menu }} {% templatetag closeblock %}
+&lt;/div&gt;</div>
                 </div>
             </div>
         </div>
 
+        <div class="related-posts">
+            <h2 class="related-posts-title">Bài viết trong menu</h2>
+            {% if bai_viet_list %}
+                <ul class="post-list">
+                    {% for bai_viet in bai_viet_list %}
+                    <li class="post-item">
+                        <a href="{% url 'xem_baiviet' bai_viet.ma_bv %}" class="post-link">{{ bai_viet.tieu_de }}</a>
+                        <span class="post-status {% if bai_viet.trang_thai == 'Đăng trang' %}status-active{% else %}status-inactive{% endif %}">
+                            {{ bai_viet.trang_thai }}
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-posts">Không có bài viết nào trong menu này.</p>
+            {% endif %}
+        </div>
+
         <div class="action-buttons">
-            <a href="/get-content/quanlymenu/suamenu/1/" class="btn-edit">
+            <a href="{% url 'xemtruocmenu' menu.ma_menu %}" class="btn-preview">
+                <i class="fas fa-eye"></i> Xem trước
+            </a>
+            <a href="{% url 'sua_menu' menu.ma_menu %}" class="btn-edit">
                 <i class="fas fa-edit"></i> Sửa menu
             </a>
-            <button class="btn-delete" onclick="confirmDelete(1)">
+            <button class="btn-delete" onclick="confirmDelete({{ menu.ma_menu }})">
                 <i class="fas fa-trash"></i> Xóa menu
             </button>
         </div>
@@ -421,17 +522,36 @@
     }
 
     function deleteMenu() {
-        // Ở đây sẽ gọi API để xóa menu
-        // Sau khi xóa thành công, hiển thị thông báo
-        closeDeleteModal();
-        document.getElementById('successMessage').textContent = 'Xóa menu thành công';
-        document.getElementById('successModal').style.display = 'flex';
+        // Gửi yêu cầu xóa menu
+        fetch(`/quanlymenu/xoamenu/${menuIdToDelete}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            closeDeleteModal();
+
+            if (data.success) {
+                document.getElementById('successMessage').textContent = data.message;
+                document.getElementById('successModal').style.display = 'flex';
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            closeDeleteModal();
+            alert('Có lỗi xảy ra khi xóa menu');
+        });
     }
 
     function closeSuccessModal() {
         document.getElementById('successModal').style.display = 'none';
-        // Redirect back to menu list
-        window.location.href = '/get-content/quanlymenu/';
+        // Chuyển hướng về trang danh sách menu
+        window.location.href = '{% url "quanlymenu" %}';
     }
 
     function copyCode() {
@@ -439,6 +559,22 @@
         navigator.clipboard.writeText(codeText).then(() => {
             alert('Đã sao chép mã vào clipboard!');
         });
+    }
+
+    // Hàm lấy CSRF token từ cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 </script>
 {% endblock %}
