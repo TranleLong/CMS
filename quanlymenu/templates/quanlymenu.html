@@ -309,7 +309,7 @@
 <div class="content-wrapper">
     <div class="header-container">
         <h1 class="page-title">Quản lý menu</h1>
-        <a href="/get-content/quanlymenu/themmenu/" class="btn-add">
+        <a href="{% url 'themmenu' %}" class="btn-add">
             <i class="fas fa-plus"></i> Thêm menu mới
         </a>
     </div>
@@ -322,7 +322,7 @@
 
         <div class="search-container">
             <div class="search-box">
-                <input type="text" placeholder="Tìm kiếm menu..." class="search-input">
+                <input type="text" placeholder="Tìm kiếm menu..." class="search-input" id="searchMenu">
                 <i class="fas fa-search search-icon"></i>
             </div>
         </div>
@@ -338,63 +338,35 @@
                 </tr>
             </thead>
             <tbody>
+                {% for menu in menu_list %}
                 <tr>
-                    <td class="menu-title">Menu chính</td>
-                    <td class="menu-slug">menu-chinh</td>
-                    <td><span class="status-badge active">Đang hoạt động</span></td>
-                    <td>15/01/2023</td>
+                    <td class="menu-title">{{ menu.tieu_de }}</td>
+                    <td class="menu-slug">{{ menu.slug }}</td>
+                    <td>
+                        <span class="status-badge {% if menu.trang_thai == 'Dang hoat dong' %}active{% else %}inactive{% endif %}">
+                            {% if menu.trang_thai == 'Dang hoat dong' %}Đang hoạt động{% else %}Không hoạt động{% endif %}
+                        </span>
+                    </td>
+                    <td>{{ menu.ngay_tao|date:"d/m/Y" }}</td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn-icon view-menu" data-id="1" title="Xem">
+                            <a href="{% url 'xem_menu' menu.ma_menu %}" class="btn-icon view-menu" title="Xem">
                                 <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn-icon edit-menu" data-id="1" title="Sửa">
+                            </a>
+                            <a href="{% url 'sua_menu' menu.ma_menu %}" class="btn-icon edit-menu" title="Sửa">
                                 <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-icon delete" onclick="confirmDelete(1)" title="Xóa">
+                            </a>
+                            <button class="btn-icon delete" onclick="confirmDelete({{ menu.ma_menu }})" title="Xóa">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
+                {% empty %}
                 <tr>
-                    <td class="menu-title">Menu footer</td>
-                    <td class="menu-slug">menu-footer</td>
-                    <td><span class="status-badge active">Đang hoạt động</span></td>
-                    <td>20/01/2023</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-icon view-menu" data-id="2" title="Xem">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn-icon edit-menu" data-id="2" title="Sửa">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-icon delete" onclick="confirmDelete(2)" title="Xóa">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
+                    <td colspan="5" style="text-align: center; padding: 20px;">Không có menu nào. <a href="{% url 'themmenu' %}">Thêm menu mới</a></td>
                 </tr>
-                <tr>
-                    <td class="menu-title">Menu phụ</td>
-                    <td class="menu-slug">menu-phu</td>
-                    <td><span class="status-badge inactive">Không hoạt động</span></td>
-                    <td>25/01/2023</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-icon view-menu" data-id="3" title="Xem">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn-icon edit-menu" data-id="3" title="Sửa">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-icon delete" onclick="confirmDelete(3)" title="Xóa">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -448,21 +420,21 @@
     let menuIdToDelete = null;
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Thêm sự kiện cho nút xem menu
-        const viewButtons = document.querySelectorAll('.view-menu');
-        viewButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const menuId = this.getAttribute('data-id');
-                window.location.href = `/get-content/quanlymenu/xemmenu/${menuId}/`;
-            });
-        });
+        // Tìm kiếm menu
+        const searchInput = document.getElementById('searchMenu');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.data-table tbody tr');
 
-        // Thêm sự kiện cho nút sửa menu
-        const editButtons = document.querySelectorAll('.edit-menu');
-        editButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const menuId = this.getAttribute('data-id');
-                window.location.href = `/get-content/quanlymenu/suamenu/${menuId}/`;
+            rows.forEach(row => {
+                const title = row.querySelector('.menu-title').textContent.toLowerCase();
+                const slug = row.querySelector('.menu-slug').textContent.toLowerCase();
+
+                if (title.includes(searchTerm) || slug.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
             });
         });
     });
@@ -477,17 +449,52 @@
     }
 
     function deleteMenu() {
-        // Ở đây sẽ gọi API để xóa menu
-        // Sau khi xóa thành công, hiển thị thông báo
-        closeDeleteModal();
-        document.getElementById('successMessage').textContent = 'Xóa menu thành công';
-        document.getElementById('successModal').style.display = 'flex';
+        // Gửi yêu cầu xóa menu
+        fetch(`/quanlymenu/xoamenu/${menuIdToDelete}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            closeDeleteModal();
+
+            if (data.success) {
+                document.getElementById('successMessage').textContent = data.message;
+                document.getElementById('successModal').style.display = 'flex';
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            closeDeleteModal();
+            alert('Có lỗi xảy ra khi xóa menu');
+        });
     }
 
     function closeSuccessModal() {
         document.getElementById('successModal').style.display = 'none';
         // Reload trang sau khi xóa thành công
-        // window.location.reload();
+        window.location.reload();
+    }
+
+    // Hàm lấy CSRF token từ cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 </script>
 {% endblock %}

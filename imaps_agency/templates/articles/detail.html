@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ article.tieu_de }} - I MAPS AGENCY{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<div class="bg-gradient-to-r from-amber-500 to-orange-500 py-12 text-white">
+    <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-4xl">
+            <div class="mb-4 flex items-center">
+                <a href="{% url 'service_detail' article.ma_dm.slug %}" class="text-white/80 hover:text-white">
+                    {{ article.ma_dm.ten_dm }}
+                </a>
+                <span class="mx-2 text-white/60">/</span>
+                <span>{{ article.tieu_de }}</span>
+            </div>
+            <h1 class="mb-4 text-3xl font-bold md:text-4xl">{{ article.tieu_de }}</h1>
+            <div class="flex items-center">
+                <div class="flex items-center">
+                    <div class="h-10 w-10 overflow-hidden rounded-full bg-white/20">
+                        <img src="{% static 'images/placeholder.svg' %}?height=40&width=40" alt="{{ article.ma_nguoi_dung.get_full_name }}" class="h-full w-full object-cover">
+                    </div>
+                    <div class="ml-3">
+                        <p class="font-medium">{{ article.ma_nguoi_dung.get_full_name }}</p>
+                        <p class="text-sm text-white/70">{{ article.ngay_dang|date:"d/m/Y" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nội dung bài viết -->
+<section class="py-12">
+    <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-4xl">
+            <div class="mb-8 overflow-hidden rounded-xl">
+                {% if article.anh %}
+                <img src="{{ article.anh.url }}" alt="{{ article.tieu_de }}" class="h-auto w-full">
+                {% else %}
+                <img src="{% static 'images/placeholder.svg' %}?height=500&width=1000" alt="{{ article.tieu_de }}" class="h-auto w-full">
+                {% endif %}
+            </div>
+            
+            <div class="grid gap-12 lg:grid-cols-3">
+                <!-- Nội dung chính -->
+                <div class="lg:col-span-2">
+                    <div class="prose max-w-none">
+                        {{ article.noi_dung|safe }}
+                    </div>
+                    
+                    <div class="mt-8">
+                        <div class="flex flex-wrap items-center">
+                            <span class="mr-3 text-gray-700">Thẻ:</span>
+                            <a href="{% url 'service_detail' article.ma_dm.slug %}?tag={{ article.ma_the.slug }}" class="mb-2 mr-2 rounded-full bg-amber-100 px-4 py-1 text-sm text-amber-600 hover:bg-amber-200">
+                                {{ article.ma_the.ten_the }}
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-12 border-t border-gray-200 pt-8">
+                        <h3 class="mb-6 text-2xl font-bold text-gray-900">Bài viết liên quan</h3>
+                        <div class="grid gap-8 sm:grid-cols-2">
+                            {% for related in related_articles %}
+                            <div class="overflow-hidden rounded-xl bg-white shadow-sm transition-all hover:shadow-md">
+                                <div class="aspect-w-16 aspect-h-9 overflow-hidden">
+                                    {% if related.anh %}
+                                    <img src="{{ related.anh.url }}" alt="{{ related.tieu_de }}" class="h-full w-full object-cover transition-transform duration-300 hover:scale-105">
+                                    {% else %}
+                                    <img src="{% static 'images/placeholder.svg' %}?height=200&width=400" alt="{{ related.tieu_de }}" class="h-full w-full object-cover transition-transform duration-300 hover:scale-105">
+                                    {% endif %}
+                                </div>
+                                <div class="p-4">
+                                    <h4 class="mb-2 text-lg font-bold text-gray-900">
+                                        <a href="{% url 'article_detail' related.duong_dan %}" class="hover:text-amber-500">
+                                            {{ related.tieu_de }}
+                                        </a>
+                                    </h4>
+                                    <p class="mb-3 line-clamp-2 text-sm text-gray-600">
+                                        {{ related.tom_tat }}
+                                    </p>
+                                    <a href="{% url 'article_detail' related.duong_dan %}" class="inline-flex items-center text-sm font-medium text-amber-500 transition-colors hover:text-amber-600">
+                                        Đọc tiếp
+                                        <i data-lucide="arrow-right" class="ml-1 h-3 w-3"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="col-span-2 text-center">
+                                <p class="text-gray-600">Không có bài viết liên quan.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div>
+                    <div class="sticky top-24">
+                        <!-- Danh mục -->
+                        <div class="mb-8 rounded-xl bg-[#FFF5F5] p-6 shadow-sm">
+                            <h3 class="mb-4 text-xl font-bold text-gray-900">Danh mục</h3>
+                            <ul class="space-y-2">
+                                {% for category in categories %}
+                                <li>
+                                    <a href="{% url 'service_detail' category.slug %}" class="flex items-center justify-between text-gray-700 hover:text-amber-500">
+                                        <span>{{ category.ten_dm }}</span>
+                                        <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">{{ category.so_bai_viet }}</span>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <!-- Thẻ phổ biến -->
+                        <div class="rounded-xl bg-[#FFF5F5] p-6 shadow-sm">
+                            <h3 class="mb-4 text-xl font-bold text-gray-900">Thẻ phổ biến</h3>
+                            <div class="flex flex-wrap gap-2">
+                                {% for tag in popular_tags %}
+                                <a href="{% url 'service_detail' article.ma_dm.slug %}?tag={{ tag.slug }}" class="rounded-full bg-white px-3 py-1 text-sm text-gray-700 shadow-sm hover:bg-amber-500 hover:text-white">
+                                    {{ tag.ten_the }}
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="bg-gradient-to-r from-amber-500 to-orange-500 py-12 text-white">
+    <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-3xl text-center">
+            <h2 class="mb-4 text-2xl font-bold md:text-3xl">Bạn cần tư vấn về dịch vụ của chúng tôi?</h2>
+            <p class="mb-6 text-lg">
+                Hãy liên hệ với chúng tôi ngay hôm nay để nhận tư vấn miễn phí về giải pháp marketing phù hợp với doanh nghiệp của bạn.
+            </p>
+            <a href="{% url 'contact' %}" class="inline-block rounded-lg bg-white px-6 py-3 font-medium text-amber-500 shadow-md transition-colors hover:bg-gray-100">
+                Liên hệ ngay
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

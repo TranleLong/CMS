@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sứ Mệnh - I MAPS AGENCY{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<div class="bg-gradient-to-r from-amber-500 to-orange-500 py-16 text-white">
+    <div class="container mx-auto px-4">
+        <h1 class="mb-4 text-4xl font-bold">Sứ Mệnh & Tầm Nhìn</h1>
+        <p class="text-xl">Định hướng và mục tiêu dài hạn của I MAPS AGENCY</p>
+    </div>
+</div>
+
+<!-- Sứ mệnh và Tầm nhìn -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="grid gap-12 md:grid-cols-2">
+            <div>
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 md:text-3xl">Sứ mệnh của chúng tôi</h2>
+                    <div class="mt-3 h-1 w-20 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+                </div>
+                <p class="mb-6 text-gray-600">
+                    Sứ mệnh của I MAPS AGENCY là trao quyền cho các doanh nghiệp Việt Nam phát triển trong kỷ nguyên số thông qua các giải pháp marketing sáng tạo và hiệu quả. Chúng tôi cam kết:
+                </p>
+                <ul class="mb-6 space-y-4">
+                    <li class="flex items-start">
+                        <div class="mr-4 flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                            <i data-lucide="check" class="h-4 w-4"></i>
+                        </div>
+                        <p class="text-gray-600">
+                            Cung cấp các giải pháp marketing toàn diện và tùy chỉnh phù hợp với nhu cầu cụ thể của từng doanh nghiệp.
+                        </p>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="mr-4 flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                            <i data-lucide="check" class="h-4 w-4"></i>
+                        </div>
+                        <p class="text-gray-600">
+                            Áp dụng công nghệ và xu hướng mới nhất để mang lại kết quả vượt trội cho khách hàng.
+                        </p>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="mr-4 flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                            <i data-lucide="check" class="h-4 w-4"></i>
+                        </div>
+                        <p class="text-gray-600">
+                            Xây dựng mối quan hệ đối tác lâu dài dựa trên sự tin tưởng, minh bạch và kết quả đo lường được.
+                        </p>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="mr-4 flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                            <i data-lucide="check" class="h-4 w-4"></i>
+                        </div>
+                        <p class="text-gray-600">
+                            Đóng góp vào sự phát triển của cộng đồng doanh nghiệp Việt Nam thông qua việc chia sẻ kiến thức và hỗ trợ các doanh nghiệp khởi nghiệp.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="relative">
+                <div class="relative z-10 overflow-hidden rounded-xl shadow-xl">
+                    <img src="{% static 'images/mission.jpg' %}" alt="Sứ mệnh" class="h-auto w-full" onerror="this.src='{% static 'images/placeholder.svg' %}?height=500&width=800'">
+                </div>
+                <div class="absolute -bottom-6 -right-6 z-0 h-24 w-24 rounded-full bg-amber-500 opacity-50 blur-xl"></div>
+                <div class="absolute -left-6 -top-6 z-0 h-24 w-24 rounded-full bg-orange-500 opacity-50 blur-xl"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tầm nhìn -->
+<section class="bg-[#FFF5F5] py-16">
+    <div class="container mx-auto px-4">
+        <div class="grid gap-12 md:grid-cols-2">
+            <div class="relative order-2 md:order-1">
+                <div class="relative z-10 overflow-hidden rounded-xl shadow-xl">
+                    <img src="{% static 'images/vision.jpg' %}" alt="Tầm nhìn" class="h-auto w-full" onerror="this.src='{% static 'images/placeholder.svg' %}?height=500&width=800'">
+                </div>
+                <div class="absolute -bottom-6 -right-6 z-0 h-24 w-24 rounded-full bg-amber-500 opacity-50 blur-xl"></div>
+                <div class="absolute -left-6 -top-6 z-0 h-24 w-24 rounded-full bg-orange-500 opacity-50 blur-xl"></div>
+            </div>
+            <div class="order-1 md:order-2">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 md:text-3xl">Tầm nhìn của chúng tôi</h2>
+                    <div class="mt-3 h-1 w-20 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+                </div>
+                <p class="mb-6 text-gray-600">
+                    I MAPS AGENCY hướng tới việc trở thành công ty marketing hàng đầu tại Việt Nam và khu vực Đông Nam Á, được công nhận về sự sáng tạo, chất lượng dịch vụ và kết quả mang lại cho khách hàng.
+                </p>
+                <p class="mb-6 text-gray-600">
+                    Chúng tôi mong muốn:
+                </p>
+                <ul class="mb-6 space-y-4">
+                    <li class="flex items-start">
+                        <div class="mr-4 flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                            <i data-lucide="check" class="h-4 w-4"></i>
+                        </div>
+                        <p class="text-gray-600">
+                            Định hình lại cách các doanh nghiệp tiếp cận marketing trong kỷ nguyên số.
+                        </p>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="mr-4 flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                            <i data-lucide="check" class="h-4 w-4"></i>
+                        </div>
+                        <p class="text-gray-600">
+                            Xây dựng một môi trường làm việc sáng tạo và phát triển, nơi các tài năng marketing có thể phát huy hết tiềm năng.
+                        </p>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="mr-4 flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                            <i data-lucide="check" class="h-4 w-4"></i>
+                        </div>
+                        <p class="text-gray-600">
+                            Đóng góp vào sự phát triển của ngành marketing Việt Nam thông qua việc đào tạo và chia sẻ kiến thức.
+                        </p>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="mr-4 flex h-6 w-6 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                            <i data-lucide="check" class="h-4 w-4"></i>
+                        </div>
+                        <p class="text-gray-600">
+                            Mở rộng hoạt động ra thị trường quốc tế, đưa thương hiệu Việt Nam ra toàn cầu.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Giá trị cốt lõi -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="mb-12 text-center">
+            <h2 class="mb-4 text-3xl font-bold text-gray-900">Giá trị cốt lõi</h2>
+            <p class="mx-auto max-w-2xl text-lg text-gray-600">
+                Những nguyên tắc định hướng mọi hoạt động của chúng tôi
+            </p>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-3">
+            <div class="rounded-xl bg-white p-8 shadow-md">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-amber-100 text-amber-500">
+                    <i data-lucide="heart" class="h-7 w-7"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-900">Đam mê</h3>
+                <p class="text-gray-600">
+                    Chúng tôi làm việc với niềm đam mê và nhiệt huyết, luôn tìm kiếm những giải pháp tốt nhất cho khách hàng. Đam mê là động lực thúc đẩy chúng tôi không ngừng đổi mới và sáng tạo.
+                </p>
+            </div>
+
+            <div class="rounded-xl bg-white p-8 shadow-md">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-amber-100 text-amber-500">
+                    <i data-lucide="shield" class="h-7 w-7"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-900">Chính trực</h3>
+                <p class="text-gray-600">
+                    Chúng tôi hoạt động dựa trên sự trung thực, minh bạch và đạo đức nghề nghiệp. Chúng tôi luôn giữ lời hứa và làm những gì đúng đắn, ngay cả khi không có ai đang theo dõi.
+                </p>
+            </div>
+
+            <div class="rounded-xl bg-white p-8 shadow-md">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-amber-100 text-amber-500">
+                    <i data-lucide="target" class="h-7 w-7"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-900">Xuất sắc</h3>
+                <p class="text-gray-600">
+                    Chúng tôi không ngừng nỗ lực để đạt được sự xuất sắc trong mọi dự án. Chúng tôi đặt ra tiêu chuẩn cao và luôn tìm cách vượt qua giới hạn của bản thân để mang lại kết quả tốt nhất.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cam kết -->
+<section class="bg-[#FFF5F5] py-16">
+    <div class="container mx-auto px-4">
+        <div class="mb-12 text-center">
+            <h2 class="mb-4 text-3xl font-bold text-gray-900">Cam kết của chúng tôi</h2>
+            <p class="mx-auto max-w-2xl text-lg text-gray-600">
+                Những lời hứa mà chúng tôi luôn giữ vững với khách hàng
+            </p>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-2">
+            <div class="rounded-xl bg-white p-8 shadow-md">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-amber-100 text-amber-500">
+                    <i data-lucide="clock" class="h-7 w-7"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-900">Đúng thời hạn</h3>
+                <p class="text-gray-600">
+                    Chúng tôi hiểu rằng thời gian là tài sản quý giá của doanh nghiệp. Vì vậy, chúng tôi cam kết hoàn thành mọi dự án đúng thời hạn đã thỏa thuận, không để khách hàng phải chờ đợi.
+                </p>
+            </div>
+
+            <div class="rounded-xl bg-white p-8 shadow-md">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-amber-100 text-amber-500">
+                    <i data-lucide="bar-chart-2" class="h-7 w-7"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-900">Kết quả đo lường được</h3>
+                <p class="text-gray-600">
+                    Chúng tôi không chỉ đưa ra những lời hứa suông mà luôn cung cấp các chỉ số và báo cáo cụ thể để khách hàng có thể theo dõi hiệu quả của chiến dịch marketing.
+                </p>
+            </div>
+
+            <div class="rounded-xl bg-white p-8 shadow-md">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-amber-100 text-amber-500">
+                    <i data-lucide="refresh-cw" class="h-7 w-7"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-900">Liên tục cải tiến</h3>
+                <p class="text-gray-600">
+                    Chúng tôi không bao giờ hài lòng với hiện tại. Chúng tôi luôn tìm kiếm cách để cải tiến và tối ưu hóa chiến dịch marketing của khách hàng, đảm bảo kết quả tốt nhất.
+                </p>
+            </div>
+
+            <div class="rounded-xl bg-white p-8 shadow-md">
+                <div class="mb-4 flex h-14 w-14 items-center justify-center rounded-lg bg-amber-100 text-amber-500">
+                    <i data-lucide="headphones" class="h-7 w-7"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-900">Hỗ trợ 24/7</h3>
+                <p class="text-gray-600">
+                    Chúng tôi luôn sẵn sàng hỗ trợ khách hàng bất cứ khi nào cần thiết. Đội ngũ chăm sóc khách hàng của chúng tôi làm việc 24/7 để đảm bảo mọi thắc mắc đều được giải đáp kịp thời.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="bg-gradient-to-r from-amber-500 to-orange-500 py-16 text-white">
+    <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-3xl text-center">
+            <h2 class="mb-6 text-3xl font-bold md:text-4xl">Hãy cùng chúng tôi hiện thực hóa tầm nhìn của bạn</h2>
+            <p class="mb-8 text-lg">
+                Chúng tôi sẵn sàng đồng hành cùng bạn trên hành trình phát triển thương hiệu và doanh nghiệp.
+            </p>
+            <a href="{% url 'contact' %}" class="inline-block rounded-lg bg-white px-8 py-3 font-medium text-amber-500 shadow-md transition-colors hover:bg-gray-100">
+                Liên hệ ngay
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Về Chúng Tôi {% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<div class="bg-gradient-to-r from-amber-500 to-orange-500 py-16 text-white">
+    <div class="container mx-auto px-4">
+        <h1 class="mb-4 text-4xl font-bold">Về Chúng Tôi</h1>
+        <p class="text-xl">Khám phá câu chuyện và con người đằng sau I MAPS AGENCY</p>
+    </div>
+</div>
+
+<!-- Giới thiệu công ty -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="grid gap-12 md:grid-cols-2">
+            <div>
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 md:text-3xl">Câu chuyện của chúng tôi</h2>
+                    <div class="mt-3 h-1 w-20 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+                </div>
+                <p class="mb-6 text-gray-600">
+                    I MAPS AGENCY được thành lập vào năm 2020 với sứ mệnh giúp các doanh nghiệp Việt Nam phát triển trong thời đại số. Chúng tôi bắt đầu với một đội ngũ nhỏ gồm các chuyên gia marketing đam mê và tài năng, và nhanh chóng phát triển thành một trong những công ty marketing hàng đầu tại Việt Nam.
+                </p>
+                <p class="mb-6 text-gray-600">
+                    Tên gọi "I MAPS" đại diện cho triết lý của chúng tôi: "Innovative Marketing And Professional Solutions" - Giải pháp Marketing Chuyên nghiệp và Sáng tạo. Chúng tôi tin rằng mỗi doanh nghiệp đều có một câu chuyện độc đáo và xứng đáng được kể một cách ấn tượng.
+                </p>
+                <p class="mb-6 text-gray-600">
+                    Ngày nay, I MAPS AGENCY tự hào là đối tác tin cậy của hơn 200 doanh nghiệp trong và ngoài nước, từ các startup đầy tiềm năng đến các tập đoàn lớn. Chúng tôi không ngừng đổi mới và cập nhật các xu hướng marketing mới nhất để mang đến những giải pháp tối ưu cho khách hàng.
+                </p>
+            </div>
+            <div class="relative">
+                <div class="relative z-10 overflow-hidden rounded-xl shadow-xl">
+                    <img src="{% static 'images/about-us.jpg' %}" alt="Về chúng tôi" class="h-auto w-full" onerror="this.src='{% static 'images/placeholder.svg' %}?height=500&width=800'">
+                </div>
+                <div class="absolute -bottom-6 -right-6 z-0 h-24 w-24 rounded-full bg-amber-500 opacity-50 blur-xl"></div>
+                <div class="absolute -left-6 -top-6 z-0 h-24 w-24 rounded-full bg-orange-500 opacity-50 blur-xl"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Giá trị cốt lõi -->
+<section class="bg-[#FFF5F5] py-16">
+    <div class="container mx-auto px-4">
+        <div class="mb-12 text-center">
+            <h2 class="mb-4 text-3xl font-bold text-gray-900">Giá trị cốt lõi</h2>
+            <p class="mx-auto max-w-2xl text-lg text-gray-600">
+                Những giá trị định hướng mọi hoạt động và quyết định của chúng tôi
+            </p>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                    <i data-lucide="lightbulb" class="h-8 w-8"></i>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-gray-900">Sáng tạo</h3>
+                <p class="text-gray-600">
+                    Chúng tôi luôn tìm kiếm những ý tưởng mới mẻ và độc đáo để giúp khách hàng nổi bật trong thị trường cạnh tranh.
+                </p>
+            </div>
+
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                    <i data-lucide="check-circle" class="h-8 w-8"></i>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-gray-900">Chất lượng</h3>
+                <p class="text-gray-600">
+                    Chúng tôi cam kết mang đến những sản phẩm và dịch vụ chất lượng cao, vượt trên sự mong đợi của khách hàng.
+                </p>
+            </div>
+
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                    <i data-lucide="users" class="h-8 w-8"></i>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-gray-900">Hợp tác</h3>
+                <p class="text-gray-600">
+                    Chúng tôi tin vào sức mạnh của sự hợp tác, làm việc cùng khách hàng như đối tác để đạt được mục tiêu chung.
+                </p>
+            </div>
+
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                    <i data-lucide="trending-up" class="h-8 w-8"></i>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-gray-900">Kết quả</h3>
+                <p class="text-gray-600">
+                    Chúng tôi tập trung vào việc mang lại kết quả đo lường được và giá trị thực sự cho doanh nghiệp của khách hàng.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Đội ngũ -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="mb-12 text-center">
+            <h2 class="mb-4 text-3xl font-bold text-gray-900">Đội ngũ lãnh đạo</h2>
+            <p class="mx-auto max-w-2xl text-lg text-gray-600">
+                Gặp gỡ những người đứng sau thành công của I MAPS AGENCY
+            </p>
+        </div>
+
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full">
+                    <img src="{% static 'images/placeholder.svg' %}?height=128&width=128" alt="CEO" class="h-full w-full object-cover">
+                </div>
+                <h3 class="mb-1 text-xl font-bold text-gray-900">Nguyễn Văn A</h3>
+                <p class="mb-3 text-amber-500">CEO & Founder</p>
+                <p class="mb-4 text-gray-600">
+                    Hơn 15 năm kinh nghiệm trong lĩnh vực marketing và phát triển thương hiệu.
+                </p>
+                <div class="flex justify-center space-x-3">
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="linkedin" class="h-4 w-4"></i>
+                    </a>
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="twitter" class="h-4 w-4"></i>
+                    </a>
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="mail" class="h-4 w-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full">
+                    <img src="{% static 'images/placeholder.svg' %}?height=128&width=128" alt="COO" class="h-full w-full object-cover">
+                </div>
+                <h3 class="mb-1 text-xl font-bold text-gray-900">Trần Thị B</h3>
+                <p class="mb-3 text-amber-500">COO</p>
+                <p class="mb-4 text-gray-600">
+                    Chuyên gia về quản lý vận hành và tối ưu hóa quy trình làm việc.
+                </p>
+                <div class="flex justify-center space-x-3">
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="linkedin" class="h-4 w-4"></i>
+                    </a>
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="twitter" class="h-4 w-4"></i>
+                    </a>
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="mail" class="h-4 w-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full">
+                    <img src="{% static 'images/placeholder.svg' %}?height=128&width=128" alt="CMO" class="h-full w-full object-cover">
+                </div>
+                <h3 class="mb-1 text-xl font-bold text-gray-900">Lê Văn C</h3>
+                <p class="mb-3 text-amber-500">CMO</p>
+                <p class="mb-4 text-gray-600">
+                    Chuyên gia về chiến lược marketing và phát triển thương hiệu.
+                </p>
+                <div class="flex justify-center space-x-3">
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="linkedin" class="h-4 w-4"></i>
+                    </a>
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="twitter" class="h-4 w-4"></i>
+                    </a>
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="mail" class="h-4 w-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full">
+                    <img src="{% static 'images/placeholder.svg' %}?height=128&width=128" alt="CTO" class="h-full w-full object-cover">
+                </div>
+                <h3 class="mb-1 text-xl font-bold text-gray-900">Phạm Thị D</h3>
+                <p class="mb-3 text-amber-500">CTO</p>
+                <p class="mb-4 text-gray-600">
+                    Chuyên gia về công nghệ và giải pháp kỹ thuật số.
+                </p>
+                <div class="flex justify-center space-x-3">
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="linkedin" class="h-4 w-4"></i>
+                    </a>
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="twitter" class="h-4 w-4"></i>
+                    </a>
+                    <a href="#" class="rounded-full bg-gray-100 p-2 text-gray-600 transition-colors hover:bg-amber-500 hover:text-white">
+                        <i data-lucide="mail" class="h-4 w-4"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Thành tựu -->
+<section class="bg-[#FFF5F5] py-16">
+    <div class="container mx-auto px-4">
+        <div class="mb-12 text-center">
+            <h2 class="mb-4 text-3xl font-bold text-gray-900">Thành tựu của chúng tôi</h2>
+            <p class="mx-auto max-w-2xl text-lg text-gray-600">
+                Những con số nói lên sự phát triển và thành công của I MAPS AGENCY
+            </p>
+        </div>
+
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                    <i data-lucide="users" class="h-8 w-8"></i>
+                </div>
+                <h3 class="mb-2 text-4xl font-bold text-gray-900">200+</h3>
+                <p class="text-gray-600">Khách hàng hài lòng</p>
+            </div>
+
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                    <i data-lucide="briefcase" class="h-8 w-8"></i>
+                </div>
+                <h3 class="mb-2 text-4xl font-bold text-gray-900">500+</h3>
+                <p class="text-gray-600">Dự án thành công</p>
+            </div>
+
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                    <i data-lucide="award" class="h-8 w-8"></i>
+                </div>
+                <h3 class="mb-2 text-4xl font-bold text-gray-900">15+</h3>
+                <p class="text-gray-600">Giải thưởng marketing</p>
+            </div>
+
+            <div class="rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-amber-500">
+                    <i data-lucide="user-check" class="h-8 w-8"></i>
+                </div>
+                <h3 class="mb-2 text-4xl font-bold text-gray-900">50+</h3>
+                <p class="text-gray-600">Chuyên gia tài năng</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="bg-gradient-to-r from-amber-500 to-orange-500 py-16 text-white">
+    <div class="container mx-auto px-4">
+        <div class="mx-auto max-w-3xl text-center">
+            <h2 class="mb-6 text-3xl font-bold md:text-4xl">Sẵn sàng hợp tác với chúng tôi?</h2>
+            <p class="mb-8 text-lg">
+                Hãy liên hệ với chúng tôi ngay hôm nay để bắt đầu hành trình phát triển thương hiệu của bạn.
+            </p>
+            <a href="{% url 'contact' %}" class="inline-block rounded-lg bg-white px-8 py-3 font-medium text-amber-500 shadow-md transition-colors hover:bg-gray-100">
+                Liên hệ ngay
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

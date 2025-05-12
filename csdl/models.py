@@ -26,6 +26,37 @@ class Media(models.Model):
 
 
 # Bảng BaiViet
+# class BaiViet(models.Model):
+#     ma_bv = models.AutoField(primary_key=True)
+#     tieu_de = models.CharField(max_length=255)
+#     trang_thai = models.CharField(max_length=100)
+#     ngay_dang = models.DateField()
+#     duong_dan = models.URLField()
+#     tom_tat = models.CharField(max_length=255)
+#     ma_nguoi_dung = models.ForeignKey(User, on_delete=models.CASCADE)  # Liên kết trực tiếp với auth_user
+#     ma_dm = models.ForeignKey('DanhMuc', on_delete=models.CASCADE)
+#     ma_the = models.ForeignKey('The', on_delete=models.CASCADE)
+#     noi_dung = models.TextField()
+#     # Thêm trường để lưu ảnh đại diện của bài viết
+#     anh = models.ImageField(upload_to='images/bai_viet/', null=True, blank=True)  # Trường lưu ảnh bài viết
+# Bảng BaiViet (Bài viết)
+# Bảng Menu (Menu chính)
+class Menu(models.Model):
+    ma_menu = models.AutoField(primary_key=True)  # ID của menu
+    tieu_de = models.CharField(max_length=255)  # Tiêu đề của menu (Ví dụ: "Kinh doanh", "Giải trí")
+    slug = models.SlugField(unique=True)  # Đường dẫn của menu (Ví dụ: /kinh-doanh, /giai-tri)
+    trang_thai = models.CharField(
+        max_length=20,
+        choices=[('Dang hoat dong', 'Đang hoạt động'), ('Khong hoat dong', 'Không hoạt động')],
+        default='Dang hoat dong'
+    )  # Trạng thái của menu (Đang hoạt động hoặc Không hoạt động)
+    ngay_tao = models.DateField(auto_now_add=True)  # Ngày tạo menu
+
+    def __str__(self):
+        return self.tieu_de
+
+
+# Bảng BaiViet (Bài viết)
 class BaiViet(models.Model):
     ma_bv = models.AutoField(primary_key=True)
     tieu_de = models.CharField(max_length=255)
@@ -37,8 +68,13 @@ class BaiViet(models.Model):
     ma_dm = models.ForeignKey('DanhMuc', on_delete=models.CASCADE)
     ma_the = models.ForeignKey('The', on_delete=models.CASCADE)
     noi_dung = models.TextField()
-    # Thêm trường để lưu ảnh đại diện của bài viết
     anh = models.ImageField(upload_to='images/bai_viet/', null=True, blank=True)  # Trường lưu ảnh bài viết
+
+    # Thêm khóa ngoại liên kết với Menu (một bài viết chỉ thuộc về một menu)
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE, default=2)  # Sử dụng giá trị mặc định (Menu đầu tiên)
+
+    def __str__(self):
+        return self.tieu_de
 
 
 # Bảng BaiVietMedia (mối quan hệ giữa bài viết và media)
@@ -94,3 +130,5 @@ class DanhMuc(models.Model):
 
     def __str__(self):
         return self.ten_dm
+
+

@@ -1,0 +1,125 @@
+<footer class="bg-gray-900 text-white">
+    <div class="container mx-auto px-4 py-12">
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <!-- Logo và thông tin -->
+            <div>
+                <a href="{% url 'home' %}" class="inline-block">
+                    <span class="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-2xl font-bold text-transparent">
+                        I MAPS AGENCY
+                    </span>
+                </a>
+                <p class="mt-4 text-gray-400">
+                    Giải pháp marketing toàn diện cho doanh nghiệp của bạn. Chúng tôi giúp bạn phát triển thương hiệu và
+                    tăng doanh số bán hàng.
+                </p>
+                <div class="mt-6 flex space-x-4">
+                    <a href="#" class="rounded-full bg-gray-800 p-2 text-gray-400 transition-colors hover:bg-amber-500 hover:text-white" aria-label="Facebook">
+                        <i data-lucide="facebook" class="h-5 w-5"></i>
+                    </a>
+                    <a href="#" class="rounded-full bg-gray-800 p-2 text-gray-400 transition-colors hover:bg-amber-500 hover:text-white" aria-label="Twitter">
+                        <i data-lucide="twitter" class="h-5 w-5"></i>
+                    </a>
+                    <a href="#" class="rounded-full bg-gray-800 p-2 text-gray-400 transition-colors hover:bg-amber-500 hover:text-white" aria-label="Instagram">
+                        <i data-lucide="instagram" class="h-5 w-5"></i>
+                    </a>
+                    <a href="#" class="rounded-full bg-gray-800 p-2 text-gray-400 transition-colors hover:bg-amber-500 hover:text-white" aria-label="LinkedIn">
+                        <i data-lucide="linkedin" class="h-5 w-5"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Dịch vụ -->
+            <div>
+                <h3 class="mb-4 text-lg font-semibold">Dịch vụ</h3>
+                <ul class="space-y-2">
+                    {% for service in global_services %}
+                    <li>
+                        <a href="{% url 'service_detail' service.slug %}" class="text-gray-400 transition-colors hover:text-amber-500">
+                            {{ service.ten_dm }}
+                        </a>
+                    </li>
+                    {% empty %}
+                    <li class="text-gray-500">Không có dịch vụ nào</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Liên kết nhanh -->
+            <div>
+                <h3 class="mb-4 text-lg font-semibold">Liên kết nhanh</h3>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="{% url 'home' %}" class="text-gray-400 transition-colors hover:text-amber-500">
+                            Trang chủ
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'about' %}" class="text-gray-400 transition-colors hover:text-amber-500">
+                            Về chúng tôi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'mission' %}" class="text-gray-400 transition-colors hover:text-amber-500">
+                            Sứ mệnh
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'contact' %}" class="text-gray-400 transition-colors hover:text-amber-500">
+                            Liên hệ
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Liên hệ -->
+            <div>
+                <h3 class="mb-4 text-lg font-semibold">Liên hệ</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start">
+                        <i data-lucide="map-pin" class="mr-3 h-5 w-5 text-amber-500"></i>
+                        <span class="text-gray-400">
+                            123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh, Việt Nam
+                        </span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="phone" class="mr-3 h-5 w-5 text-amber-500"></i>
+                        <span class="text-gray-400">
+                            (84) 28 1234 5678
+                        </span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="mail" class="mr-3 h-5 w-5 text-amber-500"></i>
+                        <span class="text-gray-400">
+                            info@imapsagency.com
+                        </span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="clock" class="mr-3 h-5 w-5 text-amber-500"></i>
+                        <span class="text-gray-400">
+                            Thứ Hai - Thứ Sáu: 8:00 - 17:30
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="my-8 border-gray-800">
+
+        <div class="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
+            <p class="text-sm text-gray-400">
+                &copy; 2025 I MAPS AGENCY. Tất cả các quyền được bảo lưu.
+            </p>
+            <div class="flex space-x-6">
+                <a href="#" class="text-sm text-gray-400 transition-colors hover:text-amber-500">
+                    Điều khoản sử dụng
+                </a>
+                <a href="#" class="text-sm text-gray-400 transition-colors hover:text-amber-500">
+                    Chính sách bảo mật
+                </a>
+                <a href="#" class="text-sm text-gray-400 transition-colors hover:text-amber-500">
+                    Cookie
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>

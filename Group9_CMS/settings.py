@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'quanlymedia',
     'quanlythanhvien',
     'quanlymenu',
+    'imaps_agency',
 ]
 # AUTH_USER_MODEL = 'quanlybaiviet.CustomAuthUser'
 MIDDLEWARE = [
