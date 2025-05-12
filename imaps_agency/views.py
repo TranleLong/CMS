@@ -12,24 +12,31 @@ from .forms import ContactForm
 
 
 def home(request):
-    # Lấy các bài viết đã được duyệt và đã đăng
-    featured_articles = BaiViet.objects.filter(
-        trang_thai='published',
-        ngay_dang__lte=timezone.now().date()
-    ).order_by('-ngay_dang')[:3]
+    # Lấy danh sách dịch vụ cho trang chủ
+    services = DanhMuc.objects.filter(
+        trang_thai=True,
+        parent_id__isnull=True
+    ).order_by('order_index')
 
-    # Lấy các bài viết mới nhất
-    recent_articles = BaiViet.objects.filter(
-        trang_thai='published',
-        ngay_dang__lte=timezone.now().date()
-    ).order_by('-ngay_dang')[:6]
+    # Nếu không có dịch vụ, tạo danh sách cứng
+    if not services:
+        hardcoded_services = [
+            {'ten_dm': 'Thiết kế website', 'slug': 'thiet-ke-website',
+             'mo_ta': 'Thiết kế website chuyên nghiệp, tối ưu trải nghiệm người dùng và tăng tỷ lệ chuyển đổi.'},
+            {'ten_dm': 'Quảng cáo Google Ads', 'slug': 'quang-cao-google-ads',
+             'mo_ta': 'Quản lý chiến dịch Google Ads hiệu quả, tối ưu chi phí và tăng tỷ lệ chuyển đổi.'},
+            {'ten_dm': 'Email Marketing', 'slug': 'email-marketing',
+             'mo_ta': 'Chiến lược email marketing hiệu quả, tăng tỷ lệ mở email và chuyển đổi khách hàng.'},
+            {'ten_dm': 'SEO', 'slug': 'seo',
+             'mo_ta': 'Dịch vụ SEO chuyên nghiệp, tối ưu thứ hạng từ khóa và tăng lượng truy cập tự nhiên.'}
+        ]
+    else:
+        hardcoded_services = None
 
-    context = {
-        'featured_articles': featured_articles,
-        'recent_articles': recent_articles,
-    }
-    return render(request, 'pages/home.html', context)
-
+    return render(request, 'pages/home.html', {
+        'services': services,
+        'hardcoded_services': hardcoded_services
+    })
 
 def about(request):
     return render(request, 'pages/about.html')

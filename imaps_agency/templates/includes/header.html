@@ -13,27 +13,43 @@
                 <a href="{% url 'home' %}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
                     TRANG CHỦ
                 </a>
-                <div class="relative group">
-                    <button class="flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+
+                <!-- Dịch vụ dropdown -->
+                <div class="dropdown relative">
+                    <button class="dropdown-toggle flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
                         DỊCH VỤ <i data-lucide="chevron-down" class="ml-1 h-4 w-4"></i>
                     </button>
-                    <div class="absolute left-0 top-full hidden w-64 translate-y-1 rounded-md bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5 group-hover:block">
-                        {% for service in global_services %}
-                        <a href="{% url 'service_detail' service.slug %}" class="block rounded-md px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
-                            {{ service.ten_dm }}
-                        </a>
-                        {% empty %}
-                        <span class="block rounded-md px-4 py-2 text-sm text-gray-500">
-                            Không có dịch vụ nào
-                        </span>
-                        {% endfor %}
+                    <div class="dropdown-menu absolute left-0 top-full z-50 mt-1 hidden w-64 rounded-md bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5">
+                        {% if global_services %}
+                            {% for service in global_services %}
+                            <a href="{% url 'service_detail' service.slug %}" class="block rounded-md px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                                {{ service.ten_dm }}
+                            </a>
+                            {% endfor %}
+                        {% else %}
+                            <!-- Danh sách cứng tạm thời -->
+                            <a href="{% url 'service_detail' 'thiet-ke-website' %}" class="block rounded-md px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                                Thiết kế website
+                            </a>
+                            <a href="{% url 'service_detail' 'quang-cao-google-ads' %}" class="block rounded-md px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                                Quảng cáo Google Ads
+                            </a>
+                            <a href="{% url 'service_detail' 'email-marketing' %}" class="block rounded-md px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                                Email Marketing
+                            </a>
+                            <a href="{% url 'service_detail' 'seo' %}" class="block rounded-md px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+                                SEO
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
-                <div class="relative group">
-                    <button class="flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
+
+                <!-- Giới thiệu dropdown -->
+                <div class="dropdown relative">
+                    <button class="dropdown-toggle flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
                         GIỚI THIỆU <i data-lucide="chevron-down" class="ml-1 h-4 w-4"></i>
                     </button>
-                    <div class="absolute left-0 top-full hidden w-56 translate-y-1 rounded-md bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5 group-hover:block">
+                    <div class="dropdown-menu absolute left-0 top-full z-50 mt-1 hidden w-56 rounded-md bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5">
                         <a href="{% url 'about' %}" class="block rounded-md px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
                             Về chúng tôi
                         </a>
@@ -42,6 +58,7 @@
                         </a>
                     </div>
                 </div>
+
                 <a href="{% url 'contact' %}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-amber-50 hover:text-amber-600">
                     LIÊN HỆ
                 </a>
@@ -81,15 +98,27 @@
                         <i data-lucide="chevron-down" class="h-4 w-4"></i>
                     </button>
                     <div class="mobile-submenu hidden pl-4">
-                        {% for service in global_services %}
-                        <a href="{% url 'service_detail' service.slug %}" class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600">
-                            {{ service.ten_dm }}
-                        </a>
-                        {% empty %}
-                        <span class="block rounded-md px-3 py-2 text-sm text-gray-500">
-                            Không có dịch vụ nào
-                        </span>
-                        {% endfor %}
+                        {% if global_services %}
+                            {% for service in global_services %}
+                            <a href="{% url 'service_detail' service.slug %}" class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                                {{ service.ten_dm }}
+                            </a>
+                            {% endfor %}
+                        {% else %}
+                            <!-- Danh sách cứng tạm thời -->
+                            <a href="{% url 'service_detail' 'thiet-ke-website' %}" class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                                Thiết kế website
+                            </a>
+                            <a href="{% url 'service_detail' 'quang-cao-google-ads' %}" class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                                Quảng cáo Google Ads
+                            </a>
+                            <a href="{% url 'service_detail' 'email-marketing' %}" class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                                Email Marketing
+                            </a>
+                            <a href="{% url 'service_detail' 'seo' %}" class="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600">
+                                SEO
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="space-y-1">
@@ -114,19 +143,42 @@
     </div>
 </header>
 
+<!-- Thêm JavaScript trực tiếp vào cuối header.html -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Search toggle
-        const searchToggle = document.getElementById('searchToggle');
-        const searchBar = document.getElementById('searchBar');
+        console.log('Header script loaded');
 
-        searchToggle.addEventListener('click', function() {
-            if (searchBar.classList.contains('max-h-0')) {
-                searchBar.classList.remove('max-h-0', 'opacity-0');
-                searchBar.classList.add('max-h-16', 'opacity-100', 'py-3');
-            } else {
-                searchBar.classList.remove('max-h-16', 'opacity-100', 'py-3');
-                searchBar.classList.add('max-h-0', 'opacity-0');
+        // Xử lý dropdown menu
+        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+
+        dropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const dropdown = this.closest('.dropdown');
+                const menu = dropdown.querySelector('.dropdown-menu');
+
+                // Đóng tất cả các dropdown khác
+                document.querySelectorAll('.dropdown-menu').forEach(m => {
+                    if (m !== menu) {
+                        m.classList.add('hidden');
+                    }
+                });
+
+                // Toggle dropdown hiện tại
+                menu.classList.toggle('hidden');
+
+                console.log('Dropdown clicked:', menu.classList.contains('hidden') ? 'hidden' : 'visible');
+            });
+        });
+
+        // Đóng dropdown khi click bên ngoài
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.add('hidden');
+                });
             }
         });
 
@@ -134,9 +186,11 @@
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
 
-        mobileMenuToggle.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
-        });
+        if (mobileMenuToggle && mobileMenu) {
+            mobileMenuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
 
         // Mobile submenu toggles
         const mobileSubmenuToggles = document.querySelectorAll('.mobile-submenu-toggle');
@@ -147,5 +201,27 @@
                 submenu.classList.toggle('hidden');
             });
         });
+
+        // Search toggle
+        const searchToggle = document.getElementById('searchToggle');
+        const searchBar = document.getElementById('searchBar');
+
+        if (searchToggle && searchBar) {
+            searchToggle.addEventListener('click', function() {
+                if (searchBar.classList.contains('max-h-0')) {
+                    searchBar.classList.remove('max-h-0');
+                    searchBar.classList.add('max-h-20');
+                    searchBar.classList.remove('opacity-0');
+                    searchBar.classList.add('opacity-100');
+                } else {
+                    searchBar.classList.add('max-h-0');
+                    searchBar.classList.remove('max-h-20');
+                    searchBar.classList.add('opacity-0');
+                    searchBar.classList.remove('opacity-100');
+                }
+            });
+        }
+
+        console.log('Header script initialization complete');
     });
 </script>
