@@ -1,0 +1,456 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1>Chi tiết thẻ</h1>
+            <p class="header-subtitle">Xem thông tin chi tiết của thẻ</p>
+        </div>
+
+        <!-- Nút quay lại -->
+        <div class="navigation-actions">
+            <a href="{% url 'quanlythe' %}" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                <span>Quay lại danh sách</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="dashboard-content">
+        <!-- Thông tin thẻ -->
+        <div class="content-card">
+            <div class="card-header">
+                <div class="header-left">
+                    <h2>Thông tin thẻ</h2>
+                    <p>Chi tiết thông tin của thẻ</p>
+                </div>
+                <div class="header-right">
+                    <a href="{% url 'sua_the' the.ma_the %}" class="edit-button">
+                        <i class="fas fa-edit"></i>
+                        <span>Sửa thẻ</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="info-container">
+                <div class="info-group">
+                    <div class="info-label">Tên thẻ</div>
+                    <div class="info-value">{{ the.ten_the }}</div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Đường dẫn (slug)</div>
+                    <div class="info-value">{{ the.slug }}</div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Số bài viết</div>
+                    <div class="info-value">
+                        <span class="tag-count">{{ the.so_bai_viet }}</span>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Mô tả</div>
+                    {% if the.mo_ta %}
+                        <div class="info-description">{{ the.mo_ta }}</div>
+                    {% else %}
+                        <div class="info-value text-muted">Không có mô tả</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sách bài viết -->
+        <div class="content-card">
+            <div class="card-header">
+                <div class="header-left">
+                    <h2>Bài viết có thẻ này</h2>
+                    <p>Danh sách các bài viết sử dụng thẻ này</p>
+                </div>
+            </div>
+
+            <div class="posts-container">
+                {% if bai_viet_list %}
+                    <div class="posts-list">
+                        {% for bai_viet in bai_viet_list %}
+                        <div class="post-item">
+                            <div class="post-info">
+                                <a href="{% url 'xem_baiviet' bai_viet.ma_bv %}" class="post-title">{{ bai_viet.tieu_de }}</a>
+                            </div>
+                            <div class="post-status">
+                                <span class="status-badge {% if bai_viet.trang_thai == 'Đăng trang' %}status-active{% else %}status-inactive{% endif %}">
+                                    {{ bai_viet.trang_thai }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <p class="empty-text">Không có bài viết nào sử dụng thẻ này.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Biến CSS */
+    :root {
+        /* Màu chính */
+        --primary-color: #4f46e5;
+        --primary-light: #818cf8;
+        --primary-dark: #3730a3;
+
+        /* Màu thẻ thống kê */
+        --blue-color: #3b82f6;
+        --blue-light: #93c5fd;
+        --blue-dark: #1d4ed8;
+
+        --green-color: #10b981;
+        --green-light: #6ee7b7;
+        --green-dark: #047857;
+
+        --purple-color: #8b5cf6;
+        --purple-light: #c4b5fd;
+        --purple-dark: #6d28d9;
+
+        --orange-color: #f59e0b;
+        --orange-light: #fcd34d;
+        --orange-dark: #d97706;
+
+        --red-color: #ef4444;
+        --red-light: #fca5a5;
+        --red-dark: #b91c1c;
+
+        /* Màu nền và văn bản */
+        --bg-color: #f9fafb;
+        --card-bg: #ffffff;
+        --text-primary: #111827;
+        --text-secondary: #4b5563;
+        --text-muted: #9ca3af;
+
+        /* Màu viền và đổ bóng */
+        --border-color: #e5e7eb;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+        /* Kích thước và khoảng cách */
+        --border-radius: 0.5rem;
+        --border-radius-lg: 0.75rem;
+        --spacing-xs: 0.25rem;
+        --spacing-sm: 0.5rem;
+        --spacing: 1rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 3rem;
+
+        /* Thời gian chuyển động */
+        --transition-fast: 0.15s;
+        --transition: 0.3s;
+    }
+
+    /* Dashboard container */
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        padding: var(--spacing-lg);
+        background-color: var(--bg-color);
+        min-height: 100vh;
+        gap: var(--spacing-lg);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Header */
+    .dashboard-header {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .header-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .header-subtitle {
+        font-size: 1rem;
+        color: var(--text-secondary);
+    }
+
+    /* Nút quay lại */
+    .navigation-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing);
+    }
+
+    .back-button {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: 0.625rem var(--spacing-md);
+        background: linear-gradient(to right, #0d6efd, #60a5fa);
+        color: white;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all var(--transition-fast);
+        border: 1px solid var(--border-color);
+    }
+
+    .back-button:hover {
+        background-color: var(--border-color);
+        transform: translateY(-2px);
+    }
+
+    /* Nội dung chính */
+    .dashboard-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        flex-grow: 1;
+    }
+
+    .content-card {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: box-shadow var(--transition);
+    }
+
+    .content-card:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .header-left h2 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 var(--spacing-xs) 0;
+    }
+
+    .header-left p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+    }
+
+    .edit-button {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: 0.625rem var(--spacing-md);
+        background: linear-gradient(to right, #0d6efd, #60a5fa);
+        color: white;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all var(--transition-fast);
+    }
+
+    .edit-button:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+    }
+
+    /* Thông tin thẻ */
+    .info-container {
+        padding: var(--spacing-md);
+    }
+
+    .info-group {
+        margin-bottom: var(--spacing-md);
+    }
+
+    .info-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .info-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .info-value {
+        font-size: 1rem;
+        color: var(--text-primary);
+    }
+
+    .text-muted {
+        color: var(--text-muted);
+        font-style: italic;
+    }
+
+    .info-description {
+        background-color: var(--bg-color);
+        padding: var(--spacing);
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        white-space: pre-wrap;
+    }
+
+    .tag-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--blue-light);
+        color: var(--blue-dark);
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    /* Danh sách bài viết */
+    .posts-container {
+        padding: var(--spacing-md);
+    }
+
+    .posts-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .post-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--spacing);
+        border-bottom: 1px solid var(--border-color);
+        transition: background-color var(--transition-fast);
+    }
+
+    .post-item:hover {
+        background-color: rgba(79, 70, 229, 0.05);
+    }
+
+    .post-item:last-child {
+        border-bottom: none;
+    }
+
+    .post-info {
+        flex-grow: 1;
+    }
+
+    .post-title {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: color var(--transition-fast);
+    }
+
+    .post-title:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+    }
+
+    .post-status {
+        margin-left: var(--spacing);
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--border-radius);
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .status-active {
+        background-color: var(--green-light);
+        color: var(--green-dark);
+    }
+
+    .status-inactive {
+        background-color: var(--red-light);
+        color: var(--red-dark);
+    }
+
+    /* Empty state */
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing-xl);
+        color: var(--text-muted);
+        text-align: center;
+    }
+
+    .empty-icon {
+        font-size: 2.5rem;
+        margin-bottom: var(--spacing);
+        opacity: 0.5;
+    }
+
+    .empty-text {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dashboard-header,
+    .navigation-actions,
+    .content-card {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .content-card:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+</style>
+{% endblock %}
