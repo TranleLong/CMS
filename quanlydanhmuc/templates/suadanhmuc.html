@@ -1,0 +1,497 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .content-wrapper {
+        padding: 20px;
+        width: 100%;
+    }
+
+    .back-button {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .back-button i {
+        margin-right: 5px;
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .required {
+        color: #F44336;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .form-select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        appearance: none;
+        font-size: 14px;
+        background-position: right 10px center;
+        background-repeat: no-repeat;
+        background-size: 12px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    }
+
+    .form-textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        resize: vertical;
+        font-size: 14px;
+        min-height: 120px;
+    }
+
+    .form-hint {
+        display: block;
+        margin-top: 5px;
+        color: #666;
+        font-size: 12px;
+    }
+
+    .toggle-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .toggle-label {
+        margin-right: 10px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 20px;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+        background-color: #4CAF50;
+    }
+
+    input:checked + .toggle-slider:before {
+        transform: translateX(20px);
+    }
+
+    .toggle-status {
+        margin-left: 10px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    .btn-cancel {
+        padding: 10px 16px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        background-color: white;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-save {
+        padding: 10px 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #2196F3;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        border-radius: 8px;
+        width: 400px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: #999;
+    }
+
+    /* Success modal */
+    .success-modal {
+        text-align: center;
+        padding: 30px;
+    }
+
+    .success-icon-container {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 20px;
+        background-color: #E8F5E9;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .success-icon {
+        color: #4CAF50;
+        font-size: 40px;
+    }
+
+    .success-title {
+        color: #4CAF50;
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .success-message {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .btn-success {
+        padding: 8px 30px;
+        border-radius: 4px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    /* Confirm modal */
+    .confirm-modal {
+        padding: 20px;
+    }
+
+    .confirm-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .confirm-icon {
+        color: #FF9800;
+        font-size: 20px;
+        margin-right: 10px;
+    }
+
+    .confirm-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .warning-box {
+        background-color: #FFF3E0;
+        border-radius: 4px;
+        padding: 10px;
+        border-left: 4px solid #FF9800;
+        margin-bottom: 20px;
+    }
+
+    .warning-text {
+        margin: 0;
+        color: #E65100;
+        font-size: 14px;
+    }
+
+    .confirm-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .btn-confirm-cancel {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #f0f0f0;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-confirm-save {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #F44336;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    /* Error message */
+    .error-message {
+        color: #F44336;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+    }
+
+    .form-input.error, .form-select.error, .form-textarea.error {
+        border-color: #F44336;
+    }
+
+    /* Alert messages */
+    .alert {
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        background-color: #E8F5E9;
+        color: #2E7D32;
+        border-left: 4px solid #4CAF50;
+    }
+
+    .alert-error {
+        background-color: #FFEBEE;
+        color: #C62828;
+        border-left: 4px solid #F44336;
+    }
+</style>
+
+<div class="content-wrapper">
+    <a href="{% url 'quanlydanhmuc' %}" class="back-button" style="text-decoration: none; color: #0d6efd; margin-right: 10px;">
+        <i class="fas fa-chevron-left" style="margin-right: 5px; margin-top: 3px" ></i> Quay lại danh sách
+    </a>
+    <h1 class="page-title">Sửa danh mục</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card">
+        <form id="editCategoryForm" method="post" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="ten_dm" class="form-label">Tên danh mục <span class="required">*</span></label>
+                <input type="text" id="ten_dm" name="ten_dm" class="form-input" required value="{{ danh_muc.ten_dm }}">
+                <span class="error-message" id="ten_dm_error">Vui lòng nhập tên danh mục</span>
+            </div>
+
+            <div class="form-group">
+                <label for="slug" class="form-label">Đường dẫn <span class="required">*</span></label>
+                <input type="text" id="slug" name="slug" class="form-input" required value="{{ danh_muc.slug }}">
+                <span class="form-hint">Đường dẫn sẽ hiển thị trên URL của trang danh mục</span>
+                <span class="error-message" id="slug_error">Vui lòng nhập đường dẫn hợp lệ</span>
+            </div>
+
+            <div class="form-group">
+                <label for="parent_id" class="form-label">Danh mục cha</label>
+                <select id="parent_id" name="parent_id" class="form-select">
+                    <option value="">Chọn danh mục cha</option>
+                    {% for category in parent_categories %}
+                        <option value="{{ category.ma_dm }}" {% if danh_muc.parent_id and danh_muc.parent_id.ma_dm == category.ma_dm %}selected{% endif %}>{{ category.ten_dm }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="mo_ta" class="form-label">Mô tả</label>
+                <textarea id="mo_ta" name="mo_ta" class="form-textarea" placeholder="Nhập mô tả cho danh mục">{{ danh_muc.mo_ta }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <div class="toggle-container">
+                    <label class="toggle-label">Trạng thái</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="trang_thai" name="trang_thai" {% if danh_muc.trang_thai %}checked{% endif %}>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-status" id="statusText">{% if danh_muc.trang_thai %}Đang hoạt động{% else %}Không hoạt động{% endif %}</span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'quanlydanhmuc' %}" class="btn-cancel">Hủy</a>
+                <button type="submit" class="btn-save">Lưu danh mục</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle switch functionality
+        const statusToggle = document.getElementById('trang_thai');
+        const statusText = document.getElementById('statusText');
+
+        statusToggle.addEventListener('change', function() {
+            statusText.textContent = this.checked ? 'Đang hoạt động' : 'Không hoạt động';
+        });
+
+        // Auto-generate slug from category name
+        const categoryNameInput = document.getElementById('ten_dm');
+        const categorySlugInput = document.getElementById('slug');
+
+        // Check if slug has been manually edited
+        let slugEdited = false;
+
+        categoryNameInput.addEventListener('input', function() {
+            // Only auto-generate if user hasn't edited the slug
+            if (!slugEdited) {
+                const slug = createSlug(this.value);
+                categorySlugInput.value = slug;
+            }
+        });
+
+        categorySlugInput.addEventListener('input', function() {
+            // Mark that user has edited the slug
+            slugEdited = true;
+        });
+
+        // Form validation
+        const editCategoryForm = document.getElementById('editCategoryForm');
+
+        editCategoryForm.addEventListener('submit', function(e) {
+            let isValid = true;
+
+            // Validate category name
+            const tenDm = document.getElementById('ten_dm');
+            const tenDmError = document.getElementById('ten_dm_error');
+
+            if (!tenDm.value.trim()) {
+                tenDm.classList.add('error');
+                tenDmError.style.display = 'block';
+                isValid = false;
+            } else {
+                tenDm.classList.remove('error');
+                tenDmError.style.display = 'none';
+            }
+
+            // Validate slug
+            const slug = document.getElementById('slug');
+            const slugError = document.getElementById('slug_error');
+
+            if (!slug.value.trim() || !/^[a-z0-9-]+$/.test(slug.value)) {
+                slug.classList.add('error');
+                slugError.style.display = 'block';
+                isValid = false;
+            } else {
+                slug.classList.remove('error');
+                slugError.style.display = 'none';
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    function createSlug(text) {
+        return text
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[đĐ]/g, 'd')
+            .replace(/[^a-z0-9\s]/g, '')
+            .replace(/\s+/g, '-');
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,1167 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1>Quản lý menu</h1>
+            <p class="header-subtitle">Quản lý tất cả menu trong hệ thống của bạn</p>
+        </div>
+
+        <!-- Bộ lọc tìm kiếm -->
+        <div class="filter-section">
+            <div class="filter-container">
+                <div class="filter-label">
+                    <i class="fas fa-search"></i>
+                    <span>Tìm kiếm menu:</span>
+                </div>
+                <div class="filter-controls">
+                    <div class="filter-item" style="flex-grow: 1;">
+                        <input type="text" id="searchMenu" placeholder="Tìm kiếm theo tiêu đề hoặc slug..." class="filter-select">
+                    </div>
+                    <div class="filter-item">
+                        <select id="filterType" class="filter-select" onchange="filterMenus()">
+                            <option value="all">Tất cả loại</option>
+                            <option value="bai_viet">Bài viết</option>
+                            <option value="duong_dan">Đường dẫn</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <select id="filterStatus" class="filter-select" onchange="filterMenus()">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="active">Đang hoạt động</option>
+                            <option value="inactive">Không hoạt động</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <a href="{% url 'themmenu' %}" class="filter-button add-button">
+                            <i class="fas fa-plus"></i>
+                            <span>Thêm menu mới</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hiển thị thông báo -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Nội dung chính -->
+    <div class="dashboard-content">
+        <!-- Thống kê nhanh -->
+        <div class="stats-grid">
+            <div class="stat-card blue">
+                <div class="stat-icon">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ menu_list|length }}</div>
+                    <div class="stat-label">Tổng menu</div>
+                </div>
+            </div>
+            <div class="stat-card green">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="activeCount">0</div>
+                    <div class="stat-label">Đang hoạt động</div>
+                </div>
+            </div>
+            <div class="stat-card orange">
+                <div class="stat-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="articleMenuCount">0</div>
+                    <div class="stat-label">Menu bài viết</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sách menu -->
+        <div class="content-card">
+            <div class="card-header">
+                <div class="header-left">
+                    <h2>Danh sách menu</h2>
+                    <p>Quản lý tất cả menu trong hệ thống</p>
+                </div>
+                <div class="header-right">
+                    <button class="refresh-button" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Tiêu đề</th>
+                            <th>Loại</th>
+                            <th>Slug</th>
+                            <th>Số bài viết</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="menuTableBody">
+                        {% for menu in menu_list %}
+                        <tr data-type="{{ menu.loai_menu }}" data-status="{% if menu.trang_thai == 'Dang hoat dong' %}active{% else %}inactive{% endif %}">
+                            <td class="menu-title">{{ menu.tieu_de }}</td>
+                            <td class="menu-type">
+                                <span class="type-badge {% if menu.loai_menu == 'bai_viet' %}type-articles{% else %}type-url{% endif %}">
+                                    <i class="fas {% if menu.loai_menu == 'bai_viet' %}fa-file-alt{% else %}fa-link{% endif %}"></i>
+                                    {% if menu.loai_menu == 'bai_viet' %}Bài viết{% else %}Đường dẫn{% endif %}
+                                </span>
+                            </td>
+                            <td class="menu-slug">{{ menu.slug }}</td>
+                            <td class="menu-count">
+                                {% if menu.loai_menu == 'bai_viet' %}
+                                    <span class="count-badge">{{ menu.bai_viet_count|default:0 }}</span>
+                                {% else %}
+                                    <span class="count-badge disabled">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="menu-status">
+                                <span class="status-badge {% if menu.trang_thai == 'Dang hoat dong' %}active{% else %}inactive{% endif %}">
+                                    <i class="fas {% if menu.trang_thai == 'Dang hoat dong' %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i>
+                                    {% if menu.trang_thai == 'Dang hoat dong' %}Đang hoạt động{% else %}Không hoạt động{% endif %}
+                                </span>
+                            </td>
+                            <td class="menu-date">{{ menu.ngay_tao|date:"d/m/Y" }}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon view-menu" onclick="window.open('{% url 'xem_menu' menu.ma_menu %}', '_blank')" title="Xem">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon edit-menu" onclick="window.location.href='{% url 'sua_menu' menu.ma_menu %}'" title="Sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon delete" onclick="confirmDelete({{ menu.ma_menu }}, '{{ menu.tieu_de|escapejs }}')" title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 20px;">
+                                Không có menu nào.
+                                <a href="{% url 'themmenu' %}" class="add-link">Thêm menu mới</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <!-- Thông báo không tìm thấy kết quả -->
+                        <tr id="noResultsMessage" style="display: none;">
+                            <td colspan="7" style="text-align: center; padding: 20px;">Không tìm thấy menu nào phù hợp</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeDeleteModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="delete-modal-header">
+            <h3 class="delete-modal-title">Xác nhận xóa</h3>
+        </div>
+        <div class="delete-modal-body">
+            <div class="warning-box">
+                <p class="warning-text">
+                    <i class="fas fa-exclamation-triangle warning-icon"></i>
+                    Cảnh báo
+                </p>
+                <p class="warning-text" style="margin-top: 10px;">
+                    Bạn có chắc chắn muốn xóa menu "<span id="deleteItemName"></span>"?
+                </p>
+                <p class="warning-text" style="margin-top: 10px;">
+                    Hành động này không thể hoàn tác và có thể ảnh hưởng đến dữ liệu liên quan.
+                </p>
+            </div>
+        </div>
+        <div class="delete-modal-footer">
+            <button class="btn-cancel" onclick="closeDeleteModal()">Hủy</button>
+            <button class="btn-confirm" id="confirmDeleteBtn">Xóa</button>
+        </div>
+    </div>
+</div>
+
+<!-- Thông báo -->
+<div id="notification" class="notification">
+    <div class="notification-content">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationMessage">Thao tác thành công!</span>
+    </div>
+</div>
+
+<style>
+    /* Biến CSS - giống như các trang khác */
+    :root {
+        /* Màu chính */
+        --primary-color: #0d6efd;
+        --primary-light: #60a5fa;
+        --primary-dark: #0953c6;
+
+        /* Màu thẻ thống kê */
+        --blue-color: #3b82f6;
+        --blue-light: #93c5fd;
+        --blue-dark: #1d4ed8;
+
+        --green-color: #10b981;
+        --green-light: #6ee7b7;
+        --green-dark: #047857;
+
+        --purple-color: #8b5cf6;
+        --purple-light: #c4b5fd;
+        --purple-dark: #6d28d9;
+
+        --orange-color: #f59e0b;
+        --orange-light: #fcd34d;
+        --orange-dark: #d97706;
+
+        --red-color: #ef4444;
+        --red-light: #fca5a5;
+        --red-dark: #b91c1c;
+
+        /* Màu nền và văn bản */
+        --bg-color: #f9fafb;
+        --card-bg: #ffffff;
+        --text-primary: #111827;
+        --text-secondary: #4b5563;
+        --text-muted: #9ca3af;
+
+        /* Màu viền và đổ bóng */
+        --border-color: #e5e7eb;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+        /* Kích thước và khoảng cách */
+        --border-radius: 0.5rem;
+        --border-radius-lg: 0.75rem;
+        --spacing-xs: 0.25rem;
+        --spacing-sm: 0.5rem;
+        --spacing: 1rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 3rem;
+
+        /* Thời gian chuyển động */
+        --transition-fast: 0.15s;
+        --transition: 0.3s;
+    }
+
+    /* Dashboard container */
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        padding: var(--spacing-lg);
+        background-color: var(--bg-color);
+        min-height: 100vh;
+        gap: var(--spacing-lg);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Header */
+    .dashboard-header {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .header-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .header-subtitle {
+        font-size: 1rem;
+        color: var(--text-secondary);
+    }
+
+    /* Bộ lọc */
+    .filter-section {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: var(--spacing-md);
+        box-shadow: var(--shadow);
+        transition: box-shadow var(--transition);
+    }
+
+    .filter-section:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    .filter-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing);
+    }
+
+    .filter-label {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .filter-label i {
+        color: var(--primary-color);
+    }
+
+    .filter-controls {
+        display: flex;
+        gap: var(--spacing);
+        align-items: center;
+    }
+
+    .filter-item {
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .filter-select {
+        width: 100%;
+        padding: 0.625rem var(--spacing);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        background-color: var(--card-bg);
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        transition: all var(--transition-fast);
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+    }
+
+    .filter-select:hover {
+        border-color: var(--primary-light);
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+    }
+
+    .filter-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-sm);
+        padding: 0.625rem var(--spacing-md);
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+        color: white;
+        text-decoration: none;
+    }
+
+    .filter-button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    .add-button {
+        background: linear-gradient(to right, var(--green-color), var(--green-light));
+    }
+
+    /* Nội dung chính */
+    .dashboard-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        flex-grow: 1;
+    }
+
+    /* Thống kê */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing);
+    }
+
+    .stat-card {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: var(--spacing-md);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing);
+        transition: all var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(to right, var(--stat-color), var(--stat-color-light));
+    }
+
+    .stat-card.blue {
+        --stat-color: var(--blue-color);
+        --stat-color-light: var(--blue-light);
+    }
+
+    .stat-card.green {
+        --stat-color: var(--green-color);
+        --stat-color-light: var(--green-light);
+    }
+
+    .stat-card.orange {
+        --stat-color: var(--orange-color);
+        --stat-color-light: var(--orange-light);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--stat-color), var(--stat-color-light));
+        color: white;
+        font-size: 1.25rem;
+    }
+
+    .stat-content {
+        flex: 1;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-top: var(--spacing-xs);
+    }
+
+    .content-card {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: box-shadow var(--transition);
+    }
+
+    .content-card:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .header-left h2 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 var(--spacing-xs) 0;
+    }
+
+    .header-left p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+    }
+
+    .refresh-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: var(--bg-color);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+    }
+
+    .refresh-button:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    /* Table styles */
+    .table-container {
+        padding: var(--spacing-md);
+        overflow-x: auto;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-table th {
+        background-color: var(--bg-color);
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .data-table td {
+        font-size: 0.875rem;
+        color: var(--text-primary);
+    }
+
+    .data-table tbody tr:hover {
+        background-color: rgba(13, 110, 253, 0.05);
+    }
+
+    /* Thiết lập chiều rộng cột */
+    .data-table th:nth-child(1),
+    .data-table td:nth-child(1) {
+        width: 20%;
+    }
+
+    .data-table th:nth-child(2),
+    .data-table td:nth-child(2) {
+        width: 12%;
+    }
+
+    .data-table th:nth-child(3),
+    .data-table td:nth-child(3) {
+        width: 15%;
+    }
+
+    .data-table th:nth-child(4),
+    .data-table td:nth-child(4) {
+        width: 10%;
+        text-align: center;
+    }
+
+    .data-table th:nth-child(5),
+    .data-table td:nth-child(5) {
+        width: 15%;
+        text-align: center;
+    }
+
+    .data-table th:nth-child(6),
+    .data-table td:nth-child(6) {
+        width: 13%;
+    }
+
+    .data-table th:nth-child(7),
+    .data-table td:nth-child(7) {
+        width: 15%;
+        text-align: center;
+    }
+
+    .menu-title {
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+    .menu-slug {
+        color: var(--text-secondary);
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    .menu-date {
+        color: var(--text-secondary);
+    }
+
+    /* Type badges */
+    .type-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .type-badge.type-articles {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: var(--blue-dark);
+    }
+
+    .type-badge.type-url {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: var(--green-dark);
+    }
+
+    /* Count badges */
+    .count-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 24px;
+        height: 24px;
+        padding: 0 6px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .count-badge.disabled {
+        background-color: var(--text-muted);
+    }
+
+    /* Status badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .status-badge.active {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: var(--green-dark);
+    }
+
+    .status-badge.inactive {
+        background-color: rgba(156, 163, 175, 0.1);
+        color: var(--text-secondary);
+    }
+
+    /* Action buttons */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--border-color);
+        background-color: white;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+    }
+
+    .btn-icon:hover {
+        transform: translateY(-2px);
+    }
+
+    .view-menu:hover {
+        background-color: var(--primary-light);
+        color: white;
+        border-color: var(--primary-light);
+    }
+
+    .edit-menu:hover {
+        background-color: var(--green-color);
+        color: white;
+        border-color: var(--green-color);
+    }
+
+    .delete:hover {
+        background-color: var(--red-color);
+        color: white;
+        border-color: var(--red-color);
+    }
+
+    /* Add link */
+    .add-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .add-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        border-radius: var(--border-radius);
+        width: 400px;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        animation: modalFadeIn 0.3s ease-out;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: var(--text-muted);
+    }
+
+    /* Delete confirmation modal */
+    .delete-modal-header {
+        padding: 20px 20px 0 20px;
+        text-align: center;
+    }
+
+    .delete-modal-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: var(--text-primary);
+    }
+
+    .delete-modal-body {
+        padding: 20px;
+    }
+
+    .warning-box {
+        background-color: #FFF3E0;
+        border-radius: var(--border-radius);
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .warning-icon {
+        color: var(--orange-color);
+        margin-right: 10px;
+    }
+
+    .warning-text {
+        color: var(--orange-dark);
+        font-size: 14px;
+        margin: 0;
+    }
+
+    .delete-modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 20px 20px 20px;
+        gap: 10px;
+    }
+
+    .btn-cancel {
+        padding: 8px 16px;
+        border-radius: var(--border-radius);
+        border: none;
+        background-color: var(--bg-color);
+        color: var(--text-secondary);
+        cursor: pointer;
+        font-size: 14px;
+        transition: all var(--transition-fast);
+    }
+
+    .btn-cancel:hover {
+        background-color: var(--border-color);
+    }
+
+    .btn-confirm {
+        padding: 8px 16px;
+        border-radius: var(--border-radius);
+        border: none;
+        background-color: var(--red-color);
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all var(--transition-fast);
+    }
+
+    .btn-confirm:hover {
+        background-color: var(--red-dark);
+    }
+
+    /* Thông báo */
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1100;
+        transform: translateX(120%);
+        transition: transform 0.3s ease-out;
+    }
+
+    .notification.show {
+        transform: translateX(0);
+    }
+
+    .notification-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: var(--green-color);
+        color: white;
+        padding: 12px 16px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+    }
+
+    .notification-content i {
+        font-size: 18px;
+    }
+
+    /* Alert styles */
+    .alert {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing);
+        margin-bottom: var(--spacing);
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+    }
+
+    .alert-success {
+        background-color: #E8F5E9;
+        color: var(--green-dark);
+        border-left: 4px solid var(--green-color);
+    }
+
+    .alert-error {
+        background-color: #FFEBEE;
+        color: var(--red-dark);
+        border-left: 4px solid var(--red-color);
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes modalFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dashboard-header,
+    .filter-section,
+    .stats-grid,
+    .content-card {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .filter-section {
+        animation-delay: 0.1s;
+    }
+
+    .stats-grid {
+        animation-delay: 0.2s;
+    }
+
+    .content-card {
+        animation-delay: 0.3s;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: var(--spacing);
+        }
+
+        .filter-controls {
+            flex-direction: column;
+        }
+
+        .filter-actions {
+            width: 100%;
+        }
+
+        .filter-button {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .data-table {
+            min-width: 800px;
+        }
+    }
+</style>
+
+<script>
+    let menuIdToDelete = null;
+
+    // Khởi tạo khi trang được tải
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cập nhật thống kê
+        updateStats();
+
+        // Thiết lập tìm kiếm
+        setupSearch();
+    });
+
+    // Cập nhật thống kê
+    function updateStats() {
+        const rows = document.querySelectorAll('#menuTableBody tr[data-type]');
+        let activeCount = 0;
+        let articleMenuCount = 0;
+
+        rows.forEach(row => {
+            const status = row.getAttribute('data-status');
+            const type = row.getAttribute('data-type');
+
+            if (status === 'active') {
+                activeCount++;
+            }
+
+            if (type === 'bai_viet') {
+                articleMenuCount++;
+            }
+        });
+
+        document.getElementById('activeCount').textContent = activeCount;
+        document.getElementById('articleMenuCount').textContent = articleMenuCount;
+    }
+
+    // Thiết lập tìm kiếm
+    function setupSearch() {
+        const searchInput = document.getElementById('searchMenu');
+        searchInput.addEventListener('input', function() {
+            filterMenus();
+        });
+    }
+
+    // Lọc menu
+    function filterMenus() {
+        const searchTerm = document.getElementById('searchMenu').value.toLowerCase();
+        const filterType = document.getElementById('filterType').value;
+        const filterStatus = document.getElementById('filterStatus').value;
+        const rows = document.querySelectorAll('#menuTableBody tr[data-type]');
+
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const title = row.querySelector('.menu-title')?.textContent.toLowerCase() || '';
+            const slug = row.querySelector('.menu-slug')?.textContent.toLowerCase() || '';
+            const type = row.getAttribute('data-type');
+            const status = row.getAttribute('data-status');
+
+            // Kiểm tra điều kiện lọc
+            const matchesSearch = title.includes(searchTerm) || slug.includes(searchTerm);
+            const matchesType = filterType === 'all' || type === filterType;
+            const matchesStatus = filterStatus === 'all' || status === filterStatus;
+
+            if (matchesSearch && matchesType && matchesStatus) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Hiển thị thông báo nếu không tìm thấy kết quả
+        const noResultsMessage = document.getElementById('noResultsMessage');
+        if (visibleCount === 0 && (searchTerm !== '' || filterType !== 'all' || filterStatus !== 'all')) {
+            noResultsMessage.style.display = 'table-row';
+        } else {
+            noResultsMessage.style.display = 'none';
+        }
+    }
+
+    // Xác nhận xóa
+    function confirmDelete(id, name) {
+        menuIdToDelete = id;
+        document.getElementById('deleteItemName').textContent = name;
+        document.getElementById('deleteModal').style.display = 'flex';
+
+        // Cập nhật sự kiện cho nút xác nhận xóa
+        document.getElementById('confirmDeleteBtn').onclick = function() {
+            deleteMenu();
+        };
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    function deleteMenu() {
+        // Gửi yêu cầu xóa menu
+        fetch(`/quanlymenu/xoamenu/${menuIdToDelete}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Lỗi kết nối server');
+            }
+            return response.json();
+        })
+        .then(data => {
+            closeDeleteModal();
+
+            if (data.success) {
+                // Xóa hàng menu khỏi bảng
+                const rowToDelete = document.querySelector(`.btn-icon.delete[onclick*="${menuIdToDelete}"]`).closest('tr');
+                if (rowToDelete) {
+                    rowToDelete.remove();
+                }
+
+                // Cập nhật thống kê
+                updateStats();
+
+                // Hiển thị thông báo thành công
+                showNotification(data.message);
+            } else {
+                showNotification(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            closeDeleteModal();
+            showNotification('Có lỗi xảy ra khi xóa menu: ' + error.message, 'error');
+        });
+    }
+
+    // Hàm hiển thị thông báo
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
+        notificationMessage.textContent = message;
+
+        // Thay đổi màu sắc dựa trên loại thông báo
+        const notificationContent = notification.querySelector('.notification-content');
+        if (type === 'error') {
+            notificationContent.style.backgroundColor = '#ef4444';
+        } else {
+            notificationContent.style.backgroundColor = '#10b981';
+        }
+
+        // Hiển thị thông báo
+        notification.classList.add('show');
+
+        // Tự động ẩn thông báo sau 3 giây
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+
+    // Hàm lấy CSRF token từ cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Đóng modal khi click bên ngoài
+    window.onclick = function(event) {
+        const deleteModal = document.getElementById('deleteModal');
+        if (event.target == deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    }
+</script>
+
+{% endblock %}

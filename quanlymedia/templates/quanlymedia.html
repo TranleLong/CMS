@@ -1,0 +1,1683 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1>Quản lý media</h1>
+            <p class="header-subtitle">Quản lý tất cả hình ảnh và tệp tin trong hệ thống của bạn</p>
+        </div>
+
+        <!-- Bộ lọc tìm kiếm -->
+        <div class="filter-section">
+            <div class="filter-container">
+                <div class="filter-label">
+                    <i class="fas fa-search"></i>
+                    <span>Tìm kiếm media:</span>
+                </div>
+                <form method="get" action="{% url 'quanlymedia' %}">
+                    <div class="filter-controls">
+                        <div class="filter-item" style="flex-grow: 1;">
+                            <input type="text" name="search" placeholder="Tìm kiếm media..." class="filter-select" value="{{ search_query }}">
+                        </div>
+                        <div class="filter-actions">
+                            <button type="submit" class="filter-button">
+                                <i class="fas fa-search"></i>
+                                <span>Tìm kiếm</span>
+                            </button>
+                            <button type="button" class="filter-button add-button" onclick="showUploadModal()">
+                                <i class="fas fa-upload"></i>
+                                <span>Tải lên</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hiển thị thông báo -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Nội dung chính -->
+    <div class="dashboard-content">
+        <!-- Thống kê nhanh -->
+        <div class="stats-grid">
+            <div class="stat-card blue">
+                <div class="stat-icon">
+                    <i class="fas fa-photo-video"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ media_list.paginator.count|default:0 }}</div>
+                    <div class="stat-label">Tổng media</div>
+                </div>
+            </div>
+            <div class="stat-card green">
+                <div class="stat-icon">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ folders|length|default:0 }}</div>
+                    <div class="stat-label">Thư mục</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breadcrumb -->
+        {% if current_folder %}
+        <div class="breadcrumb-container">
+            <nav class="breadcrumb">
+                <a href="{% url 'quanlymedia' %}" class="breadcrumb-item">
+                    <i class="fas fa-home"></i>
+                    Trang chủ
+                </a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-item active">{{ current_folder }}</span>
+            </nav>
+        </div>
+        {% endif %}
+
+        <!-- Thư mục -->
+        {% if folders %}
+        <div class="content-card">
+            <div class="card-header">
+                <div class="header-left">
+                    <h2>Thư mục</h2>
+                    <p>{{ folders|length }} thư mục</p>
+                </div>
+            </div>
+            <div class="folders-grid">
+                {% for folder in folders %}
+                <div class="folder-item" data-name="{{ folder }}">
+                    <div class="folder-content">
+                        <div class="folder-icon">
+                            <i class="fas fa-folder"></i>
+                        </div>
+                        <div class="folder-info">
+                            <div class="folder-name">{{ folder }}</div>
+                            <div class="folder-meta">Thư mục</div>
+                        </div>
+                    </div>
+                    <div class="hover-actions">
+                        <button class="action-btn view" onclick="viewFolder('{{ folder }}')" title="Xem">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn download" onclick="downloadFolder('{{ folder }}')" title="Tải xuống">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="action-btn delete" onclick="confirmDeleteFolder('{{ folder }}')" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Media files -->
+        {% if media_list %}
+        <div class="content-card">
+            <div class="card-header">
+                <div class="header-left">
+                    <h2>Tệp media</h2>
+                    <p>Hiển thị {{ media_list.start_index }}-{{ media_list.end_index }} của {{ media_list.paginator.count }} tệp</p>
+                </div>
+                <div class="header-right">
+                    <button class="refresh-button" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="media-grid">
+                {% for media in media_list %}
+                <div class="media-item" data-id="{{ media.ma_media }}" data-name="{{ media.file_name }}">
+                    <div class="media-thumbnail">
+                        {% if media.type_name == 'image' and media.image %}
+                            <img src="{{ media.image.url }}" alt="{{ media.file_name }}" class="media-image">
+                        {% else %}
+                            <div class="media-placeholder">
+                                {% if media.type_name == 'video' %}
+                                    <i class="fas fa-video file-icon video"></i>
+                                {% elif media.type_name == 'document' %}
+                                    <i class="fas fa-file-alt file-icon document"></i>
+                                {% else %}
+                                    <i class="fas fa-file file-icon other"></i>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        <div class="media-overlay">
+                            <div class="media-actions">
+                                <button class="action-btn view" onclick="previewMedia({{ media.ma_media }}, '{{ media.file_name }}')" title="Xem">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn download" onclick="downloadMedia({{ media.ma_media }}, '{{ media.file_name }}')" title="Tải xuống">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="action-btn delete" onclick="confirmDeleteMedia({{ media.ma_media }}, '{{ media.file_name }}')" title="Xóa">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <div class="media-name" title="{{ media.file_name }}">{{ media.file_name }}</div>
+                        <div class="media-meta">
+                            <span class="media-type">{{ media.type_name|upper }}</span>
+                            <span class="media-size">{{ media.size|filesizeformat }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Phân trang -->
+            {% if media_list.has_other_pages %}
+            <div class="pagination-container">
+                <div class="pagination">
+                    {% if media_list.has_previous %}
+                    <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if current_folder %}&folder={{ current_folder }}{% endif %}" class="pagination-btn">&laquo; Đầu</a>
+                    <a href="?page={{ media_list.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_folder %}&folder={{ current_folder }}{% endif %}" class="pagination-btn">Trước</a>
+                    {% endif %}
+
+                    <span class="pagination-info">
+                        Trang {{ media_list.number }} / {{ media_list.paginator.num_pages }}
+                    </span>
+
+                    {% if media_list.has_next %}
+                    <a href="?page={{ media_list.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_folder %}&folder={{ current_folder }}{% endif %}" class="pagination-btn">Tiếp</a>
+                    <a href="?page={{ media_list.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_folder %}&folder={{ current_folder }}{% endif %}" class="pagination-btn">Cuối &raquo;</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <!-- Empty state -->
+        <div class="content-card">
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-photo-video"></i>
+                </div>
+                <h3 class="empty-title">Không có media nào</h3>
+                <p class="empty-description">Tải lên media đầu tiên của bạn hoặc tạo thư mục mới</p>
+                <button class="filter-button add-button" onclick="showUploadModal()">
+                    <i class="fas fa-upload"></i>
+                    Tải lên ngay
+                </button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal tải lên tệp tin -->
+<div id="uploadModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeUploadModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="modal-header">
+            <h3 class="modal-title">Tải lên tệp tin</h3>
+        </div>
+        <form id="uploadForm" method="post" action="{% url 'upload_media' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="folder_name" class="form-label">Thư mục</label>
+                    <input type="text" id="folder_name" name="folder_name" class="form-input" placeholder="Nhập tên thư mục" required>
+                    <div class="form-hint">Tên thư mục để lưu trữ tệp tin</div>
+                </div>
+
+                <div class="upload-area" id="dropArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">Kéo và thả tệp tin vào đây</div>
+                    <div class="upload-hint">hoặc nhấp vào nút bên dưới để chọn tệp tin</div>
+                    <button type="button" class="upload-btn" id="selectFileBtn">
+                        <i class="fas fa-file"></i> Chọn tệp tin
+                    </button>
+                    <input type="file" id="fileInput" name="image" style="display: none;" required>
+                    <div id="selectedFileName" class="selected-file"></div>
+                    <div class="upload-formats">
+                        Hỗ trợ: JPG, PNG, GIF, SVG, MP4, PDF, DOC, DOCX, XLS, XLSX (Tối đa 10MB)
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeUploadModal()">Hủy</button>
+                <button type="submit" class="btn-confirm">Tải lên</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa thư mục -->
+<div id="deleteFolderModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeDeleteFolderModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="delete-modal-header">
+            <h3 class="delete-modal-title">Xác nhận xóa</h3>
+        </div>
+        <form id="deleteFolderForm" method="post">
+            {% csrf_token %}
+            <div class="delete-modal-body">
+                <div class="warning-box">
+                    <p class="warning-text">
+                        <i class="fas fa-exclamation-triangle warning-icon"></i>
+                        Cảnh báo
+                    </p>
+                    <p class="warning-text" style="margin-top: 10px;">
+                        Bạn có chắc chắn muốn xóa thư mục "<span id="folderNameToDelete"></span>"?
+                    </p>
+                    <p class="warning-text" style="margin-top: 10px;">
+                        Hành động này không thể hoàn tác và có thể ảnh hưởng đến dữ liệu liên quan.
+                    </p>
+                </div>
+            </div>
+            <div class="delete-modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeDeleteFolderModal()">Hủy</button>
+                <button type="submit" class="btn-confirm delete">Xóa</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa media -->
+<div id="deleteMediaModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeDeleteMediaModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="delete-modal-header">
+            <h3 class="delete-modal-title">Xác nhận xóa</h3>
+        </div>
+        <form id="deleteMediaForm" method="post">
+            {% csrf_token %}
+            <div class="delete-modal-body">
+                <div class="warning-box">
+                    <p class="warning-text">
+                        <i class="fas fa-exclamation-triangle warning-icon"></i>
+                        Cảnh báo
+                    </p>
+                    <p class="warning-text" style="margin-top: 10px;">
+                        Bạn có chắc chắn muốn xóa tệp tin "<span id="mediaNameToDelete"></span>"?
+                    </p>
+                    <p class="warning-text" style="margin-top: 10px;">
+                        Hành động này không thể hoàn tác và có thể dẫn đến mất dữ liệu.
+                    </p>
+                </div>
+            </div>
+            <div class="delete-modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeDeleteMediaModal()">Hủy</button>
+                <button type="submit" class="btn-confirm delete">Xóa</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal xem trước media -->
+<div id="previewModal" class="modal preview-modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closePreviewModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="modal-header">
+            <h3 class="modal-title">Xem trước</h3>
+        </div>
+        <div class="modal-body">
+            <div id="previewContent" class="preview-content">
+                <!-- Nội dung xem trước sẽ được thêm vào đây -->
+            </div>
+            <div class="preview-details">
+                <div id="previewName" class="preview-name"></div>
+                <div class="preview-meta">
+                    <div class="preview-meta-item">
+                        <i class="fas fa-file"></i>
+                        <span id="previewType"></span>
+                    </div>
+                    <div class="preview-meta-item">
+                        <i class="fas fa-weight-hanging"></i>
+                        <span id="previewSize"></span>
+                    </div>
+                    <div class="preview-meta-item">
+                        <i class="fas fa-folder"></i>
+                        <span id="previewFolder"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-cancel" onclick="closePreviewModal()">Đóng</button>
+            <button type="button" class="btn-confirm" id="downloadPreviewBtn">
+                <i class="fas fa-download"></i> Tải xuống
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Thông báo -->
+<div id="notification" class="notification">
+    <div class="notification-content">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationMessage">Thao tác thành công!</span>
+    </div>
+</div>
+
+<style>
+    /* Biến CSS - giống như các trang khác */
+    :root {
+        /* Màu chính */
+        --primary-color: #0d6efd;
+        --primary-light: #60a5fa;
+        --primary-dark: #0953c6;
+
+        /* Màu thẻ thống kê */
+        --blue-color: #3b82f6;
+        --blue-light: #93c5fd;
+        --blue-dark: #1d4ed8;
+
+        --green-color: #10b981;
+        --green-light: #6ee7b7;
+        --green-dark: #047857;
+
+        --purple-color: #8b5cf6;
+        --purple-light: #c4b5fd;
+        --purple-dark: #6d28d9;
+
+        --orange-color: #f59e0b;
+        --orange-light: #fcd34d;
+        --orange-dark: #d97706;
+
+        --red-color: #ef4444;
+        --red-light: #fca5a5;
+        --red-dark: #b91c1c;
+
+        /* Màu nền và văn bản */
+        --bg-color: #f9fafb;
+        --card-bg: #ffffff;
+        --text-primary: #111827;
+        --text-secondary: #4b5563;
+        --text-muted: #9ca3af;
+
+        /* Màu viền và đổ bóng */
+        --border-color: #e5e7eb;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+        /* Kích thước và khoảng cách */
+        --border-radius: 0.5rem;
+        --border-radius-lg: 0.75rem;
+        --spacing-xs: 0.25rem;
+        --spacing-sm: 0.5rem;
+        --spacing: 1rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 3rem;
+
+        /* Thời gian chuyển động */
+        --transition-fast: 0.15s;
+        --transition: 0.3s;
+    }
+
+    /* Dashboard container */
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        padding: var(--spacing-lg);
+        background-color: var(--bg-color);
+        min-height: 100vh;
+        gap: var(--spacing-lg);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Header */
+    .dashboard-header {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .header-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .header-subtitle {
+        font-size: 1rem;
+        color: var(--text-secondary);
+    }
+
+    /* Bộ lọc */
+    .filter-section {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: var(--spacing-md);
+        box-shadow: var(--shadow);
+        transition: box-shadow var(--transition);
+    }
+
+    .filter-section:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    .filter-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing);
+    }
+
+    .filter-label {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .filter-label i {
+        color: var(--primary-color);
+    }
+
+    .filter-controls {
+        display: flex;
+        gap: var(--spacing);
+        align-items: center;
+    }
+
+    .filter-item {
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .filter-select {
+        width: 100%;
+        padding: 0.625rem var(--spacing);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        background-color: var(--card-bg);
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        transition: all var(--transition-fast);
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+    }
+
+    .filter-select:hover {
+        border-color: var(--primary-light);
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+    }
+
+    .filter-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-sm);
+        padding: 0.625rem var(--spacing-md);
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+        color: white;
+        text-decoration: none;
+    }
+
+    .filter-button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    .add-button {
+        background: linear-gradient(to right, var(--green-color), var(--green-light));
+    }
+
+    /* Nội dung chính */
+    .dashboard-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        flex-grow: 1;
+    }
+
+    /* Thống kê */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing);
+    }
+
+    .stat-card {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: var(--spacing-md);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing);
+        transition: all var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(to right, var(--stat-color), var(--stat-color-light));
+    }
+
+    .stat-card.blue {
+        --stat-color: var(--blue-color);
+        --stat-color-light: var(--blue-light);
+    }
+
+    .stat-card.green {
+        --stat-color: var(--green-color);
+        --stat-color-light: var(--green-light);
+    }
+
+    .stat-card.orange {
+        --stat-color: var(--orange-color);
+        --stat-color-light: var(--orange-light);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--stat-color), var(--stat-color-light));
+        color: white;
+        font-size: 1.25rem;
+    }
+
+    .stat-content {
+        flex: 1;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-top: var(--spacing-xs);
+    }
+
+    /* Breadcrumb */
+    .breadcrumb-container {
+        margin-bottom: var(--spacing);
+    }
+
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm) var(--spacing);
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .breadcrumb-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.875rem;
+    }
+
+    .breadcrumb-item:hover {
+        color: var(--primary-color);
+    }
+
+    .breadcrumb-item.active {
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .breadcrumb-separator {
+        color: var(--text-muted);
+    }
+
+    .content-card {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: box-shadow var(--transition);
+    }
+
+    .content-card:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .header-left h2 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 var(--spacing-xs) 0;
+    }
+
+    .header-left p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+    }
+
+    .refresh-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: var(--bg-color);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+    }
+
+    .refresh-button:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    /* Folders grid */
+    .folders-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--spacing);
+        padding: var(--spacing-md);
+    }
+
+    .folder-item {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: var(--spacing);
+        cursor: pointer;
+        transition: all var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .folder-item:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    .folder-content {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing);
+    }
+
+    .folder-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--border-radius);
+        background: linear-gradient(135deg, var(--orange-color), var(--orange-light));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.25rem;
+    }
+
+    .folder-info {
+        flex: 1;
+    }
+
+    .folder-name {
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .folder-meta {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    /* Media grid */
+    .media-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--spacing);
+        padding: var(--spacing-md);
+    }
+
+    .media-item {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: all var(--transition);
+        position: relative;
+    }
+
+    .media-item:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .media-thumbnail {
+        position: relative;
+        width: 100%;
+        height: 150px;
+        overflow: hidden;
+    }
+
+    .media-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .media-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--bg-color);
+    }
+
+    .file-icon {
+        font-size: 2rem;
+    }
+
+    .file-icon.image {
+        color: var(--green-color);
+    }
+
+    .file-icon.video {
+        color: var(--red-color);
+    }
+
+    .file-icon.document {
+        color: var(--blue-color);
+    }
+
+    .file-icon.other {
+        color: var(--text-muted);
+    }
+
+    .media-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity var(--transition);
+    }
+
+    .media-item:hover .media-overlay,
+    .folder-item:hover .hover-actions {
+        opacity: 1;
+    }
+
+    .media-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+    }
+
+    .hover-actions {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        gap: var(--spacing-sm);
+        opacity: 0;
+        transition: opacity var(--transition);
+    }
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: white;
+        color: var(--text-secondary);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        box-shadow: var(--shadow);
+    }
+
+    .action-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .action-btn.view:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .action-btn.download:hover {
+        background-color: var(--green-color);
+        color: white;
+    }
+
+    .action-btn.delete:hover {
+        background-color: var(--red-color);
+        color: white;
+    }
+
+    .media-info {
+        padding: var(--spacing);
+    }
+
+    .media-name {
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-xs);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.875rem;
+    }
+
+    .media-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    .media-type {
+        background-color: var(--bg-color);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 500;
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: var(--spacing-xl);
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: var(--text-muted);
+        margin-bottom: var(--spacing);
+    }
+
+    .empty-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .empty-description {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing);
+    }
+
+    /* Pagination */
+    .pagination-container {
+        padding: var(--spacing-md);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+
+    .pagination-btn {
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: all var(--transition-fast);
+    }
+
+    .pagination-btn:hover {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+
+    .pagination-info {
+        padding: 8px 12px;
+        background-color: var(--bg-color);
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        border-radius: var(--border-radius);
+        width: 500px;
+        max-width: 90vw;
+        max-height: 90vh;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        animation: modalFadeIn 0.3s ease-out;
+        overflow: hidden;
+    }
+
+    .preview-modal .modal-content {
+        width: 80%;
+        max-width: 800px;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: var(--text-muted);
+        z-index: 10;
+    }
+
+    .modal-header {
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .modal-body {
+        padding: var(--spacing-md);
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    .modal-footer {
+        padding: var(--spacing-md);
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--spacing-sm);
+    }
+
+    /* Delete modal */
+    .delete-modal-header {
+        padding: var(--spacing-md);
+        text-align: center;
+    }
+
+    .delete-modal-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .delete-modal-body {
+        padding: var(--spacing-md);
+    }
+
+    .delete-modal-footer {
+        padding: var(--spacing-md);
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--spacing-sm);
+    }
+
+    .warning-box {
+        background-color: #FFF3E0;
+        border-radius: var(--border-radius);
+        padding: var(--spacing);
+        margin-top: var(--spacing);
+    }
+
+    .warning-icon {
+        color: var(--orange-color);
+        margin-right: var(--spacing-sm);
+    }
+
+    .warning-text {
+        color: var(--orange-dark);
+        font-size: 0.875rem;
+        margin: 0;
+    }
+
+    /* Form styles */
+    .form-group {
+        margin-bottom: var(--spacing);
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: var(--spacing-xs);
+        font-weight: 500;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.625rem var(--spacing);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        transition: all var(--transition-fast);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+    }
+
+    .form-hint {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: var(--spacing-xs);
+    }
+
+    /* Upload area */
+    .upload-area {
+        border: 2px dashed var(--border-color);
+        border-radius: var(--border-radius);
+        padding: var(--spacing-xl);
+        text-align: center;
+        transition: all var(--transition);
+        margin-bottom: var(--spacing);
+    }
+
+    .upload-area:hover,
+    .upload-area.dragover {
+        border-color: var(--primary-color);
+        background-color: rgba(13, 110, 253, 0.05);
+    }
+
+    .upload-icon {
+        font-size: 2.5rem;
+        color: var(--text-muted);
+        margin-bottom: var(--spacing);
+    }
+
+    .upload-text {
+        font-size: 1rem;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-xs);
+        font-weight: 500;
+    }
+
+    .upload-hint {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing);
+    }
+
+    .upload-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        padding: 0.625rem var(--spacing-md);
+        background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+    }
+
+    .upload-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    .selected-file {
+        margin-top: var(--spacing);
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .upload-formats {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: var(--spacing);
+    }
+
+    /* Preview */
+    .preview-content {
+        text-align: center;
+        margin-bottom: var(--spacing);
+    }
+
+    .preview-image {
+        max-width: 100%;
+        max-height: 60vh;
+        object-fit: contain;
+        border-radius: var(--border-radius);
+    }
+
+    .preview-details {
+        padding: var(--spacing);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .preview-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .preview-meta {
+        display: flex;
+        gap: var(--spacing);
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .preview-meta-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+    }
+
+    /* Buttons */
+    .btn-cancel {
+        padding: 0.625rem var(--spacing-md);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        background-color: white;
+        color: var(--text-secondary);
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all var(--transition-fast);
+    }
+
+    .btn-cancel:hover {
+        background-color: var(--bg-color);
+    }
+
+    .btn-confirm {
+        padding: 0.625rem var(--spacing-md);
+        border: none;
+        border-radius: var(--border-radius);
+        background-color: var(--primary-color);
+        color: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all var(--transition-fast);
+    }
+
+    .btn-confirm:hover {
+        background-color: var(--primary-dark);
+    }
+
+    .btn-confirm.delete {
+        background-color: var(--red-color);
+    }
+
+    .btn-confirm.delete:hover {
+        background-color: var(--red-dark);
+    }
+
+    /* Thông báo */
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1100;
+        transform: translateX(120%);
+        transition: transform 0.3s ease-out;
+    }
+
+    .notification.show {
+        transform: translateX(0);
+    }
+
+    .notification-content {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        background-color: var(--green-color);
+        color: white;
+        padding: var(--spacing) var(--spacing-md);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+    }
+
+    .notification-content i {
+        font-size: 1.125rem;
+    }
+
+    /* Alert styles */
+    .alert {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing);
+        margin-bottom: var(--spacing);
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+    }
+
+    .alert-success {
+        background-color: #E8F5E9;
+        color: var(--green-dark);
+        border-left: 4px solid var(--green-color);
+    }
+
+    .alert-error {
+        background-color: #FFEBEE;
+        color: var(--red-dark);
+        border-left: 4px solid var(--red-color);
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes modalFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dashboard-header,
+    .filter-section,
+    .stats-grid,
+    .content-card {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .filter-section {
+        animation-delay: 0.1s;
+    }
+
+    .stats-grid {
+        animation-delay: 0.2s;
+    }
+
+    .content-card {
+        animation-delay: 0.3s;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: var(--spacing);
+        }
+
+        .filter-controls {
+            flex-direction: column;
+        }
+
+        .filter-actions {
+            width: 100%;
+        }
+
+        .filter-button {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .folders-grid,
+        .media-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+
+        .modal-content {
+            width: 95%;
+            margin: var(--spacing);
+        }
+    }
+</style>
+
+<script>
+    // Biến lưu trữ ID và tên của thư mục/media đang được thao tác
+    let currentFolderId = null;
+    let currentFolderName = null;
+    let currentMediaId = null;
+    let currentMediaName = null;
+
+    // Khởi tạo khi trang được tải
+    document.addEventListener('DOMContentLoaded', function() {
+        setupFileUpload();
+        setupDragAndDrop();
+    });
+
+    // Thiết lập upload file
+    function setupFileUpload() {
+        const fileInput = document.getElementById('fileInput');
+        const selectFileBtn = document.getElementById('selectFileBtn');
+        const selectedFileName = document.getElementById('selectedFileName');
+
+        selectFileBtn.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                selectedFileName.textContent = `Đã chọn: ${this.files[0].name}`;
+                selectedFileName.style.color = 'var(--green-color)';
+            } else {
+                selectedFileName.textContent = '';
+            }
+        });
+    }
+
+    // Thiết lập drag and drop
+    function setupDragAndDrop() {
+        const dropArea = document.getElementById('dropArea');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            dropArea.classList.add('dragover');
+        }
+
+        function unhighlight() {
+            dropArea.classList.remove('dragover');
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+
+            if (files.length > 0) {
+                document.getElementById('fileInput').files = files;
+                document.getElementById('selectedFileName').textContent = `Đã chọn: ${files[0].name}`;
+                document.getElementById('selectedFileName').style.color = 'var(--green-color)';
+            }
+        }
+    }
+
+    // Modal functions
+    function showUploadModal() {
+        document.getElementById('uploadModal').style.display = 'flex';
+    }
+
+    function closeUploadModal() {
+        document.getElementById('uploadModal').style.display = 'none';
+        document.getElementById('uploadForm').reset();
+        document.getElementById('selectedFileName').textContent = '';
+    }
+
+    // Folder functions
+    function viewFolder(name) {
+        window.location.href = "{% url 'quanlymedia' %}?folder=" + encodeURIComponent(name);
+    }
+
+    function downloadFolder(name) {
+        window.location.href = "/quanlymedia/download-folder/" + encodeURIComponent(name) + "/";
+    }
+
+    function confirmDeleteFolder(name) {
+        currentFolderName = name;
+        document.getElementById('folderNameToDelete').textContent = name;
+        document.getElementById('deleteFolderForm').action = "/quanlymedia/delete-folder/" + encodeURIComponent(name) + "/";
+        document.getElementById('deleteFolderModal').style.display = 'flex';
+    }
+
+    function closeDeleteFolderModal() {
+        document.getElementById('deleteFolderModal').style.display = 'none';
+    }
+
+    // Media functions
+    function previewMedia(id, name) {
+        currentMediaId = id;
+        currentMediaName = name;
+
+        // Gọi API để lấy thông tin chi tiết của media
+        fetch(`/quanlymedia/view/${id}/`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const media = data.media;
+                const previewContent = document.getElementById('previewContent');
+
+                // Xóa nội dung cũ
+                previewContent.innerHTML = '';
+
+                // Hiển thị nội dung dựa trên loại file
+                if (media.type === 'image') {
+                    previewContent.innerHTML = `<img src="${media.url}" alt="${media.name}" class="preview-image">`;
+                } else if (media.type === 'video') {
+                    previewContent.innerHTML = `
+                        <video controls class="preview-image">
+                            <source src="${media.url}" type="video/mp4">
+                            Trình duyệt của bạn không hỗ trợ video.
+                        </video>
+                    `;
+                } else {
+                    previewContent.innerHTML = `
+                        <div style="display: flex; align-items: center; justify-content: center; height: 300px; background-color: var(--bg-color); border-radius: var(--border-radius);">
+                            <i class="fas fa-file-alt" style="font-size: 100px; color: var(--text-muted);"></i>
+                        </div>
+                    `;
+                }
+
+                // Cập nhật thông tin
+                document.getElementById('previewName').textContent = media.name;
+                document.getElementById('previewType').textContent = media.type.toUpperCase();
+                document.getElementById('previewSize').textContent = formatFileSize(media.size);
+                document.getElementById('previewFolder').textContent = media.folder || 'Thư mục gốc';
+
+                // Cập nhật nút tải xuống
+                document.getElementById('downloadPreviewBtn').onclick = function() {
+                    downloadMedia(media.id, media.name);
+                };
+
+                // Hiển thị modal
+                document.getElementById('previewModal').style.display = 'flex';
+            } else {
+                showNotification('Không thể tải thông tin media', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Có lỗi xảy ra khi tải thông tin media', 'error');
+        });
+    }
+
+    function closePreviewModal() {
+        document.getElementById('previewModal').style.display = 'none';
+    }
+
+    function downloadMedia(id, name) {
+        window.location.href = `/quanlymedia/download/${id}/`;
+    }
+
+    function confirmDeleteMedia(id, name) {
+        currentMediaId = id;
+        currentMediaName = name;
+        document.getElementById('mediaNameToDelete').textContent = name;
+        document.getElementById('deleteMediaForm').action = `/quanlymedia/delete/${id}/`;
+        document.getElementById('deleteMediaModal').style.display = 'flex';
+    }
+
+    function closeDeleteMediaModal() {
+        document.getElementById('deleteMediaModal').style.display = 'none';
+    }
+
+    // Utility functions
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
+        notificationMessage.textContent = message;
+
+        // Thay đổi màu sắc dựa trên loại thông báo
+        const notificationContent = notification.querySelector('.notification-content');
+        if (type === 'error') {
+            notificationContent.style.backgroundColor = 'var(--red-color)';
+        } else {
+            notificationContent.style.backgroundColor = 'var(--green-color)';
+        }
+
+        // Hiển thị thông báo
+        notification.classList.add('show');
+
+        // Tự động ẩn thông báo sau 3 giây
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+
+    // Đóng modal khi click bên ngoài
+    window.onclick = function(event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+{% endblock %}

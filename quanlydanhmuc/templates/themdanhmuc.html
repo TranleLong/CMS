@@ -1,0 +1,583 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1>Thêm danh mục mới</h1>
+            <p class="header-subtitle">Tạo danh mục mới cho hệ thống</p>
+        </div>
+
+        <!-- Nút quay lại -->
+        <div class="navigation-actions">
+            <a href="{% url 'quanlydanhmuc' %}" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                <span>Quay lại danh sách</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Hiển thị thông báo lỗi hoặc thành công -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Nội dung chính -->
+    <div class="dashboard-content">
+        <div class="content-card">
+            <div class="card-header">
+                <div class="header-left">
+                    <h2>Thông tin danh mục</h2>
+                    <p>Nhập thông tin chi tiết của danh mục mới</p>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <form id="addCategoryForm" method="post" action="">
+                    {% csrf_token %}
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="categoryName" class="form-label">
+                                    <i class="fas fa-tag form-icon"></i>
+                                    Tên danh mục <span class="required">*</span>
+                                </label>
+                                <input type="text" id="categoryName" name="categoryName" class="form-input" required placeholder="Nhập tên danh mục">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="categorySlug" class="form-label">
+                                    <i class="fas fa-link form-icon"></i>
+                                    Đường dẫn <span class="required">*</span>
+                                </label>
+                                <input type="text" id="categorySlug" name="categorySlug" class="form-input" required placeholder="duong-dan-danh-muc">
+                                <span class="form-hint">Chuỗi đường dẫn thân thiện, thường là tên danh mục viết thường và có dấu gạch ngang.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="parentCategory" class="form-label">
+                                    <i class="fas fa-folder form-icon"></i>
+                                    Danh mục cha
+                                </label>
+                                <div class="select-wrapper">
+                                    <select id="parentCategory" name="parentCategory" class="form-select">
+                                        <option value="">Chọn danh mục cha</option>
+                                        {% for category in parent_categories %}
+                                        <option value="{{ category.ma_dm }}">{{ category.ten_dm }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <label class="toggle-label">
+                                        <i class="fas fa-toggle-on form-icon"></i>
+                                        Trạng thái
+                                    </label>
+                                    <div class="toggle-wrapper">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="statusToggle" name="status" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-status" id="statusText">Đang hoạt động</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group description-group">
+                        <label for="categoryDescription" class="form-label">
+                            <i class="fas fa-align-left form-icon"></i>
+                            Mô tả
+                        </label>
+                        <textarea id="categoryDescription" name="categoryDescription" class="form-textarea" placeholder="Nhập mô tả cho danh mục"></textarea>
+                        <span class="form-hint">Mô tả ngắn gọn về danh mục này là gì và sử dụng cho nội dung nào.</span>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="{% url 'quanlydanhmuc' %}" class="btn-cancel">
+                            <i class="fas fa-times"></i>
+                            <span>Hủy</span>
+                        </a>
+                        <button type="submit" class="btn-save">
+                            <span>Lưu danh mục</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Biến CSS */
+    :root {
+        /* Màu chính - từ file mẫu */
+        --primary-color: #0d6efd;
+        --primary-light: #60a5fa;
+        --primary-dark: #0953c6;
+
+        /* Màu thành phần */
+        --green-color: #10b981;
+        --green-light: #6ee7b7;
+        --green-dark: #047857;
+
+        --red-color: #ef4444;
+        --red-light: #fca5a5;
+        --red-dark: #b91c1c;
+
+        /* Màu nền và văn bản - từ file mẫu */
+        --bg-color: #f9fafb;
+        --card-bg: #ffffff;
+        --text-primary: #111827;
+        --text-secondary: #4b5563;
+        --text-muted: #9ca3af;
+
+        /* Màu viền và đổ bóng */
+        --border-color: #e5e7eb;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+        /* Kích thước và khoảng cách */
+        --border-radius: 0.5rem;
+        --border-radius-lg: 0.75rem;
+        --spacing-xs: 0.25rem;
+        --spacing-sm: 0.5rem;
+        --spacing: 1rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 3rem;
+
+        /* Thời gian chuyển động */
+        --transition-fast: 0.15s;
+        --transition: 0.3s;
+    }
+
+    /* Dashboard container */
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        padding: var(--spacing-lg);
+        background-color: var(--bg-color);
+        min-height: 100vh;
+        gap: var(--spacing-lg);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Header */
+    .dashboard-header {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: var(--spacing);
+
+    }
+
+    .header-content h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .header-subtitle {
+        font-size: 1rem;
+        margin: 10px 0 10px 0;
+        color: var(--text-secondary);
+    }
+
+    /* Nút quay lại */
+    .back-button {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: 0.625rem var(--spacing-md);
+        background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+        color: white;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all var(--transition-fast);
+        width: fit-content;
+    }
+
+    .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    /* Alert styles */
+    .alert {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing);
+        margin-bottom: var(--spacing);
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+    }
+
+    .alert-success {
+        background-color: #E8F5E9;
+        color: var(--green-dark);
+        border-left: 4px solid var(--green-color);
+    }
+
+    .alert-error {
+        background-color: #FFEBEE;
+        color: var(--red-dark);
+        border-left: 4px solid var(--red-color);
+    }
+
+    /* Nội dung chính */
+    .dashboard-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+    }
+
+    .content-card {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: box-shadow var(--transition);
+    }
+
+    .content-card:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .header-left h2 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 var(--spacing-xs) 0;
+    }
+
+    .header-left p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    /* Form container */
+    .form-container {
+        padding: var(--spacing-md);
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -var(--spacing);
+    }
+
+    .form-col {
+        flex: 1;
+        min-width: 250px;
+        padding: 0 var(--spacing);
+    }
+
+    .form-group {
+        margin-bottom: var(--spacing-md);
+    }
+
+    .description-group {
+        margin-top: var(--spacing);
+        padding-top: var(--spacing);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .form-label {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-sm);
+        font-weight: 500;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+    }
+
+    .form-icon {
+        color: var(--primary-color);
+        font-size: 0.875rem;
+    }
+
+    .required {
+        color: var(--red-color);
+        margin-left: var(--spacing-xs);
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+        width: 100%;
+        padding: 0.625rem var(--spacing);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        background-color: var(--card-bg);
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        transition: all var(--transition-fast);
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+    }
+
+    .form-input:hover,
+    .form-select:hover,
+    .form-textarea:hover {
+        border-color: var(--primary-light);
+    }
+
+    .form-textarea {
+        min-height: 120px;
+        resize: vertical;
+        font-family: inherit;
+    }
+
+    .form-hint {
+        display: block;
+        margin-top: var(--spacing-xs);
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+    }
+
+    .select-wrapper {
+        position: relative;
+    }
+
+
+
+    /* Toggle switch */
+    .toggle-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .toggle-wrapper {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing);
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 20px;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+        background-color: var(--green-color);
+    }
+
+    input:checked + .toggle-slider:before {
+        transform: translateX(20px);
+    }
+
+    .toggle-status {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    /* Form actions */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--spacing);
+        margin-top: var(--spacing-lg);
+        padding-top: var(--spacing);
+        border-top: 1px solid var(--border-color);
+    }
+
+    .btn-cancel {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: 0.625rem var(--spacing);
+        border-radius: var(--border-radius);
+        background-color: var(--bg-color);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        text-decoration: none;
+    }
+
+    .btn-cancel:hover {
+        background-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .btn-save {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: 0.625rem var(--spacing-md);
+        border-radius: var(--border-radius);
+        background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+        color: white;
+        border: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+    }
+
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dashboard-header,
+    .navigation-actions,
+    .content-card {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .content-card {
+        animation-delay: 0.1s;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--spacing);
+        }
+
+        .navigation-actions {
+            width: 100%;
+        }
+
+        .back-button {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .form-row {
+            flex-direction: column;
+        }
+
+        .form-col {
+            padding: 0;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tự động tạo slug từ tên danh mục
+        const categoryNameInput = document.getElementById('categoryName');
+        const categorySlugInput = document.getElementById('categorySlug');
+
+        // Biến để theo dõi xem người dùng đã chỉnh sửa slug chưa
+        let slugEdited = false;
+
+        categoryNameInput.addEventListener('input', function() {
+            // Chỉ tự động tạo slug nếu người dùng chưa chỉnh sửa
+            if (!slugEdited) {
+                const slug = createSlug(this.value);
+                categorySlugInput.value = slug;
+            }
+        });
+
+        categorySlugInput.addEventListener('input', function() {
+            // Đánh dấu rằng người dùng đã chỉnh sửa slug
+            slugEdited = true;
+        });
+
+        // Toggle switch styling
+        const statusToggle = document.getElementById('statusToggle');
+        const statusText = document.getElementById('statusText');
+
+        statusToggle.addEventListener('change', function() {
+            statusText.textContent = this.checked ? 'Đang hoạt động' : 'Không hoạt động';
+        });
+    });
+
+    function createSlug(text) {
+        return text
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[đĐ]/g, 'd')
+            .replace(/[^a-z0-9\s]/g, '')
+            .replace(/\s+/g, '-');
+    }
+</script>
+{% endblock %}

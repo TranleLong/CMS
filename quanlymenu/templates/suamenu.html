@@ -1,0 +1,494 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    html, body {
+        overflow: hidden; /* Loại bỏ thanh cuộn ngoài */
+        height: 100%; /* Đảm bảo chiều cao của body và html luôn bằng 100% */
+    }
+
+    .content-wrapper {
+        height: 100vh; /* Chiều cao tối đa của phần content */
+        padding: 20px;
+    }
+
+    .back-button {
+        text-decoration: none;
+        color: #0d6efd;
+        margin-right: 10px;
+        margin-bottom: 20px;
+    }
+
+    .back-button i {
+        margin-right: 5px;
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .required {
+        color: #F44336;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .slug-input {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .slug-prefix {
+        padding: 10px 12px;
+        background-color: #f5f5f5;
+        color: #666;
+        border-right: 1px solid #ddd;
+    }
+
+    .slug-input input {
+        flex: 1;
+        padding: 10px 12px;
+        border: none;
+        font-size: 14px;
+    }
+
+    .form-hint {
+        display: block;
+        margin-top: 5px;
+        color: #666;
+        font-size: 12px;
+        margin-left: 10px;
+    }
+
+    .menu-type-container {
+        display: flex;
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    .menu-type-option {
+        display: flex;
+        flex: 1;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+    }
+
+    .menu-type-option input[type="radio"] {
+        margin-right: 8px;
+        width: auto;
+    }
+
+    .menu-type-option label {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .toggle-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .toggle-label {
+        margin-right: 10px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 20px;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+        background-color: #4CAF50;
+    }
+
+    input:checked + .toggle-slider:before {
+        transform: translateX(20px);
+    }
+
+    .toggle-status {
+        margin-left: 10px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .bai-viet-container {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        margin-top: 10px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .bai-viet-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .bai-viet-item:last-child {
+        border-bottom: none;
+    }
+
+    .bai-viet-checkbox {
+        margin-right: 10px;
+        width:20px;
+    }
+
+    .bai-viet-title {
+        flex: 1;
+        font-size: 14px;
+    }
+
+    .bai-viet-date {
+        color: #666;
+        font-size: 12px;
+    }
+
+    .search-box {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 10px 12px;
+        padding-left: 35px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    .btn-cancel {
+        padding: 10px 16px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        background-color: white;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-save {
+        padding: 10px 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #0d6efd;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .bai-viet-status {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-size: 11px;
+        margin-left: 10px;
+    }
+
+    .status-approved {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .status-pending {
+        background-color: #fff8e1;
+        color: #ff8f00;
+    }
+</style>
+
+<div class="content-wrapper">
+    <a href="{% url 'quanlymenu' %}" class="back-button">
+        <i class="fas fa-chevron-left" style="margin-bottom:15px"></i> Quay lại danh sách
+    </a>
+    <h1 class="page-title">Sửa thông tin menu</h1>
+    <div class="card">
+        <form id="editMenuForm" method="post" action="{% url 'sua_menu' menu.ma_menu %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.tieu_de.id_for_label }}" class="form-label">Tiêu đề <span class="required">*</span></label>
+                {{ form.tieu_de }}
+                {% if form.tieu_de.errors %}
+                <div class="error-message">{{ form.tieu_de.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.slug.id_for_label }}" class="form-label">Đường dẫn <span class="required">*</span></label>
+                <div class="slug-input">
+                    <span class="slug-prefix">/</span>
+                    {{ form.slug }}
+                </div>
+                <span class="form-hint">Đường dẫn sẽ hiển thị trên URL của trang menu</span>
+                {% if form.slug.errors %}
+                <div class="error-message">{{ form.slug.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_thu_tu" class="form-label">Thứ tự hiển thị</label>
+                <input type="number" id="id_thu_tu" name="thu_tu" class="form-input" value="{{ menu.thu_tu }}" min="0">
+                <span class="form-hint">Thứ tự hiển thị của menu trong thanh điều hướng (số nhỏ hơn sẽ hiển thị trước)</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Loại menu <span class="required">*</span></label>
+                <div class="menu-type-container">
+                    <div class="menu-type-option">
+                        <input type="radio" id="menu_type_bai_viet" name="loai_menu" value="bai_viet" {% if menu.loai_menu == 'bai_viet' %}checked{% endif %}>
+                        <label for="menu_type_bai_viet">Bài viết</label>
+                        <p class="form-hint">Menu sẽ hiển thị danh sách các bài viết đã chọn</p>
+                    </div>
+                    <div class="menu-type-option">
+                        <input type="radio" id="menu_type_duong_dan" name="loai_menu" value="duong_dan" {% if menu.loai_menu == 'duong_dan' %}checked{% endif %}>
+                        <label for="menu_type_duong_dan">Đường dẫn</label>
+                        <p class="form-hint">Menu sẽ dẫn trực tiếp đến URL được chỉ định</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="bai_viet_section" class="form-group" {% if menu.loai_menu == 'duong_dan' %}style="display: none;"{% endif %}>
+                <label class="form-label">Bài viết liên quan</label>
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchBaiViet" placeholder="Tìm kiếm bài viết..." class="search-input">
+                </div>
+                <div class="bai-viet-container">
+                    {% for bai_viet in bai_viet_list %}
+                    <div class="bai-viet-item">
+                        <input type="checkbox" style="width:auto" name="bai_viet_ids" value="{{ bai_viet.ma_bv }}" class="bai-viet-checkbox" id="bai-viet-{{ bai_viet.ma_bv }}" {% if bai_viet.ma_bv in selected_bai_viet_ids %}checked{% endif %}>
+                        <label for="bai-viet-{{ bai_viet.ma_bv }}" class="bai-viet-title">{{ bai_viet.tieu_de }}</label>
+                        <span class="bai-viet-date">{{ bai_viet.ngay_dang|date:"d/m/Y" }}</span>
+                        <span class="bai-viet-status {% if bai_viet.trang_thai == 'Đã duyệt' %}status-approved{% else %}status-pending{% endif %}">
+                            {{ bai_viet.trang_thai }}
+                        </span>
+                    </div>
+                    {% empty %}
+                    <p>Không có bài viết nào.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div id="url_section" class="form-group" {% if menu.loai_menu == 'bai_viet' %}style="display: none;"{% endif %}>
+                <label for="{{ form.url.id_for_label }}" class="form-label">URL đích <span class="required">*</span></label>
+                {{ form.url }}
+                <span class="form-hint">Nhập URL đầy đủ, bao gồm cả http:// hoặc https://</span>
+                {% if form.url.errors %}
+                <div class="error-message">{{ form.url.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <div class="toggle-container">
+                    <label class="toggle-label">Trạng thái</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="statusToggle" name="trang_thai" value="Dang hoat dong" {% if menu.trang_thai == 'Dang hoat dong' %}checked{% endif %}>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-status" id="statusText">{% if menu.trang_thai == 'Dang hoat dong' %}Đang hoạt động{% else %}Không hoạt động{% endif %}</span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'quanlymenu' %}" class="btn-cancel">Hủy</a>
+                <button type="submit" class="btn-save">Lưu menu</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle switch functionality
+        const statusToggle = document.getElementById('statusToggle');
+        const statusText = document.getElementById('statusText');
+
+        if (statusToggle && statusText) {
+            statusToggle.addEventListener('change', function() {
+                statusText.textContent = this.checked ? 'Đang hoạt động' : 'Không hoạt động';
+                this.value = this.checked ? 'Dang hoat dong' : 'Khong hoat dong';
+            });
+        }
+
+        // Search functionality for bài viết
+        const searchInput = document.getElementById('searchBaiViet');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const baiVietItems = document.querySelectorAll('.bai-viet-item');
+
+                baiVietItems.forEach(item => {
+                    const title = item.querySelector('.bai-viet-title').textContent.toLowerCase();
+                    if (title.includes(searchTerm)) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Toggle between menu types
+        const menuTypeBaiViet = document.getElementById('menu_type_bai_viet');
+        const menuTypeDuongDan = document.getElementById('menu_type_duong_dan');
+        const baiVietSection = document.getElementById('bai_viet_section');
+        const urlSection = document.getElementById('url_section');
+
+        if (menuTypeBaiViet && menuTypeDuongDan) {
+            menuTypeBaiViet.addEventListener('change', function() {
+                if (this.checked) {
+                    baiVietSection.style.display = 'block';
+                    urlSection.style.display = 'none';
+                }
+            });
+
+            menuTypeDuongDan.addEventListener('change', function() {
+                if (this.checked) {
+                    baiVietSection.style.display = 'none';
+                    urlSection.style.display = 'block';
+                }
+            });
+        }
+
+        // Form validation
+        const editMenuForm = document.getElementById('editMenuForm');
+        if (editMenuForm) {
+            editMenuForm.addEventListener('submit', function(event) {
+                let isValid = true;
+                const tieuDe = document.getElementById('id_tieu_de').value;
+                const slug = document.getElementById('id_slug').value;
+
+                if (!tieuDe) {
+                    isValid = false;
+                    alert('Vui lòng nhập tiêu đề menu');
+                } else if (!slug) {
+                    isValid = false;
+                    alert('Vui lòng nhập đường dẫn menu');
+                } else if (menuTypeDuongDan.checked) {
+                    const url = document.getElementById('id_url').value;
+                    if (!url) {
+                        isValid = false;
+                        alert('Vui lòng nhập URL đích cho menu');
+                    } else if (!isValidUrl(url)) {
+                        isValid = false;
+                        alert('URL không hợp lệ. Vui lòng nhập URL đầy đủ bao gồm http:// hoặc https://');
+                    }
+                } else if (menuTypeBaiViet.checked) {
+                    const checkedBaiViet = document.querySelectorAll('input[name="bai_viet_ids"]:checked');
+                    if (checkedBaiViet.length === 0) {
+                        isValid = false;
+                        alert('Vui lòng chọn ít nhất một bài viết cho menu');
+                    }
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+        }
+    });
+
+    function isValidUrl(url) {
+        try {
+            new URL(url);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+</script>
+{% endblock %}

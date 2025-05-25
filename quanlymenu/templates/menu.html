@@ -1,0 +1,65 @@
+<!--{% extends 'base.html' %}-->
+<!--{% load static %}-->
+
+<!--{% block title %}{{ menu.tieu_de }} - I MAPS AGENCY{% endblock %}-->
+
+<!--{% block content %}-->
+<!--<div class="container mx-auto px-4 py-8">-->
+<!--    <h1 class="mb-8 text-3xl font-bold text-gray-800">{{ menu.tieu_de }}</h1>-->
+
+<!--    {% if menu.loai_menu == 'bai_viet' %}-->
+<!--        {% if bai_viet_list %}-->
+<!--            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">-->
+<!--                {% for bai_viet in bai_viet_list %}-->
+<!--                <div class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-all hover:-translate-y-1 hover:shadow-lg">-->
+<!--                    <div class="aspect-w-16 aspect-h-9 overflow-hidden">-->
+<!--                        {% if bai_viet.anh %}-->
+<!--                        <img src="{{ bai_viet.anh.url }}" alt="{{ bai_viet.tieu_de }}" class="h-full w-full object-cover">-->
+<!--                        {% else %}-->
+<!--                        <img src="https://via.placeholder.com/400x225?text=Article+Image" alt="{{ bai_viet.tieu_de }}" class="h-full w-full object-cover">-->
+<!--                        {% endif %}-->
+<!--                    </div>-->
+<!--                    <div class="p-6">-->
+<!--                        <div class="mb-4 flex items-center">-->
+<!--                            <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-600">-->
+<!--                                {{ bai_viet.ma_dm.ten_dm }}-->
+<!--                            </span>-->
+<!--                            <span class="ml-3 text-xs text-gray-500">-->
+<!--                                {{ bai_viet.ngay_dang|date:"d/m/Y" }}-->
+<!--                            </span>-->
+<!--                        </div>-->
+<!--                        <h3 class="mb-4 text-xl font-bold text-gray-800">-->
+<!--                            <a href="{% url 'article_detail' bai_viet.duong_dan %}" class="transition-colors hover:text-amber-600">-->
+<!--                                {{ bai_viet.tieu_de }}-->
+<!--                            </a>-->
+<!--                        </h3>-->
+<!--                        <p class="mb-5 text-gray-600 line-clamp-3">-->
+<!--                            {{ bai_viet.tom_tat }}-->
+<!--                        </p>-->
+<!--                        <a href="{% url 'article_detail' bai_viet.duong_dan %}" class="group inline-flex items-center font-medium text-amber-600 transition-all hover:text-amber-700">-->
+<!--                            Đọc tiếp-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+<!--                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />-->
+<!--                            </svg>-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                {% endfor %}-->
+<!--            </div>-->
+<!--        {% else %}-->
+<!--            <div class="rounded-lg bg-gray-50 p-8 text-center">-->
+<!--                <p class="text-lg text-gray-600">Không có bài viết nào trong menu này.</p>-->
+<!--            </div>-->
+<!--        {% endif %}-->
+<!--    {% else %}-->
+<!--        <div class="rounded-lg bg-gray-50 p-8 text-center">-->
+<!--            <p class="text-lg text-gray-600">Menu này là loại đường dẫn, bạn sẽ được chuyển hướng đến: <a href="{{ menu.url }}" class="text-amber-600 underline">{{ menu.url }}</a></p>-->
+<!--            <div class="mt-6">-->
+<!--                <a href="{{ menu.url }}" class="inline-block rounded-lg bg-amber-600 px-6 py-3 font-medium text-white transition-colors hover:bg-amber-700">-->
+<!--                    Đi đến trang đích-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    {% endif %}-->
+<!--</div>-->
+<!--{% endblock %}-->
