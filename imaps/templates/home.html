@@ -1,0 +1,707 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}I MAPS AGENCY - Giải pháp Marketing Toàn Diện{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .animate-pulse {
+        animation: pulse 3s infinite;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .delay-100 {
+        animation-delay: 0.1s;
+    }
+
+    .delay-200 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-300 {
+        animation-delay: 0.3s;
+    }
+
+    .delay-400 {
+        animation-delay: 0.4s;
+    }
+
+    /* Custom styles */
+    .hero-gradient {
+        background: linear-gradient(135deg, #fff 0%, #FFF7ED 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-gradient::before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0) 70%);
+        top: -100px;
+        right: -100px;
+        z-index: 0;
+    }
+
+    .hero-gradient::after {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0) 70%);
+        bottom: -100px;
+        left: -100px;
+        z-index: 0;
+    }
+
+    .section-title {
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #F97316 0%, #FDBA74 100%);
+        border-radius: 2px;
+    }
+
+    .service-card {
+        transition: all 0.3s ease;
+        border: 1px solid #F3F4F6;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+    }
+
+    .service-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.05) 0%, rgba(249, 115, 22, 0) 100%);
+        z-index: -1;
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(249, 115, 22, 0.3);
+    }
+
+    .service-card:hover::before {
+        opacity: 1;
+    }
+
+    .service-icon {
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #FED7AA 0%, #FFEDD5 100%);
+    }
+
+    .service-card:hover .service-icon {
+        background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+        color: white !important;
+    }
+
+    .feature-card {
+        transition: all 0.3s ease;
+        border: 1px solid #F3F4F6;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+    }
+
+    .feature-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.05) 0%, rgba(249, 115, 22, 0) 100%);
+        z-index: -1;
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(249, 115, 22, 0.3);
+    }
+
+    .feature-card:hover::before {
+        opacity: 1;
+    }
+
+    .feature-icon {
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #FED7AA 0%, #FFEDD5 100%);
+    }
+
+    .feature-card:hover .feature-icon {
+        background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+        color: white !important;
+    }
+
+    .article-card {
+        transition: all 0.3s ease;
+        border: 1px solid #F3F4F6;
+        overflow: hidden;
+        min-width: 300px;
+        width: 350px;
+        margin-right: 20px;
+    }
+
+    .article-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(249, 115, 22, 0.3);
+    }
+
+    .article-image {
+        overflow: hidden;
+    }
+
+    .article-image img {
+        transition: transform 0.5s ease;
+    }
+
+    .article-card:hover .article-image img {
+        transform: scale(1.05);
+    }
+
+    .article-tag {
+        background: linear-gradient(135deg, #FED7AA 0%, #FFEDD5 100%);
+    }
+
+    .article-title {
+        transition: color 0.3s ease;
+    }
+
+    .article-card:hover .article-title {
+        color: #F97316;
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-section::before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+        top: -150px;
+        right: -150px;
+    }
+
+    .cta-section::after {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+        bottom: -150px;
+        left: -150px;
+    }
+
+    .cta-button {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .cta-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+        z-index: -1;
+        transition: all 0.6s ease;
+    }
+
+    .cta-button:hover::before {
+        left: 100%;
+    }
+
+    .latest-article {
+        transition: all 0.3s ease;
+        border: 1px solid #F3F4F6;
+        overflow: hidden;
+    }
+
+    .latest-article:hover {
+        transform: translateY(-5px);
+        border-color: rgba(249, 115, 22, 0.3);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .hero-image-container {
+        position: relative;
+    }
+
+    .hero-image-container::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0) 100%);
+        border-radius: 10px;
+        z-index: -1;
+        top: 15px;
+        left: 15px;
+    }
+
+    .hero-image {
+        border-radius: 10px;
+        box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.1), 0 10px 10px -5px rgba(249, 115, 22, 0.04);
+    }
+
+    .hero-button {
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        transition: all 0.3s ease;
+    }
+
+    .hero-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+        z-index: -1;
+        transition: all 0.6s ease;
+    }
+
+    .hero-button:hover::before {
+        left: 100%;
+    }
+
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Horizontal scroll styles */
+    .scroll-container {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        padding: 20px 0;
+        scrollbar-width: thin;
+        scrollbar-color: #F97316 #FFF7ED;
+    }
+
+    .scroll-container::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .scroll-container::-webkit-scrollbar-track {
+        background: #FFF7ED;
+        border-radius: 10px;
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+        background-color: #F97316;
+        border-radius: 10px;
+        border: 2px solid #FFF7ED;
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb:hover {
+        background-color: #EA580C;
+    }
+
+    .scroll-nav {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .scroll-nav button {
+        background: white;
+        border: 1px solid #F3F4F6;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .scroll-nav button:hover {
+        background: #F97316;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-gradient py-20">
+    <div class="container mx-auto px-4">
+        <div class="grid items-center gap-12 md:grid-cols-2">
+            <div class="animate-fadeInUp">
+                <h1 class="mb-6 text-4xl font-bold leading-tight text-gray-900 md:text-5xl">
+                    <span class="text-orange-500">GIẢI PHÁP MARKETING</span><br>TOÀN DIỆN
+                </h1>
+                <p class="mb-8 text-lg text-gray-600">
+                    Chúng tôi cung cấp các giải pháp marketing toàn diện giúp doanh nghiệp của bạn phát triển mạnh mẽ trong thời đại số.
+                </p>
+                <a href="{% url 'contact' %}" style="background: linear-gradient(to right, #F59E0B, #F97316);" class="hero-button inline-block rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-8 py-4 font-medium text-white shadow-lg transition-all hover:shadow-xl">
+                    Tìm hiểu thêm
+                </a>
+            </div>
+            <div class="hero-image-container animate-fadeInUp delay-200">
+                <img src="{% static 'images/marketing-hero.png' %}" alt="Digital Marketing" class="hero-image animate-float h-auto w-full" onerror="this.src='https://via.placeholder.com/600x400?text=Digital+Marketing'">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Dịch vụ của chúng tôi -->
+<section class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+        <div class="mb-12 text-center">
+            <h2 class="section-title mb-6 text-3xl font-bold text-gray-800 md:text-4xl">Dịch vụ của chúng tôi</h2>
+            <p class="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
+                Chúng tôi cung cấp các giải pháp marketing chuyên nghiệp, giúp doanh nghiệp của bạn tăng trưởng và phát triển.
+            </p>
+        </div>
+
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {% for service in services %}
+            <div class="service-card animate-fadeInUp delay-{{ forloop.counter|add:100 }} rounded-xl bg-white p-6 shadow-md">
+                <div class="service-icon mb-6 flex h-16 w-16 items-center justify-center rounded-full text-orange-500">
+                    <i data-lucide="{{ service.icon|default:'layout' }}" class="h-8 w-8"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-800">{{ service.ten_dm }}</h3>
+                <p class="mb-5 text-gray-600">{{ service.mo_ta|default:'Dịch vụ chuyên nghiệp giúp doanh nghiệp của bạn phát triển.' }}</p>
+                <a href="{% url 'service_detail' service.slug %}" class="group inline-flex items-center font-medium text-orange-500 transition-all hover:text-orange-600">
+                    Xem chi tiết
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-span-3 rounded-xl bg-white p-8 text-center shadow-md">
+                <p class="text-gray-600">Chưa có dịch vụ nào.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Tại sao chọn chúng tôi -->
+<section class="bg-white py-16">
+    <div class="container mx-auto px-4">
+        <div class="mb-12 text-center">
+            <h2 class="section-title mb-6 text-3xl font-bold text-gray-800 md:text-4xl">Tại sao chọn chúng tôi</h2>
+            <p class="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
+                Chúng tôi cam kết mang đến những giải pháp marketing hiệu quả và phù hợp với nhu cầu của doanh nghiệp bạn.
+            </p>
+        </div>
+
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="feature-card animate-fadeInUp delay-100 rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="feature-icon mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full text-orange-500">
+                    <i data-lucide="users" class="h-10 w-10"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-800">Đội ngũ chuyên nghiệp</h3>
+                <p class="text-gray-600">
+                    Đội ngũ chuyên gia giàu kinh nghiệm và đam mê trong lĩnh vực marketing.
+                </p>
+            </div>
+
+            <div class="feature-card animate-fadeInUp delay-200 rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="feature-icon mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full text-orange-500">
+                    <i data-lucide="trending-up" class="h-10 w-10"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-800">Kết quả đo lường được</h3>
+                <p class="text-gray-600">
+                    Chúng tôi cung cấp báo cáo chi tiết và minh bạch về hiệu quả chiến dịch.
+                </p>
+            </div>
+
+            <div class="feature-card animate-fadeInUp delay-300 rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="feature-icon mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full text-orange-500">
+                    <i data-lucide="settings" class="h-10 w-10"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-800">Giải pháp tùy chỉnh</h3>
+                <p class="text-gray-600">
+                    Mỗi doanh nghiệp đều khác biệt, chúng tôi tạo ra giải pháp phù hợp với bạn.
+                </p>
+            </div>
+
+            <div class="feature-card animate-fadeInUp delay-400 rounded-xl bg-white p-6 text-center shadow-md">
+                <div class="feature-icon mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full text-orange-500">
+                    <i data-lucide="headphones" class="h-10 w-10"></i>
+                </div>
+                <h3 class="mb-3 text-xl font-bold text-gray-800">Hỗ trợ 24/7</h3>
+                <p class="text-gray-600">
+                    Đội ngũ hỗ trợ khách hàng luôn sẵn sàng giải đáp mọi thắc mắc của bạn.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bài viết nổi bật -->
+<section class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+        <div class="mb-12 text-center">
+            <h2 class="section-title mb-6 text-3xl font-bold text-gray-800 md:text-4xl">Bài viết nổi bật</h2>
+            <p class="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
+                Khám phá những bài viết chất lượng về marketing, thiết kế website và các chiến lược phát triển doanh nghiệp.
+            </p>
+        </div>
+
+        <!-- Horizontal scroll container -->
+        <div class="scroll-container" id="featuredArticles">
+            {% for article in featured_articles %}
+            <div class="article-card animate-fadeInUp delay-{{ forloop.counter|add:100 }} overflow-hidden rounded-xl bg-white shadow-md">
+                <a href="{% url 'article_detail' article.duong_dan %}" class="block">
+                    <div class="article-image h-48 overflow-hidden">
+                        {% if article.anh %}
+                        <img src="{{ article.anh.url }}" alt="{{ article.tieu_de }}" class="h-full w-full object-cover">
+                        {% else %}
+                        <img src="https://via.placeholder.com/400x225?text=Article+Image" alt="{{ article.tieu_de }}" class="h-full w-full object-cover">
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="p-6">
+                    <div class="mb-4 flex items-center">
+                        <span class="article-tag rounded-full px-3 py-1 text-xs font-medium text-orange-600">
+                            {{ article.ma_dm.ten_dm }}
+                        </span>
+                        <span class="ml-3 text-xs text-gray-500">
+                            {{ article.ngay_dang|date:"d/m/Y" }}
+                        </span>
+                    </div>
+                    <h3 class="article-title mb-4 text-xl font-bold text-gray-800">
+                        <a href="{% url 'article_detail' article.duong_dan %}">
+                            {{ article.tieu_de }}
+                        </a>
+                    </h3>
+                    <p class="mb-5 line-clamp-2 text-gray-600">
+                        {{ article.tom_tat }}
+                    </p>
+                    <a href="{% url 'article_detail' article.duong_dan %}" class="group inline-flex items-center font-medium text-orange-500 transition-all hover:text-orange-600">
+                        Đọc tiếp
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="w-full rounded-xl bg-white p-8 text-center shadow-md">
+                <p class="text-gray-600">Chưa có bài viết nổi bật.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Navigation buttons -->
+        <div class="scroll-nav">
+            <button id="scrollLeft" aria-label="Cuộn sang trái">
+                <i data-lucide="chevron-left" class="h-5 w-5"></i>
+            </button>
+            <button id="scrollRight" aria-label="Cuộn sang phải">
+                <i data-lucide="chevron-right" class="h-5 w-5"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Bài viết mới nhất -->
+<section class="bg-white py-16">
+    <div class="container mx-auto px-4">
+        <div class="mb-12 text-center">
+            <h2 class="section-title mb-6 text-3xl font-bold text-gray-800 md:text-4xl">Bài viết mới nhất</h2>
+            <p class="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
+                Cập nhật những bài viết mới nhất từ đội ngũ chuyên gia của chúng tôi.
+            </p>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-3">
+            {% for article in latest_articles %}
+            <div class="latest-article animate-fadeInUp delay-{{ forloop.counter|add:100 }} rounded-xl bg-white p-6 shadow-md">
+                <div class="mb-4 flex items-center">
+                    <span class="article-tag rounded-full px-3 py-1 text-xs font-medium text-orange-600">
+                        {{ article.ma_dm.ten_dm }}
+                    </span>
+                    <span class="ml-3 text-xs text-gray-500">
+                        {{ article.ngay_dang|date:"d/m/Y" }}
+                    </span>
+                </div>
+                <h3 class="article-title mb-3 text-lg font-bold text-gray-800">
+                    <a href="{% url 'article_detail' article.duong_dan %}">
+                        {{ article.tieu_de }}
+                    </a>
+                </h3>
+                <p class="mb-5 line-clamp-2 text-sm text-gray-600">
+                    {{ article.tom_tat }}
+                </p>
+                <a href="{% url 'article_detail' article.duong_dan %}" class="group inline-flex items-center font-medium text-orange-500 transition-all hover:text-orange-600">
+                    Đọc tiếp
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-span-3 rounded-xl bg-white p-8 text-center shadow-md">
+                <p class="text-gray-600">Chưa có bài viết mới nhất.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section py-16">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="mx-auto max-w-3xl text-center">
+            <h2 class="mb-6 text-3xl font-bold text-white md:text-4xl">Bạn muốn tăng trưởng doanh nghiệp của bạn?</h2>
+            <p class="mb-8 text-lg text-white opacity-90">
+                Hãy liên hệ với chúng tôi ngay hôm nay để nhận tư vấn miễn phí về chiến lược marketing phù hợp với doanh
+                nghiệp của bạn.
+            </p>
+            <a href="{% url 'contact' %}" class="cta-button inline-block rounded-lg bg-white px-8 py-4 font-medium text-orange-500 shadow-lg transition-all hover:shadow-xl">
+                Liên hệ ngay
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate elements when they come into view
+        const animatedElements = document.querySelectorAll('.animate-fadeInUp');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        animatedElements.forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+
+            const delay = element.classList.contains('delay-100') ? '0.1s' :
+                          element.classList.contains('delay-200') ? '0.2s' :
+                          element.classList.contains('delay-300') ? '0.3s' :
+                          element.classList.contains('delay-400') ? '0.4s' : '0s';
+
+            element.style.transitionDelay = delay;
+
+            observer.observe(element);
+        });
+
+        // Horizontal scroll functionality
+        const scrollContainer = document.getElementById('featuredArticles');
+        const scrollLeftBtn = document.getElementById('scrollLeft');
+        const scrollRightBtn = document.getElementById('scrollRight');
+
+        if (scrollContainer && scrollLeftBtn && scrollRightBtn) {
+            // Scroll left button
+            scrollLeftBtn.addEventListener('click', function() {
+                scrollContainer.scrollBy({
+                    left: -370, // Scroll one card width + margin
+                    behavior: 'smooth'
+                });
+            });
+
+            // Scroll right button
+            scrollRightBtn.addEventListener('click', function() {
+                scrollContainer.scrollBy({
+                    left: 370, // Scroll one card width + margin
+                    behavior: 'smooth'
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

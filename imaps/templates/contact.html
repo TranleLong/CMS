@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liên hệ - I MAPS AGENCY{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Banner styles */
+    .contact-banner {
+        background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .contact-banner::before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+        top: -150px;
+        right: -150px;
+    }
+    
+    .contact-banner::after {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+        bottom: -150px;
+        left: -150px;
+    }
+    
+    /* Contact info styles */
+    .contact-icon {
+        background-color: #FED7AA;
+        color: #F97316;
+        transition: all 0.3s ease;
+    }
+    
+    .social-icon {
+        transition: all 0.3s ease;
+    }
+    
+    .social-icon:hover {
+        background-color: #F97316;
+        color: white;
+        transform: translateY(-3px);
+    }
+    
+    /* Form styles */
+    .form-input:focus {
+        border-color: #F97316;
+        box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+        outline: none;
+    }
+    
+    .submit-button {
+        background-color: #F97316;
+        color: white;
+        transition: all 0.3s ease;
+    }
+    
+    .submit-button:hover {
+        background-color: #EA580C;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-fadeIn {
+        animation: fadeIn 0.8s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    .delay-100 {
+        animation-delay: 0.1s;
+    }
+    
+    .delay-200 {
+        animation-delay: 0.2s;
+    }
+    
+    .delay-300 {
+        animation-delay: 0.3s;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<section class="contact-banner py-12 text-white relative">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="mx-auto max-w-3xl text-center animate-fadeIn">
+            <h1 class="mb-4 text-4xl font-bold">Liên hệ với chúng tôi</h1>
+            <p class="text-lg">
+                Hãy để lại thông tin, chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Thông tin liên hệ và form -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="grid gap-12 md:grid-cols-2">
+            <!-- Thông tin liên hệ -->
+            <div class="animate-fadeIn delay-100">
+                <h2 class="mb-6 text-2xl font-bold text-gray-800">Thông tin liên hệ</h2>
+                
+                <div class="mb-8 space-y-4">
+                    <div class="flex items-start">
+                        <div class="mr-4 flex h-10 w-10 items-center justify-center rounded-full contact-icon">
+                            <i data-lucide="map-pin" class="h-5 w-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Địa chỉ</h3>
+                            <p class="text-gray-600">123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh, Việt Nam</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="mr-4 flex h-10 w-10 items-center justify-center rounded-full contact-icon">
+                            <i data-lucide="phone" class="h-5 w-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Điện thoại</h3>
+                            <p class="text-gray-600">(84) 28 1234 5678</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="mr-4 flex h-10 w-10 items-center justify-center rounded-full contact-icon">
+                            <i data-lucide="mail" class="h-5 w-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Email</h3>
+                            <p class="text-gray-600">info@imapsagency.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="mr-4 flex h-10 w-10 items-center justify-center rounded-full contact-icon">
+                            <i data-lucide="clock" class="h-5 w-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Giờ làm việc</h3>
+                            <p class="text-gray-600">Thứ Hai - Thứ Sáu: 8:00 - 17:30</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="mb-4 text-xl font-semibold text-gray-800">Kết nối với chúng tôi</h3>
+                <div class="flex space-x-4">
+                    <a href="#" class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-600 social-icon">
+                        <i data-lucide="facebook" class="h-5 w-5"></i>
+                    </a>
+                    <a href="#" class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-600 social-icon">
+                        <i data-lucide="twitter" class="h-5 w-5"></i>
+                    </a>
+                    <a href="#" class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-600 social-icon">
+                        <i data-lucide="instagram" class="h-5 w-5"></i>
+                    </a>
+                    <a href="#" class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-gray-600 social-icon">
+                        <i data-lucide="linkedin" class="h-5 w-5"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Form liên hệ -->
+            <div class="animate-fadeIn delay-200">
+                <h2 class="mb-6 text-2xl font-bold text-gray-800">Gửi tin nhắn cho chúng tôi</h2>
+                
+                {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                    <div class="{% if message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %} mb-4 rounded-md p-4">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <form method="post" action="{% url 'contact' %}" class="space-y-6">
+                    {% csrf_token %}
+                    <div class="grid gap-6 md:grid-cols-2">
+                        <div>
+                            <label for="ho_ten" class="mb-2 block text-sm font-medium text-gray-700">Họ và tên <span class="text-red-500">*</span></label>
+                            <input type="text" id="ho_ten" name="ho_ten" required class="w-full rounded-md border border-gray-300 px-4 py-2 form-input focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500">
+                        </div>
+                        <div>
+                            <label for="email" class="mb-2 block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+                            <input type="email" id="email" name="email" required class="w-full rounded-md border border-gray-300 px-4 py-2 form-input focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500">
+                        </div>
+                    </div>
+                    
+                    <div class="grid gap-6 md:grid-cols-2">
+                        <div>
+                            <label for="so_dien_thoai" class="mb-2 block text-sm font-medium text-gray-700">Số điện thoại</label>
+                            <input type="tel" id="so_dien_thoai" name="so_dien_thoai" class="w-full rounded-md border border-gray-300 px-4 py-2 form-input focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500">
+                        </div>
+                        <div>
+                            <label for="chu_de" class="mb-2 block text-sm font-medium text-gray-700">Chủ đề <span class="text-red-500">*</span></label>
+                            <select id="chu_de" name="chu_de" required class="w-full rounded-md border border-gray-300 px-4 py-2 form-input focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500">
+                                <option value="">Chọn chủ đề</option>
+                                <option value="Tư vấn dịch vụ">Tư vấn dịch vụ</option>
+                                <option value="Báo giá">Báo giá</option>
+                                <option value="Hợp tác">Hợp tác</option>
+                                <option value="Khác">Khác</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="noi_dung" class="mb-2 block text-sm font-medium text-gray-700">Nội dung <span class="text-red-500">*</span></label>
+                        <textarea id="noi_dung" name="noi_dung" rows="5" required class="w-full rounded-md border border-gray-300 px-4 py-2 form-input focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"></textarea>
+                    </div>
+                    
+                    <div>
+                        <button type="submit" class="rounded-md bg-orange-500 px-6 py-3 font-medium text-white transition-colors hover:bg-orange-600 submit-button">
+                            Gửi tin nhắn
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bản đồ -->
+<section class="bg-gray-50 py-12">
+    <div class="container mx-auto px-4">
+        <div class="overflow-hidden rounded-lg shadow-md animate-fadeIn delay-300">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4241674197956!2d106.69916857486087!3d10.77194358931046!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4670702e31%3A0xa5777fb3a5bb9a05!2zMTIzIEzDqiBM4bujaSwgQsOqbiBOZ2jDqSwgUXXhuq1uIDEsIFRow6BuaCBwaOG7kSBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1715587641012!5m2!1svi!2s" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation on scroll
+        const animatedElements = document.querySelectorAll('.animate-fadeIn');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        animatedElements.forEach(element => {
+            const delay = element.classList.contains('delay-100') ? '0.1s' :
+                          element.classList.contains('delay-200') ? '0.2s' :
+                          element.classList.contains('delay-300') ? '0.3s' : '0s';
+            
+            element.style.transitionDelay = delay;
+            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            
+            observer.observe(element);
+        });
+    });
+</script>
+{% endblock %}

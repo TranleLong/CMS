@@ -1,0 +1,553 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ service.ten_dm }} - I MAPS AGENCY{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+    
+    .delay-100 {
+        animation-delay: 0.1s;
+    }
+    
+    .delay-200 {
+        animation-delay: 0.2s;
+    }
+    
+    .delay-300 {
+        animation-delay: 0.3s;
+    }
+    
+    /* Banner styles */
+    .service-banner {
+        background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-banner::before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+        top: -150px;
+        right: -150px;
+    }
+    
+    .service-banner::after {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+        bottom: -150px;
+        left: -150px;
+    }
+    
+    /* Section title */
+    .section-title {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #F97316 0%, #FDBA74 100%);
+        border-radius: 2px;
+    }
+    
+    /* Article card */
+    .article-card {
+        transition: all 0.3s ease;
+        border: 1px solid #F3F4F6;
+        overflow: hidden;
+    }
+    
+    .article-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(249, 115, 22, 0.3);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .article-image {
+        overflow: hidden;
+    }
+    
+    .article-image img {
+        transition: transform 0.5s ease;
+    }
+    
+    .article-card:hover .article-image img {
+        transform: scale(1.05);
+    }
+    
+    .article-tag {
+        background: linear-gradient(135deg, #FED7AA 0%, #FFEDD5 100%);
+    }
+    
+    .article-title {
+        transition: color 0.3s ease;
+    }
+    
+    .article-card:hover .article-article-title {
+        color: #F97316;
+    }
+
+    /* Tag styles */
+    .tag-filter {
+        transition: all 0.3s ease;
+    }
+
+    .tag-filter:hover, .tag-filter.active {
+        background-color: #F97316;
+        color: white;
+    }
+
+    /* Line clamp */
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb-item {
+        position: relative;
+        padding-right: 1.5rem;
+    }
+
+    .breadcrumb-item:not(:last-child)::after {
+        content: "/";
+        position: absolute;
+        right: 0.5rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Article content styles */
+    .article-content {
+        font-size: 1.125rem;
+        line-height: 1.75;
+        color: #374151;
+    }
+
+    .article-content h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        color: #1F2937;
+    }
+
+    .article-content h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-top: 1.25rem;
+        margin-bottom: 0.75rem;
+        color: #1F2937;
+    }
+
+    .article-content p {
+        margin-bottom: 1rem;
+    }
+
+    .article-content ul, .article-content ol {
+        margin-bottom: 1rem;
+        padding-left: 1.5rem;
+    }
+
+    .article-content ul li, .article-content ol li {
+        margin-bottom: 0.5rem;
+    }
+
+    .article-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .article-content a {
+        color: #F97316;
+        text-decoration: underline;
+        transition: color 0.2s ease;
+    }
+
+    .article-content a:hover {
+        color: #EA580C;
+    }
+
+    .article-content blockquote {
+        border-left: 4px solid #F97316;
+        padding-left: 1rem;
+        font-style: italic;
+        margin: 1.5rem 0;
+        color: #4B5563;
+    }
+
+    .article-content pre {
+        background-color: #F3F4F6;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+    }
+
+    .article-content code {
+        background-color: #F3F4F6;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+        font-family: monospace;
+    }
+
+    /* Sidebar styles */
+    .sidebar-title {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 1.5rem;
+    }
+
+    .sidebar-title::after {
+        content: "";
+        position: absolute;
+        bottom: -0.5rem;
+        left: 0;
+        width: 3rem;
+        height: 0.25rem;
+        background: linear-gradient(90deg, #F97316 0%, #FDBA74 100%);
+        border-radius: 0.125rem;
+    }
+
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #E5E7EB;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-link:hover {
+        color: #F97316;
+        transform: translateX(0.25rem);
+    }
+
+    .sidebar-link-active {
+        color: #F97316;
+        font-weight: 600;
+    }
+
+    /* Định dạng cho danh sách đánh số */
+    .article-content p {
+        position: relative;
+    }
+
+    /* Xử lý các đoạn văn bản có số đánh dấu */
+    .formatted-content [data-number]:before {
+        content: attr(data-number);
+        font-weight: bold;
+        margin-right: 0.5rem;
+    }
+
+    .formatted-content [data-number] {
+        display: block;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    /* Định dạng mới cho danh sách đánh số */
+    .article-content p {
+        margin-bottom: 1rem;
+    }
+
+    /* Định dạng cho số đánh dấu */
+    .article-content .numbered-item {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .article-content .numbered-marker {
+        font-weight: bold;
+        color: #F97316;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Định dạng cho phần đánh số */
+    .article-content .number-marker {
+        font-weight: bold;
+        color: #F97316;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Banner -->
+<section class="service-banner py-16 text-white">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="animate-fadeInUp">
+            <!-- Breadcrumb -->
+            <div class="mb-4 flex items-center text-sm">
+                <a href="{% url 'home' %}" class="breadcrumb-item text-white/80 hover:text-white">Trang chủ</a>
+                <span class="breadcrumb-item">{{ service.ten_dm }}</span>
+            </div>
+
+            <h1 class="mb-4 text-3xl font-bold md:text-4xl">{{ service.ten_dm }}</h1>
+            <p class="max-w-2xl text-lg text-white/90">
+                {{ service.mo_ta|default:"Giải pháp marketing chuyên nghiệp cho doanh nghiệp của bạn" }}
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Nội dung chính -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="grid gap-12 lg:grid-cols-3">
+            <!-- Nội dung bài viết -->
+            <div class="lg:col-span-2">
+                {% if first_article %}
+                <div class="animate-fadeInUp">
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">{{ first_article.tieu_de }}</h2>
+                        <div class="mt-4 flex items-center">
+                            <span class="article-tag rounded-full px-3 py-1 text-xs font-medium text-orange-600">
+                                {{ first_article.ma_dm.ten_dm }}
+                            </span>
+                            <span class="ml-3 text-xs text-gray-500">
+                                {{ first_article.ngay_dang|date:"d/m/Y" }}
+                            </span>
+                        </div>
+                    </div>
+
+                    {% if first_article.anh %}
+                    <div class="mb-8 overflow-hidden rounded-xl">
+                        <img src="{{ first_article.anh.url }}" alt="{{ first_article.tieu_de }}" class="h-auto w-full">
+                    </div>
+                    {% endif %}
+
+                    <div class="article-content formatted-content" id="article-content">
+                        {{ first_article.noi_dung|safe }}
+                    </div>
+                </div>
+                {% else %}
+                <div class="rounded-xl bg-white p-8 text-center shadow-md">
+                    <p class="text-gray-600">Chưa có bài viết nào trong danh mục này.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Sidebar -->
+            <div class="animate-fadeInUp delay-200">
+                <!-- Danh sách bài viết -->
+                <div class="mb-8 rounded-xl bg-white p-6 shadow-md">
+                    <h3 class="sidebar-title text-xl font-bold text-gray-800">Bài viết về {{ service.ten_dm }}</h3>
+
+                    <!-- Lọc theo thẻ -->
+                    {% if tags %}
+                    <div class="mb-6 flex flex-wrap gap-2">
+                        <a href="{% url 'service_detail' service.slug %}" class="tag-filter rounded-full px-4 py-2 text-sm font-medium {% if not current_tag %}bg-orange-500 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-orange-500 hover:text-white{% endif %}">
+                            Tất cả
+                        </a>
+                        {% for tag in tags %}
+                        <a href="{% url 'service_detail' service.slug %}?tag={{ tag.slug }}" class="tag-filter rounded-full px-4 py-2 text-sm font-medium {% if current_tag.ma_the == tag.ma_the %}bg-orange-500 text-white{% else %}bg-gray-100 text-gray-700 hover:bg-orange-500 hover:text-white{% endif %}">
+                            {{ tag.ten_the }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="space-y-1">
+                        {% for article in articles %}
+                        <a href="{% url 'article_detail' article.duong_dan %}" class="sidebar-link {% if first_article.ma_bv == article.ma_bv %}sidebar-link-active{% endif %}">
+                            {{ article.tieu_de }}
+                        </a>
+                        {% empty %}
+                        <p class="text-gray-600">Chưa có bài viết nào.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Liên hệ -->
+                <div class="rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white shadow-md">
+                    <h3 class="mb-4 text-xl font-bold" style="color:black;">Cần tư vấn?</h3>
+                    <p class="mb-6" style="color:black;">
+                        Hãy liên hệ với chúng tôi để được tư vấn miễn phí về dịch vụ {{ service.ten_dm }} phù hợp với doanh nghiệp của bạn.
+                    </p>
+                    <a href="{% url 'contact' %}" style="background: linear-gradient(to right, #F59E0B, #F97316);" class="inline-block rounded-lg bg-white px-6 py-3 font-medium text-orange-500 shadow-md transition-colors hover:bg-gray-100">
+                        Liên hệ ngay
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bài viết liên quan -->
+<section class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+        <div class="mb-12 text-center">
+            <h2 class="section-title mb-6 text-3xl font-bold text-gray-800 md:text-4xl">Bài viết liên quan</h2>
+            <p class="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
+                Khám phá thêm các bài viết về {{ service.ten_dm }} và các dịch vụ liên quan.
+            </p>
+        </div>
+
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {% for article in articles %}
+                {% if forloop.counter <= 3 and article != first_article %}
+                <div class="article-card animate-fadeInUp delay-{{ forloop.counter|add:100}} overflow-hidden rounded-xl bg-white shadow-md">
+                    <div class="article-image aspect-w-16 aspect-h-9 overflow-hidden">
+                        {% if article.anh %}
+                        <img src="{{ article.anh.url }}" alt="{{ article.tieu_de }}" class="h-full w-full object-cover">
+                        {% else %}
+                        <img src="{% static 'images/placeholder.svg' %}?height=300&width=500" alt="{{ article.tieu_de }}" class="h-full w-full object-cover">
+                        {% endif %}
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-4 flex items-center">
+                            <span class="article-tag rounded-full px-3 py-1 text-xs font-medium text-orange-600">
+                                {{ article.ma_dm.ten_dm }}
+                            </span>
+                            <span class="ml-3 text-xs text-gray-500">
+                                {{ article.ngay_dang|date:"d/m/Y" }}
+                            </span>
+                        </div>
+                        <h3 class="article-title mb-4 text-xl font-bold text-gray-800">
+                            <a href="{% url 'article_detail' article.duong_dan %}">
+                                {{ article.tieu_de }}
+                            </a>
+                        </h3>
+                        <p class="mb-5 line-clamp-2 text-gray-600">
+                            {{ article.tom_tat }}
+                        </p>
+                        <a href="{% url 'article_detail' article.duong_dan %}" class="group inline-flex items-center font-medium text-orange-500 transition-all hover:text-orange-600">
+                            Đọc tiếp
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="service-banner py-16 text-white">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="mx-auto max-w-3xl text-center">
+            <h2 class="mb-6 text-3xl font-bold md:text-4xl">Sẵn sàng nâng cao hiệu quả kinh doanh với {{ service.ten_dm }}?</h2>
+            <p class="mb-8 text-lg opacity-90">
+                Hãy liên hệ với chúng tôi ngay hôm nay để nhận tư vấn miễn phí về giải pháp {{ service.ten_dm }} phù hợp với doanh nghiệp của bạn.
+            </p>
+            <a href="{% url 'contact' %}" style="color:black;" class="inline-block rounded-lg bg-white px-8 py-4 font-medium text-orange-500 shadow-lg transition-all hover:shadow-xl hover:-translate-y-1">
+                Liên hệ ngay
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate elements when they come into view
+        const animatedElements = document.querySelectorAll('.animate-fadeInUp');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        animatedElements.forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+
+            const delay = element.classList.contains('delay-100') ? '0.1s' :
+                          element.classList.contains('delay-200') ? '0.2s' :
+                          element.classList.contains('delay-300') ? '0.3s' :
+                          element.classList.contains('delay-400') ? '0.4s' : '0s';
+
+            element.style.transitionDelay = delay;
+
+            observer.observe(element);
+        });
+
+        // Xử lý định dạng nội dung bài viết có số đánh dấu
+        function formatNumberedContent() {
+            const contentDiv = document.getElementById('article-content');
+            if (!contentDiv) return;
+
+            // Lấy HTML hiện tại
+            let html = contentDiv.innerHTML;
+
+            // Tìm và thay thế các mẫu "/số." (ví dụ: "/1.", "/2.", v.v.)
+            // Sử dụng biểu thức chính quy để tìm tất cả các mẫu "/số." và nội dung sau nó
+            let formattedHtml = '';
+            let lastIndex = 0;
+
+            // Tách nội dung thành các đoạn dựa trên mẫu "/số."
+            const regex = /\/(\d+\.)/g;
+            let parts = html.split(regex);
+
+            // Nếu không tìm thấy mẫu nào, giữ nguyên nội dung
+            if (parts.length <= 1) {
+                return;
+            }
+
+            // Phần đầu tiên là nội dung trước mẫu "/số." đầu tiên
+            formattedHtml += parts[0];
+
+            // Xử lý từng phần
+            for (let i = 1; i < parts.length; i += 2) {
+                const marker = parts[i]; // Phần số và dấu chấm (ví dụ: "1.")
+                const content = parts[i + 1] || ''; // Nội dung sau số
+
+                // Thêm xuống dòng trước mỗi mẫu "/số." và sử dụng màu cam cho phần đánh dấu
+                formattedHtml += '<p><strong class="text-orange-500">/' + marker + '</strong>' + content + '</p>';
+            }
+
+            // Cập nhật lại nội dung
+            contentDiv.innerHTML = formattedHtml;
+        }
+
+        // Gọi hàm định dạng
+        formatNumberedContent();
+    });
+</script>
+{% endblock %}
